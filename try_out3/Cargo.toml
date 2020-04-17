@@ -1,0 +1,7 @@
+[package]
+name = "try_out3"
+version = "0.1.0"
+authors = ["RD <rd20143195@gmail.com>"]
+edition = "2018"
+
+[dependencies]

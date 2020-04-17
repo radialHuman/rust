@@ -1,0 +1,1 @@
+C:\Users\rahul.damani\Downloads\code\rust\try_out3\target\release\try_out3.exe: C:\Users\rahul.damani\Downloads\code\rust\try_out3\src\main.rs C:\Users\rahul.damani\Downloads\code\rust\try_out3\src\primitives.rs
