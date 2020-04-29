@@ -55,12 +55,23 @@ pub fn function() {
 
     // TUPLE
     // destructuring
-    let (a, b) = tuple_maker(12, 17);
+    let (a, b) = tuple_maker(100, 16);
     println!(
         "The values from function is {} (sum) and {} (is 12>17)",
         a, b
     );
     // PATTERN MATCHING
+    let a_string = match a {
+        0 => "no",
+        1 | 2 => "one or two",
+        _ if (a > 12) & (a % 2 == 0) => "Even number",
+        3..=11 => "a few",
+        12 => "a dozen",
+        range @ 100..=10000 => "More than enough", // naming the range
+        _ => "a lot",
+    };
+    println!("Match of {} is {}", a, a_string);
+
     // GENERICS
 }
 
@@ -70,4 +81,14 @@ fn tuple_maker(a: i32, b: i32) -> (i32, bool) {
 
 /*
 OUTPUT
+The slice of [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] is [1, 1, 1] with type &[i32]
+S,o,m,e,t,h,i,n,g,
+g,n,i,h,t,e,m,o,S,
+The 2nd letter is m
+The all alphabet string is a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,
+Concatenation of String and &str a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,1234567890
+Concatenation of String and String a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,
+Some thing!!!
+The values from function is 28 (sum) and false (is 12>17)
+Match of 28 is Even number
 */
