@@ -1,6 +1,8 @@
 // 9.2
 //
 
+/* Since this is about handelling errors this program will not run and if it does not all lines can be tested*/
+
 use std::fs::File; // to read a local file
 use std::io::ErrorKind;
 
@@ -39,4 +41,11 @@ pub fn function() {
             panic!("Problem opening file {:?}", error);
         }
     });
+
+    // unwrap and expect
+    // unwrap is a shortcut to match and panic method
+    let f = File::open("some_file_doest_exist2.txt").unwrap();
+    // but there cna be many such statements and it can be difficult to find out which one caused the panic
+    // except allows error statement to be printed and makes easy to spot where the panic occurs in a lengthy program
+    let f = File::open("some_file_doest_exist2.txt").expect("Error at line 50");
 }
