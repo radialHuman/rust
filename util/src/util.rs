@@ -57,4 +57,69 @@ let f = File::open("some_file_that_doesnt_exist.txt");
 // to open a file
 
 //===============================================================================================================================================
+// To transpose a matrix 
+pub fn transpose(matrix: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
+    let mut output = vec![];
+    for j in 0..matrix[0].len() {
+        for i in 0..matrix.len() {
+            output.push(matrix[i][j]);
+        }
+    }
+    shape_changer(&mut output, 3, 4)
+}
+//===============================================================================================================================================
+// use a list to make a matrix
+pub fn shape_changer(list: &Vec<f64>, columns: usize, rows: usize) -> Vec<Vec<f64>> {
+    /*Changes a list to desired shape matrix*/
+    let mut l = list.clone();
+    let mut output = vec![vec![]; rows];
+    for i in 0..rows {
+        output[i] = l[..columns].iter().cloned().collect();
+        // remove the ones pushed to putput
+        l = l[columns..].iter().cloned().collect();
+    }
+    output
+}
 
+//===============================================================================================================================================
+// Matrix multiplication
+
+pub fn matrix_product(input: &Vec<Vec<f64>>, weights: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
+    if input.len() == weights.len() {
+        let mut output: Vec<f64> = vec![];
+        for i in input.iter() {
+            for j in weights.iter() {
+                output.push(dot_product(&i, &j));
+            }
+        }
+        // println!("{:?}", output);
+        shape_changer(&output, input.len(), weights.len())
+    } else {
+        println!("The matrix is invalid");
+        input.clone()
+    }
+}
+
+//===============================================================================================================================================
+// Dot product
+pub fn dot_product(a: &Vec<f64>, b: &Vec<f64>) -> f64 {
+    a.iter().zip(b.iter()).map(|(x, y)| *x * *y).sum()
+}
+
+//===============================================================================================================================================
+// Vector addition
+
+pub fn vector_addition(a: &Vec<f64>, b: &Vec<f64>) -> Vec<f64> {
+    if a.len() == b.len() {
+        let mut output = vec![];
+        for i in 0..a.len() {
+            output.push(a[i] + b[i]);
+        }
+        output
+    } else {
+        println!("The vector is invalid",);
+        a.clone()
+    }
+}
+
+//===============================================================================================================================================
