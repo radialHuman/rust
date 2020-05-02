@@ -3,13 +3,28 @@
 /*
 */
 
-
 // struct can also use generic types
 pub struct NameAge<T, U> {
     name: T,
     age: U,
 }
+// this method is for any type
+impl<T: std::fmt::Debug, U: std::fmt::Debug> NameAge<T, U> {
+    pub fn returncombo(&self) -> String {
+        format!("{:?}-{:?}", self.name, self.age)
+    }
+    pub fn adding_new_type_inside_the_function<V>(&self, random_number: V) -> V {
+        random_number
+    }
+}
+// excusive methods also can be made
+impl NameAge<String, String> {
+    pub fn return_combo(&self) -> String {
+        format!("{:?}_{:?}", self.name, self.age)
+    }
+}
 
+// same for enums
 
 pub fn function() {
     // GENERICS
@@ -35,22 +50,44 @@ pub fn function() {
     // T and U can be the same (and U can then be replaced with T) or different
 
     // Generics in struct
-    let someone = NameAge{
+    let someone = NameAge {
         name: String::from("Some"),
         age: 1,
-    }
-}
-fn function1<T, U>(arr: &Vec<T>) -> U {
-    let mut largest = arr[0];
-    for i in arr.iter() {
-        // the < in next line will not work until a trait is mentioned to know how it would repond in case of types that dont have clear understanding of <
-        if largest < *i {
-            largest = *i;
-        }
-    }
-    // similar to <, displaying of output will not be understood untill a trait is mentioned on how to act
-    format!("{} is the largest", largest)
+    };
+    println!("The values from structs: {},{}", someone.name, someone.age);
+    println!("The someone's id is {}", someone.returncombo());
 
-
-    
+    // exculsive
+    let someone_else = NameAge {
+        name: String::from("Some"),
+        age: "32".to_string(),
+    };
+    println!(
+        "The someoneElse's exclusive id is {}",
+        someone_else.return_combo()
+    );
+    println!(
+        "New generic type inside implementation {}",
+        someone_else.adding_new_type_inside_the_function(2.3)
+    )
 }
+
+// fn function1<T, U>(arr: &Vec<T>) -> U {
+//     let mut largest = arr[0];
+//     for i in arr.iter() {
+//         // the < in next line will not work until a trait is mentioned to know how it would repond in case of types that dont have clear understanding of <
+//         if largest < *i {
+//             largest = *i;
+//         }
+//     }
+//     // similar to <, displaying of output will not be understood untill a trait is mentioned on how to act
+//     format!("{} is the largest", largest)
+// }
+
+/*
+99 is the largest
+The values from structs: Some,1
+The someone's id is "Some"-1
+The someoneElse's exclusive id is "Some"_"32"
+New generic type inside implementation 2.3
+*/
