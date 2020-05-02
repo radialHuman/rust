@@ -65,12 +65,14 @@ pub fn transpose(matrix: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
             output.push(matrix[i][j]);
         }
     }
-    shape_changer(&mut output, 3, 4)
+    let x = matrix[0].len();
+    shape_changer(&output, matrix.len(), x)
 }
 //===============================================================================================================================================
 // use a list to make a matrix
 pub fn shape_changer(list: &Vec<f64>, columns: usize, rows: usize) -> Vec<Vec<f64>> {
     /*Changes a list to desired shape matrix*/
+    // println!("{},{}", &columns, &rows);
     let mut l = list.clone();
     let mut output = vec![vec![]; rows];
     for i in 0..rows {
@@ -86,17 +88,28 @@ pub fn shape_changer(list: &Vec<f64>, columns: usize, rows: usize) -> Vec<Vec<f6
 
 pub fn matrix_product(input: &Vec<Vec<f64>>, weights: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
     if input.len() == weights.len() {
-        let mut output: Vec<f64> = vec![];
-        for i in input.iter() {
-            for j in weights.iter() {
-                output.push(dot_product(&i, &j));
-            }
+        // println!(
+    //     "Multiplication of {}x{} and {}x{}",
+    //     input.len(),
+    //     input[0].len(),
+    //     weights.len(),
+    //     weights[0].len()
+    // );
+    // println!("Weights transposed to",);
+    let weights_t = transpose(&weights);
+    // print_a_matrix(&weights_t);
+    let mut output: Vec<f64> = vec![];
+    for i in input.iter() {
+        for j in weights_t.iter() {
+            // println!("{:?}x{:?},", i, j);
+            output.push(dot_product(&i, &j));
         }
-        // println!("{:?}", output);
-        shape_changer(&output, input.len(), weights.len())
+    }
+    // println!("{:?}", output);
+    shape_changer(&output, input.len(), weights_t.len())
     } else {
         println!("The matrix is invalid");
-        input.clone()
+        vec![]
     }
 }
 
@@ -118,7 +131,7 @@ pub fn vector_addition(a: &Vec<f64>, b: &Vec<f64>) -> Vec<f64> {
         output
     } else {
         println!("The vector is invalid",);
-        a.clone()
+        vec![]
     }
 }
 
