@@ -1,6 +1,7 @@
 //
 
 /*
+Generics for functions enums and structs
 */
 
 // struct can also use generic types
@@ -72,6 +73,7 @@ pub fn function() {
     )
 }
 
+// // Left incomplete in this part due to trait implementation
 // fn function1<T, U>(arr: &Vec<T>) -> U {
 //     let mut largest = arr[0];
 //     for i in arr.iter() {

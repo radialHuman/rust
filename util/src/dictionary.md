@@ -9,4 +9,4 @@
 |7. | dyn Error | trpl2 34 | from use std::error::Error ??? |
 |8. | panic!("") | trpl2 35 | error handling |
 |9. | RUST_BACKTRACING=1  cargo run| trpl2 35| to show in cmd where the error ocurred and other details |
-
+|10. | fn longest_string_with_lifetime_annotation<'a>(string1: &'a str, string2: &'a str) -> &'a str { | trpl2 41 | lifetime annotation (better in Doug Milford)|
