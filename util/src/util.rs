@@ -58,7 +58,7 @@ let f = File::open("some_file_that_doesnt_exist.txt");
 
 //===============================================================================================================================================
 // To transpose a matrix 
-pub fn transpose(matrix: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
+pub fn transpose<T>(matrix: &Vec<Vec<T>>) -> Vec<Vec<T>> {
     let mut output = vec![];
     for j in 0..matrix[0].len() {
         for i in 0..matrix.len() {
@@ -70,7 +70,7 @@ pub fn transpose(matrix: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
 }
 //===============================================================================================================================================
 // use a list to make a matrix
-pub fn shape_changer(list: &Vec<f64>, columns: usize, rows: usize) -> Vec<Vec<f64>> {
+pub fn shape_changer<T>(list: &Vec<T>, columns: usize, rows: usize) -> Vec<Vec<f64>> {
     /*Changes a list to desired shape matrix*/
     // println!("{},{}", &columns, &rows);
     let mut l = list.clone();

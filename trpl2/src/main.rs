@@ -4,7 +4,9 @@
 // mod _36_error_handling_when_panic;
 // mod _37_38_generics;
 // mod _39_40_traits;
-mod _41_42_lifetime;
+// mod _41_42_lifetime;
+// mod _42_43_testing;
+mod _44_control_testing;
 
 fn main() {
     // _33_error_handling_1::function();
@@ -13,5 +15,7 @@ fn main() {
     // _36_error_handling_when_panic::function();
     // _37_38_generics::function();
     // _39_40_traits::function();
-    _41_42_lifetime::function();
+    // _41_42_lifetime::function();
+    // _42_43_testing::function();
+    _44_control_testing::function();
 }
