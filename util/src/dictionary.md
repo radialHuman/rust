@@ -18,3 +18,16 @@
 |16. |cargo-test -- --nocapture  | trpl2 44 |to show the printed values for success case|
 |17. | cargo-test *name_of_the_test_function* | trpl2 44 | to test just that specific test function|
 |18. | #[ignore] | trpl2 44 | added before fn and after #[test] to ignore running that particular test|
+|19. | collect | trpl2 45 | to make a vector of somthing, needs type specification |
+|20. | clone() | trpl2 45 | to make a copy of data using speed and memory, can be avoided |
+|21.| use std::fs::File;| Trpl2 33 | To open a file from local|
+|21.a| fs::read_to_string| Trpl2 33| To read a file intoa string|
+|22. | use std::io::Read;| Trpl2 34 | To open and read a file from local|
+|23. | use super::*|??? | ???|
+|24. | use std::env;|Trpl2 45 | To capture user input passed as parameter|
+|25. | use std::thread; |Trpl2 52| ??? |
+|26. | use std::time::Duration;| Trpl2 53| sleep |
+|27. | move|???|Uses copy trait|
+|28. | Fn| Trpl2 52| ???|
+|29. | FnOnce| Trpl2 52| ???|
+|30. | FnMut| Trpl2 52| ???|
