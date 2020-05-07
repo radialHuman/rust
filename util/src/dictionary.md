@@ -31,3 +31,13 @@
 |28. | Fn| Trpl2 52| ???|
 |29. | FnOnce| Trpl2 52| ???|
 |30. | FnMut| Trpl2 52| ???|
+|31. |iter()| Trple 55| To traverse through collections with immutable reference|
+|32. |iter_mut()|Trple 55| To traverse through collections with mutable reference|
+|33. |into_iter()|Trple 55| To traverse through collections by taking ownership|
+|34. |.filter() |Trple 55 | To filter a collection|
+|35. |.map() |Trple 55 | To modify all elements a collection|
+|36. |.sum()|Trple 55 | To add up a collection|
+|37. |.collect()|Trple 55 | To finish lazily called functions like filter and map|
+|38. |.zip()|Trple 55 | To make tuples of two collections |
+|39. | >> | ??? | Bit shift|
+|40. |"Unrolling"| Trpl2 55 | Used to optimize for loops but iterating |

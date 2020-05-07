@@ -10,7 +10,9 @@
 // mod _45_46_grep1;
 // mod _47_48_grep2; // incomplete
 // ...
-mod _52_53_54_clousure;
+// mod _52_53_54_clousure;
+// mod _55_56_iteratos;
+mod _57_iterators_vs_loops;
 
 fn main() {
     // _33_error_handling_1::function();
@@ -25,5 +27,7 @@ fn main() {
     // _45_46_grep1::function();
     // _47_48_grep2::function(); // incomplete
     // ...
-    _52_53_54_clousure::function(); // ??? cacher
+    // _52_53_54_clousure::function(); // ??? cacher
+    // _55_56_iteratos::function(); // ??? Customize iterator trait
+    _57_iterators_vs_loops::function();
 }
