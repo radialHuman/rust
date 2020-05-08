@@ -12,7 +12,11 @@
 // ...
 // mod _52_53_54_clousure;
 // mod _55_56_iteratos;
-mod _57_iterators_vs_loops;
+// mod _57_iterators_vs_loops;
+// ...
+// mod _64_box;
+// mod _65_deref;
+mod _66_drop;
 
 fn main() {
     // _33_error_handling_1::function();
@@ -29,5 +33,9 @@ fn main() {
     // ...
     // _52_53_54_clousure::function(); // ??? cacher
     // _55_56_iteratos::function(); // ??? Customize iterator trait
-    _57_iterators_vs_loops::function();
+    // _57_iterators_vs_loops::function();
+    // ...
+    // _64_box::function();
+    // _65_deref::function();
+    _66_drop::function();
 }

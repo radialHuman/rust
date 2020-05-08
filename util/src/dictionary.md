@@ -41,3 +41,7 @@
 |38. |.zip()|Trple 55 | To make tuples of two collections |
 |39. | >> | ??? | Bit shift|
 |40. |"Unrolling"| Trpl2 55 | Used to optimize for loops but iterating |
+|41. | Box<T>| Trpl2 64| Smart pointer to store value on heap and pointer on stack|
+|42. | Deref coersion| Trpl2 65| Uses automatic conversion of type ex: &String to &str|
+|43. | Associative types |???|???|
+|44. | Double free error| Trpl2 66| When destructor like drop is called and drop of the same value occurs when it goes out of scope |
