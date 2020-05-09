@@ -1,10 +1,10 @@
 |# | Keyword/Function | From | Explanation |
 |-|-|-|-|
-|1. |use std::io::ErrorKind | trpl2 33 | Type of error using err.kind(), other_kind|
-|2. |unwrap_or_else(\|x\| {}) | trpl2  33 | used to handle error and reduce nested match expressions|
-|3. |unwrap()| trpl2 34 | to do match and panic in a shorter way|
-|4. |except("")| trpl2 34 | to do unwrap() in a searchable way with unique message|
-|5. |read_to_string() | trpl2 34 | to read contents of a read file, after File::open()|
+|1. | use std::io::ErrorKind | trpl2 33 | Type of error using err.kind(), other_kind|
+|2. | unwrap_or_else(\|x\| {}) | trpl2  33 | used to handle error and reduce nested match expressions|
+|3. | unwrap()| trpl2 34 | to do match and panic in a shorter way|
+|4. | except("")| trpl2 34 | to do unwrap() in a searchable way with unique message|
+|5. | read_to_string() | trpl2 34 | to read contents of a read file, after File::open()|
 |6. | ? | trpl2 34 | after an actions to check if it was scuccessful or will it propagate error, also changes error  type as per functions return type |
 |7. | dyn Error | trpl2 34 | from use std::error::Error ??? |
 |8. | panic!("") | trpl2 35 | error handling |
@@ -31,17 +31,33 @@
 |28. | Fn| Trpl2 52| ???|
 |29. | FnOnce| Trpl2 52| ???|
 |30. | FnMut| Trpl2 52| ???|
-|31. |iter()| Trple 55| To traverse through collections with immutable reference|
-|32. |iter_mut()|Trple 55| To traverse through collections with mutable reference|
-|33. |into_iter()|Trple 55| To traverse through collections by taking ownership|
-|34. |.filter() |Trple 55 | To filter a collection|
-|35. |.map() |Trple 55 | To modify all elements a collection|
-|36. |.sum()|Trple 55 | To add up a collection|
-|37. |.collect()|Trple 55 | To finish lazily called functions like filter and map|
-|38. |.zip()|Trple 55 | To make tuples of two collections |
+|31. | iter()| Trple 55| To traverse through collections with immutable reference|
+|32. | iter_mut()|Trple 55| To traverse through collections with mutable reference|
+|33. | into_iter()|Trple 55| To traverse through collections by taking ownership|
+|34. | .filter() |Trple 55 | To filter a collection|
+|35. | .map() |Trple 55 | To modify all elements a collection|
+|36. | .sum()|Trple 55 | To add up a collection|
+|37. | .collect()|Trple 55 | To finish lazily called functions like filter and map|
+|38. | .zip()|Trple 55 | To make tuples of two collections |
 |39. | >> | ??? | Bit shift|
-|40. |"Unrolling"| Trpl2 55 | Used to optimize for loops but iterating |
+|40. | "Unrolling"| Trpl2 55 | Used to optimize for loops but iterating |
 |41. | Box<T>| Trpl2 64| Smart pointer to store value on heap and pointer on stack|
 |42. | Deref coersion| Trpl2 65| Uses automatic conversion of type ex: &String to &str|
 |43. | Associative types |???|???|
 |44. | Double free error| Trpl2 66| When destructor like drop is called and drop of the same value occurs when it goes out of scope |
+|45. | std::rc::Rc| Trpl2 67| Smart Pointer (SP) To have multiple reference |
+|46. | Rc::clone(& *variable*)| Trpl2 67| Reference counting of a variable, cloning pointer referencing to heap memory |
+|47. | Rc::strong_count(& *variable*)| Trpl2 67| Shows the current # of references to the variable |
+|48. | RefCell<T>| Trpl2 68|use std::cell::RefCell; to mutate immutable objects (unsafe)|
+|48. | Cell<T>| Trpl2 68|use std::cell::RefCell; to get data in and out (unsafe)|
+|49. | .borrow() |Trpl2 68| Used instead of & while using RefCell; has SP Ref<T> and Deref|
+|50. | .borrow_mut() |Trpl2 68| Used instead of &mut while using RefCell; has SP RefMut<T> and Deref|
+|51. | thread::spawn(||)| Trpl2 71| Thread related API |
+|52. | thread::sleep(Duration::from_secs())| Trpl2 71| To sleep|
+|53. | spawner.join().unwrap();| Trpl2 71| To block the thread and move on once its over|
+|54. | thread::spawn(move \|\| {})| Trpl2 71| TO use environment variable in thread, it has to tkae ownership and cant borro as its not sure when the variable would get dropped|
+|55. | std::sync::mpsc::channel;| Trpl2 72| TO create channel *multi producer single consumer*|
+|56. | tx.send(value).unwrap();| Trpl2 72| To send value via transmitter form a thread|
+|57. | rx.recv().unwrap();| Trpl2 72| To receive value sent via tx; blocks main thread until the value is sent |
+|58. | rx.try_recv().unwrap();| Trpl2 72| To receive value sent via tx; does not block while the main thread can do soem other operations|
+|59. |tx1 = mpsc::Sender::clone(&tx)| Trpl2 72| To clone a tx|

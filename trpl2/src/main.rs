@@ -16,7 +16,13 @@
 // ...
 // mod _64_box;
 // mod _65_deref;
-mod _66_drop;
+// mod _66_drop;
+// mod _67_Rc;
+// mod _68_69_RefCell;
+// ...
+// mod _71_concurrency;
+// mod _72_channels;
+mod _73_concurrency;
 
 fn main() {
     // _33_error_handling_1::function();
@@ -37,5 +43,11 @@ fn main() {
     // ...
     // _64_box::function();
     // _65_deref::function();
-    _66_drop::function();
+    // _66_drop::function();
+    // _67_Rc::function();
+    // _68_69_RefCell::function(); // ???
+    // ...
+    // _71_concurrency::function();
+    // _72_channels::function();
+    _73_concurrency::function();
 }
