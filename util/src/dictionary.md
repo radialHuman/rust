@@ -60,4 +60,8 @@
 |56. | tx.send(value).unwrap();| Trpl2 72| To send value via transmitter form a thread|
 |57. | rx.recv().unwrap();| Trpl2 72| To receive value sent via tx; blocks main thread until the value is sent |
 |58. | rx.try_recv().unwrap();| Trpl2 72| To receive value sent via tx; does not block while the main thread can do soem other operations|
-|59. |tx1 = mpsc::Sender::clone(&tx)| Trpl2 72| To clone a tx|
+|59. | tx1 = mpsc::Sender::clone(&tx)| Trpl2 72| To clone a tx|
+|60. | use std::sync::Mutex; | Trpl2 73| Mutex for shared data concurrency |
+|61. | std::sync::Arc; | Trpl2 73| Smart Pointer (SP) Atomic reference counter To have multiple reference for mutex |
+|62. | Send | Trpl2 74| Trait from std::marker for concurrancy sending|
+|63. | Sync | Trpl2 74| Trait from std::marker for concurrancy syncing|

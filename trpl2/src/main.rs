@@ -22,7 +22,11 @@
 // ...
 // mod _71_concurrency;
 // mod _72_channels;
-mod _73_concurrency;
+// mod _73_concurrency;
+// mod _74_send_sync;
+// mod _76_Oops_trait;
+// ...
+// mod _79_80_81_pattern_matching;
 
 fn main() {
     // _33_error_handling_1::function();
@@ -49,5 +53,9 @@ fn main() {
     // ...
     // _71_concurrency::function();
     // _72_channels::function();
-    _73_concurrency::function();
+    // _73_concurrency::function(); // Revisit  required
+    // _74_send_sync::function();
+    // _76_Oops_trait::function(); // incomplete
+    // ...
+    // _79_80_81_pattern_matching::function();
 }
