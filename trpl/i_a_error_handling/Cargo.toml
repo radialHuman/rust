@@ -1,9 +1,0 @@
-[package]
-name = "i_a_error_handling"
-version = "0.1.0"
-authors = ["radialHuman <52597852+radialHuman@users.noreply.github.com>"]
-edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
