@@ -12,9 +12,7 @@ use rand::*;
 fn main() {
     // matrix_lib.rs
 
-    // ReLU check
     let v1 = vec![1., 2., 5., 8., 3., 7., 5., -2., -3., -5.];
-
     let mut v2 = vec![1, 6, 2, 7, 3, 7, 99, 6, 3, 6, -12, -34];
 
     // vector addition check
@@ -60,6 +58,23 @@ fn main() {
     // ACTIVATION FUCNTION ReLU
     println!("ReLU of {:?} is {:?}", v1, nn_lib::activation_relu(&v1));
 
+    // ACTIVATION FUNCTION Leaky ReLU
+    println!(
+        "Leaky ReLU of {:?} with alpha 0.1 is {:?}",
+        v1,
+        nn_lib::activation_leaky_relu(&v1, 0.1)
+    );
+
+    // ACTIVATION FUNCTION Sigmoid
+    println!(
+        "Sigmoid of {:?} is {:?}",
+        v1,
+        nn_lib::activation_sigmoid(&v1)
+    );
+
+    // ACTIVATION FUNCTION TanH
+    println!("TanH of {:?} is {:?}", v1, nn_lib::activation_tanh(&v1));
+
     // Creating neuron
     let n_features = 6;
     let layer_1 = LayerDetails {
@@ -91,6 +106,11 @@ fn main() {
     matrix_lib::print_a_matrix("\nOutput generated is :", &output);
 }
 
+// fn main() {
+//     let v1 = vec![1., 2., 5., 0.8, 3., 7., 5., -2., -3., -5.];
+//     println!("Tanh of {:?} is {:?}", v1, nn_lib::activation_tanh(&v1));
+// }
+
 /* OUTPUT
 The changed vector is [1, 2, 5, 8, 3, 7, 5, -2, -3, -5, 0, 0]
 The addition of of [1.0, 2.0, 5.0, 8.0, 3.0, 7.0, 5.0, -2.0, -3.0, -5.0] with [1, 6, 2, 7, 3, 7, 99, 6, 3, 6, -12, -34] is: [2, 8, 7, 15, 6, 14, 104, 4, 0, 1]
@@ -120,6 +140,10 @@ The multiplicaiton of [[1, 4, 4], [5, 8, 9], [0, 1, 6]] and [[1, 4, 4, 5], [5, 8
 
 
 ReLU of [1.0, 2.0, 5.0, 8.0, 3.0, 7.0, 5.0, -2.0, -3.0, -5.0] is [1.0, 2.0, 5.0, 8.0, 3.0, 7.0, 5.0, 0.0, 0.0, 0.0]
+ReLU of [1.0, 2.0, 5.0, 8.0, 3.0, 7.0, 5.0, -2.0, -3.0, -5.0] is [1.0, 2.0, 5.0, 8.0, 3.0, 7.0, 5.0, 0.0, 0.0, 0.0]
+Leaky ReLU of [1.0, 2.0, 5.0, 8.0, 3.0, 7.0, 5.0, -2.0, -3.0, -5.0] with alpha 0.1 is [1.0, 2.0, 5.0, 8.0, 3.0, 7.0, 5.0, -0.2, -0.30000000000000004, -0.5]
+Sigmoid of [1.0, 2.0, 5.0, 8.0, 3.0, 7.0, 5.0, -2.0, -3.0, -5.0] is [0.2689414213699951, 0.11920292202211755, 0.0066928509242848554, 0.0003353501304664781, 0.04742587317756678, 0.0009110511944006454, 0.0066928509242848554, 0.8807970779778823, 0.9525741268224334, 0.9933071490757153]
+Tanh of [1.0, 2.0, 5.0, 0.8, 3.0, 7.0, 5.0, -2.0, -3.0, -5.0] is [0.7615941559557649, 0.964027580075817, 0.999909204262595, 0.664036770267849, 0.9950547536867306, 0.9999983369439447, 0.999909204262595, -0.964027580075817, -0.9950547536867306, -0.999909204262595]
 
 Input generated is :
 [2.841796917427054, -9.642429895883167, 5.947542422193642, -0.7089463523840234, 5.859383897766733, -6.2538797189982365]

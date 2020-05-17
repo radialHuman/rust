@@ -2,6 +2,11 @@ use math::round;
 use rand::*;
 
 use crate::matrix_lib::*;
+
+/*
+Activation from : https://ml-cheatsheet.readthedocs.io/en/latest/activation_functions.html
+Neuron : nnfs
+*/
 pub struct LayerDetails {
     pub n_inputs: usize,
     pub n_neurons: i32,
@@ -59,5 +64,49 @@ where
     input
         .iter()
         .map(|x| if *x > zero { *x } else { *x - *x })
+        .collect()
+}
+
+pub fn activation_leaky_relu<T>(input: &Vec<T>, alpha: f64) -> Vec<T>
+where
+    T: Copy + std::cmp::PartialOrd + std::ops::Mul<Output = T> + std::str::FromStr,
+    <T as std::str::FromStr>::Err: std::fmt::Debug,
+{
+    // Leaky ReLU for neurons, where alpha is multiplied with x if x <= 0
+    // to avoid making it completely 0 like in ReLU
+    let zero = "0".parse::<T>().unwrap();
+    let a = format!("{}", alpha).parse::<T>().unwrap();
+    input
+        .iter()
+        .map(|x| if *x > zero { *x } else { a * *x })
+        .collect()
+}
+
+pub fn activation_sigmoid<T>(input: &Vec<T>) -> Vec<f64>
+where
+    T: std::str::FromStr + std::fmt::Debug,
+    <T as std::str::FromStr>::Err: std::fmt::Debug,
+{
+    // Sigmoid for neurons
+    input
+        .iter()
+        .map(|x| 1. / (1. + format!("{:?}", x).parse::<f64>().unwrap().exp()))
+        .collect()
+}
+
+pub fn activation_tanh<T>(input: &Vec<T>) -> Vec<f64>
+where
+    T: std::str::FromStr + std::fmt::Debug,
+    <T as std::str::FromStr>::Err: std::fmt::Debug,
+{
+    // TanH for neurons
+    input
+        .iter()
+        .map(|x| {
+            (format!("{:?}", x).parse::<f64>().unwrap().exp()
+                - (format!("{:?}", x).parse::<f64>().unwrap() * (-1.)).exp())
+                / (format!("{:?}", x).parse::<f64>().unwrap().exp()
+                    + (format!("{:?}", x).parse::<f64>().unwrap() * (-1.)).exp())
+        })
         .collect()
 }
