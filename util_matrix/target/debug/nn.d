@@ -1,1 +1,1 @@
-C:\Users\rahul.damani\Downloads\code\rust\nn\target\debug\nn.exe: C:\Users\rahul.damani\Downloads\code\rust\nn\src\main.rs C:\Users\rahul.damani\Downloads\code\rust\nn\src\matrix_lib.rs
+C:\Users\rahul.damani\Downloads\code\rust\util_matrix\target\debug\nn.exe: C:\Users\rahul.damani\Downloads\code\rust\util_matrix\src\main.rs C:\Users\rahul.damani\Downloads\code\rust\util_matrix\src\matrix_lib.rs C:\Users\rahul.damani\Downloads\code\rust\util_matrix\src\nn_lib.rs

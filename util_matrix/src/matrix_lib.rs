@@ -1,16 +1,3 @@
-pub fn activation_relu<T>(input: &Vec<T>) -> Vec<T>
-where
-    T: Copy + std::cmp::PartialOrd + std::ops::Sub<Output = T> + std::str::FromStr,
-    <T as std::str::FromStr>::Err: std::fmt::Debug,
-{
-    // ReLU for neurons
-    let zero = "0".parse::<T>().unwrap();
-    input
-        .iter()
-        .map(|x| if *x > zero { *x } else { *x - *x })
-        .collect()
-}
-
 pub fn print_a_matrix<T: std::fmt::Debug>(string: &str, matrix: &Vec<Vec<T>>) {
     // To print a matrix in a manner that resembles a matrix
     println!("{}", string);
