@@ -7,5 +7,5 @@ ALIASES["ppv_lite86"] = {};
 ALIASES["rand"] = {};
 ALIASES["rand_chacha"] = {};
 ALIASES["rand_core"] = {};
-ALIASES["util_ml"] = {};
+ALIASES["simple_ml"] = {};
 ALIASES["winapi"] = {};
