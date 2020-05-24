@@ -3,6 +3,8 @@ name = "util_ml"
 version = "0.1.0"
 authors = ["rd2575691 <52597852+rd2575691@users.noreply.github.com>"]
 edition = "2018"
+description = "Functions required for data analysis and machine learning tasks"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
