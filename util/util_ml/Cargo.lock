@@ -39,14 +39,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "nn"
-version = "0.1.0"
-dependencies = [
- "libmath",
- "rand 0.7.3",
-]
-
-[[package]]
 name = "ppv-lite86"
 version = "0.2.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -138,6 +130,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "678054eb77286b51581ba43620cc911abf02758c91f93f479767aed0f90458b2"
 dependencies = [
  "rand_core 0.3.1",
+]
+
+[[package]]
+name = "util_ml"
+version = "0.1.0"
+dependencies = [
+ "libmath",
+ "rand 0.7.3",
 ]
 
 [[package]]

@@ -45,12 +45,18 @@ FUNCTIONS
     > 1. _
     = 1. str
 10. unique_values : of a Vector
-    > 1. A &Vec<T>
+    > 1. list : A &Vec<T>
     = 1. Vec<T>
 11. variance :
-    > 1. list1 : A &Vec<T>
+    > 1. list : A &Vec<T>
     = 1. f64
-
+12. turn_string_categorical :
+    > 1. list : A &Vec<T>
+    > 2. extra_class : bool if true more than 10 classes else less
+    = Vec<usize>
+13. value_counts :
+    > 1. list : A &Vec<T>
+    = HashMap<T, u32>
 */
 
 use crate::lib_matrix;
@@ -77,48 +83,6 @@ where
         .parse()
         .unwrap()
 }
-
-// pub fn median<T>(list: &Vec<T>) -> f64
-// where
-//     T: Copy
-//         + std::cmp::PartialOrd
-//         + std::ops::Rem<T, Output = T>
-//         + std::ops::Div<T, Output = T>
-//         + std::ops::Add<T, Output = T>
-//         + std::ops::Sub<T, Output = T>
-//         + std::string::ToString
-//         + std::str::FromStr,
-//     <T as std::str::FromStr>::Err: std::fmt::Debug,
-// {
-//     let mut output = list.clone();
-//     // println!("Issue found in 1");
-//     output.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap());
-//     // println!("Issue found in 2");
-//     let zero: T = "0".parse().unwrap();
-//     // println!("Issue found in 3");
-//     let half = 0.5;
-//     // println!("Issue found in 4");
-//     let two: T = "2".parse().unwrap();
-//     // println!("Issue found in 5");
-//     let len_str: T = output.len().to_string().parse().unwrap();
-//     if len_str % two == zero {
-//         let middle_of_list: usize = (len_str / two).to_string().parse().unwrap();
-//         if output[middle_of_list] == output[middle_of_list + 1] {
-//             println!("Issue found in 6");
-//             output[middle_of_list].to_string().parse().unwrap()
-//         } else {
-//             println!("Issue found in 7");
-//             (output[middle_of_list - 1]).to_string().parse().unwrap()
-//         }
-//     } else {
-//         let middle_of_list: usize = ((len_str / two) - half.to_string().parse().unwrap())
-//             .to_string()
-//             .parse()
-//             .unwrap();
-//         println!("Issue found in 8");
-//         output[middle_of_list].to_string().parse().unwrap()
-//     }
-// }
 
 pub fn variance<T>(list: &Vec<T>) -> f64
 where
@@ -341,7 +305,6 @@ pub fn unique_values<T>(list: &Vec<T>) -> Vec<T>
 where
     T: std::cmp::PartialEq + Copy,
 {
-    println!("========================================================================================================================================================");
     let mut output = vec![];
     for i in list.iter() {
         if output.contains(i) {
@@ -350,4 +313,34 @@ where
         };
     }
     output
+}
+
+pub fn turn_string_categorical<T>(list: &Vec<T>, extra_class: bool) -> Vec<usize>
+where
+    T: std::cmp::PartialEq + std::cmp::Eq + std::hash::Hash + Copy,
+{
+    println!("========================================================================================================================================================");
+    let values = unique_values(&list);
+    if extra_class == true && values.len() > 10 {
+        println!("The number of classe will be more than 10");
+    } else {
+        ();
+    }
+    let mut map: HashMap<&T, usize> = HashMap::new();
+    for (n, i) in values.iter().enumerate() {
+        map.insert(i, n + 1);
+    }
+    list.iter().map(|a| map[a]).collect()
+}
+
+pub fn value_counts<T>(list: &Vec<T>) -> HashMap<T, u32>
+where
+    T: std::cmp::PartialEq + std::cmp::Eq + std::hash::Hash + Copy,
+{
+    println!("========================================================================================================================================================");
+    let mut count: HashMap<T, u32> = HashMap::new();
+    for i in list {
+        count.insert(*i, 1 + if count.contains_key(i) { count[i] } else { 0 });
+    }
+    count
 }

@@ -183,6 +183,17 @@ fn main() {
         "Now the unique classes are {:?}",
         lib_ml::unique_values(&lib_ml::impute_string(&mut species, "UNKNOWN")) // converting String to &str as copy is not implemented for String
     );
+
+    println!(
+        "Categorized {:?} is now {:?}",
+        &df["species"],
+        lib_ml::turn_string_categorical(&df["species"].iter().map(|a| &*a).collect(), false)
+    );
+
+    println!(
+        "The value count of SPECIES is {:?}",
+        lib_ml::value_counts(&df["species"].iter().map(|a| &*a).collect())
+    );
     //================================================================================================================
     section_break("ML OVER");
 }
@@ -195,7 +206,7 @@ pub fn section_break(display: &str) {
     println!("");
     println!("");
     println!("========================================================================================================================================================================");
-    println!("                                          {:?}", display);
+    println!("                                                                                          {:?}", display);
     println!("========================================================================================================================================================================");
     println!("");
     println!("");
@@ -307,9 +318,14 @@ is now
 ========================================================================================================================================================
 Missing value found in 11th position of the vector
 ========================================================================================================================================================
-Now the unique classes are ["setosa", "UNKNOWN", "versicolor", "virginica"]
+Now the unique classes are ["setosa", "versicolor", "virginica"]
+========================================================================================================================================================
+Categorized ["setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "setosa", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "versicolor", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica",
+"virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica", "virginica"] is now [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+========================================================================================================================================================
+The value count of SPECIES is {"versicolor": 50, "setosa": 50, "virginica": 50}
 
 
-========================================================================================================================================================================                                          "ML OVER"
+========================================================================================================================================================================                                                                                               "ML OVER"
 ========================================================================================================================================================================
 */

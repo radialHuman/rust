@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["activation_leaky_relu",""],["activation_relu",""],["activation_sigmoid",""],["activation_tanh",""]],"struct":[["LayerDetails",""]]});
