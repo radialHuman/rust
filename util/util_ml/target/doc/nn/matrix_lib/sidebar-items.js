@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["dot_product",""],["element_wise_multiplication",""],["matrix_product",""],["pad_with_zero",""],["print_a_matrix",""],["shape_changer",""],["transpose",""],["vector_addition",""]]});
