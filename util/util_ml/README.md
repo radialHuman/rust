@@ -4,7 +4,6 @@
 ---
 ## List of Functions
 ### lib_matrix
-
     * dot_product
     * element_wise_multiplication
     * matrix_product
@@ -14,7 +13,6 @@
     * transpose
     * vector_addition
 ### lib_ml
-
     * coefficient
     * convert_and_impute
     * covariance
@@ -29,6 +27,7 @@
     * value_counts
     * variance
 ### lib_nn
+    * create_layer (Struct)
     * activation_leaky_relu
     * activation_relu
     * activation_sigmoid
