@@ -5,10 +5,10 @@ authors = ["rd2575691 <52597852+rd2575691@users.noreply.github.com>"]
 edition = "2018"
 description = "Functions required for data analysis and machine learning tasks"
 license = "MIT"
-# documentation = "https://docs.rs/crate/simple_ml/"
+#documentation = "https://docs.rs/crate/simple_ml/"
 repository = "https://github.com/radialHuman/rust/tree/master/util/util_ml/"
-
-
+readme = "README.md"
+keywords = ["ml", "data analysis","eda", "machine learning","simple"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
