@@ -134,7 +134,7 @@ dependencies = [
 
 [[package]]
 name = "simple_ml"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "libmath",
  "rand 0.7.3",
