@@ -1,0 +1,20 @@
+DESCRIPTION
+-----------------------------------------
+STRUCTS
+-------
+1. Struct name : Struct description
+    > 1. Function 1 : Function 1 description
+    > 2. Function 1 : Function 1 description
+FUNCTIONS
+---------
+1. Function name 1 : Function 2 description (optional)
+    > 1. Variable name 1 : Input 1 type Input 2 description
+    > 2. Variable name 2 : Input 1 type Input 2 description
+    = 1. Output 1
+    = 2. Output 2
+1. Function name 2 : Function 2 description (optional)
+    > 1. Variable name 1 : Input 1 type Input 2 description
+    > 2. Variable name 2 : Input 1 type Input 2 description
+    = 1. Output 1
+    = 2. Output 2
+
