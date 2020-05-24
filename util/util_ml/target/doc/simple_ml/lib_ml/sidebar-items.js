@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["coefficient",""],["convert_and_impute",""],["covariance",""],["impute_string",""],["mean",""],["read_csv",""],["root_mean_square",""],["simple_linear_regression_prediction",""],["turn_string_categorical",""],["type_of",""],["unique_values",""],["value_counts",""],["variance",""]]});
