@@ -37,6 +37,32 @@ FUNCTIONS
     > 1. A &Vec<T>
     > 2. A &Vec<T>
     = 1. Vec<T>
+9. make_matrix_float :
+    > 1. input: A &Vec<Vec<T>>
+    = Vec<Vec<f64>>
+10. make_vector_float :
+    > 1. input: &Vec<T>
+    = Vec<f64>
+11. round_off_f :
+    > 1. value: f64
+    > 2. decimals: i32
+    = f64
+12. unique_values : of a Vector
+    > 1. list : A &Vec<T>
+    = 1. Vec<T>
+13. value_counts :
+    > 1. list : A &Vec<T>
+    = HashMap<T, u32>
+14. is_numerical :
+    > 1. value: T
+    = bool
+15. min_max_f :
+    > 1. list: A &Vec<f64>
+    = (f64, f64)
+16. type_of : To know the type of a variable
+    > 1. _
+    = 1. str
+
 */
 
 pub fn print_a_matrix<T: std::fmt::Debug>(string: &str, matrix: &Vec<Vec<T>>) {
@@ -233,46 +259,20 @@ FUNCTIONS
     > 1. train : A &Vec<(T,T)>
     > 2. test : A &Vec<(T,T)>
     = 1. Vec<T>
-9. type_of : To know the type of a variable
-    > 1. _
-    = 1. str
-10. unique_values : of a Vector
-    > 1. list : A &Vec<T>
-    = 1. Vec<T>
-11. variance :
+9. variance :
     > 1. list : A &Vec<T>
     = 1. f64
-12. turn_string_categorical :
+10. turn_string_categorical :
     > 1. list : A &Vec<T>
     > 2. extra_class : bool if true more than 10 classes else less
     = Vec<usize>
-13. value_counts :
-    > 1. list : A &Vec<T>
-    = HashMap<T, u32>
-14. is_numerical :
-    > 1. value: T
-    = bool
-15. min_max_f :
-    > 1. list: A &Vec<f64>
-    = (f64, f64)
-16. normalize_vector_f : between [0.,1.]
+11. normalize_vector_f : between [0.,1.]
     > 1. list: A &Vec<f64>
     = Vec<f64>
-17. logistic_function_f :
+12. logistic_function_f :
     > 1. matrix: A &Vec<Vec<f64>>
     > 2. beta: A &Vec<Vec<f64>>
-    = Vec<Vec<f64>>
-18. make_matrix_float :
-    > 1. input: A &Vec<Vec<T>>
-    = Vec<Vec<f64>>
-19. make_vector_float :
-    > 1. input: &Vec<T>
-    = Vec<f64>
-20. round_off_f :
-    > 1. value: f64
-    > 2. decimals: i32
-    = f64
-*/
+    = Vec<Vec<f64>>*/
 
 // use crate::lib_matrix;
 // use lib_matrix::*;

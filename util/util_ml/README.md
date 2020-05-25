@@ -11,6 +11,14 @@
     6. shape_changer
     7. transpose
     8. vector_addition
+    9. make_matrix_float
+    10. make_vector_float
+    11. round_off_f
+    12. unique_values
+    13. value_counts
+    14. is_numerical
+    15. min_max_f
+    16. type_of
 ### lib_ml
     1. coefficient
     2. convert_and_impute
@@ -21,17 +29,9 @@
     7. root_mean_square
     8. simple_linear_regression_prediction
     9. turn_string_categorical
-    10. type_of
-    11. unique_values
-    12. value_counts
-    13. variance
-    14. is_numerical
-    15. min_max_f
-    16. normalize_vector_f
-    17. logistic_function_f
-    18. make_matrix_float
-    19. make_vector_float
-    20. round_off_f
+    10. variance
+    11. normalize_vector_f
+    12. logistic_function_f
 ### lib_nn
     1. create_layer (Struct)
 

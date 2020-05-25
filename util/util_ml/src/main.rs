@@ -159,7 +159,7 @@ fn main() {
     // unique values
     println!(
         "Unique classes are {:?}",
-        lib_ml::unique_values(&df["species"].iter().map(|a| &*a).collect()) // converting String to &str as copy is not implemented for String
+        lib_matrix::unique_values(&df["species"].iter().map(|a| &*a).collect()) // converting String to &str as copy is not implemented for String
     );
 
     // type conversion and missing value replacement
@@ -182,7 +182,7 @@ fn main() {
     // unique values
     println!(
         "Now the unique classes are {:?}",
-        lib_ml::unique_values(&lib_ml::impute_string(&mut species, "UNKNOWN")) // converting String to &str as copy is not implemented for String
+        lib_matrix::unique_values(&lib_ml::impute_string(&mut species, "UNKNOWN")) // converting String to &str as copy is not implemented for String
     );
 
     // string to categories
@@ -195,12 +195,12 @@ fn main() {
     // unique value count (pivot)
     println!(
         "The value count of SPECIES is {:?}",
-        lib_ml::value_counts(&df["species"].iter().map(|a| &*a).collect())
+        lib_matrix::value_counts(&df["species"].iter().map(|a| &*a).collect())
     );
 
     // maximum and minimum
     let arr = vec![1., 2., 3., -5., -7., 0.];
-    let (min, max) = lib_ml::min_max_f(&arr);
+    let (min, max) = lib_matrix::min_max_f(&arr);
     println!("In {:?}\nminimum is {} and maximum is {}", arr, min, max);
 
     // normalize vector
@@ -217,14 +217,14 @@ fn main() {
         "{:?}\n{:?}\nBecomes {:?}\n using logistic fucntion ",
         matrix,
         beta,
-        lib_ml::logistic_function_f(&lib_ml::make_matrix_float(&matrix), &beta)
+        lib_ml::logistic_function_f(&lib_matrix::make_matrix_float(&matrix), &beta)
     );
 
     // make vector float
     println!(
         "{:?}\n converted to float: {:?}",
         matrix[0],
-        lib_ml::make_vector_float(&matrix[0])
+        lib_matrix::make_vector_float(&matrix[0])
     );
 
     // round off
@@ -232,7 +232,7 @@ fn main() {
         "Rounding of {} by {} = {}",
         3.14267864,
         4,
-        lib_ml::round_off_f(3.14267864, 4)
+        lib_matrix::round_off_f(3.14267864, 4)
     );
 
     //================================================================================================================

@@ -41,45 +41,21 @@ FUNCTIONS
     > 1. train : A &Vec<(T,T)>
     > 2. test : A &Vec<(T,T)>
     = 1. Vec<T>
-9. type_of : To know the type of a variable
-    > 1. _
-    = 1. str
-10. unique_values : of a Vector
-    > 1. list : A &Vec<T>
-    = 1. Vec<T>
-11. variance :
+9. variance :
     > 1. list : A &Vec<T>
     = 1. f64
-12. turn_string_categorical :
+10. turn_string_categorical :
     > 1. list : A &Vec<T>
     > 2. extra_class : bool if true more than 10 classes else less
     = Vec<usize>
-13. value_counts :
-    > 1. list : A &Vec<T>
-    = HashMap<T, u32>
-14. is_numerical :
-    > 1. value: T
-    = bool
-15. min_max_f :
-    > 1. list: A &Vec<f64>
-    = (f64, f64)
-16. normalize_vector_f : between [0.,1.]
+11. normalize_vector_f : between [0.,1.]
     > 1. list: A &Vec<f64>
     = Vec<f64>
-17. logistic_function_f :
+12. logistic_function_f :
     > 1. matrix: A &Vec<Vec<f64>>
     > 2. beta: A &Vec<Vec<f64>>
     = Vec<Vec<f64>>
-18. make_matrix_float :
-    > 1. input: A &Vec<Vec<T>>
-    = Vec<Vec<f64>>
-19. make_vector_float :
-    > 1. input: &Vec<T>
-    = Vec<f64>
-20. round_off_f :
-    > 1. value: f64
-    > 2. decimals: i32
-    = f64
+
 */
 
 use crate::lib_matrix;
@@ -319,25 +295,6 @@ pub fn impute_string<'a>(list: &'a mut Vec<String>, impute_with: &'a str) -> Vec
         .collect()
 }
 
-use std::any::type_name;
-pub fn type_of<T>(_: T) -> &'static str {
-    type_name::<T>()
-}
-
-pub fn unique_values<T>(list: &Vec<T>) -> Vec<T>
-where
-    T: std::cmp::PartialEq + Copy,
-{
-    let mut output = vec![];
-    for i in list.iter() {
-        if output.contains(i) {
-        } else {
-            output.push(*i)
-        };
-    }
-    output
-}
-
 pub fn turn_string_categorical<T>(list: &Vec<T>, extra_class: bool) -> Vec<usize>
 where
     T: std::cmp::PartialEq + std::cmp::Eq + std::hash::Hash + Copy,
@@ -356,65 +313,6 @@ where
     list.iter().map(|a| map[a]).collect()
 }
 
-pub fn value_counts<T>(list: &Vec<T>) -> HashMap<T, u32>
-where
-    T: std::cmp::PartialEq + std::cmp::Eq + std::hash::Hash + Copy,
-{
-    println!("========================================================================================================================================================");
-    let mut count: HashMap<T, u32> = HashMap::new();
-    for i in list {
-        count.insert(*i, 1 + if count.contains_key(i) { count[i] } else { 0 });
-    }
-    count
-}
-
-pub fn is_numerical<T>(value: T) -> bool {
-    if type_of(&value) == "&i32"
-        || type_of(&value) == "&i8"
-        || type_of(&value) == "&i16"
-        || type_of(&value) == "&i64"
-        || type_of(&value) == "&i128"
-        || type_of(&value) == "&f64"
-        || type_of(&value) == "&f32"
-        || type_of(&value) == "&u32"
-        || type_of(&value) == "&u8"
-        || type_of(&value) == "&u16"
-        || type_of(&value) == "&u64"
-        || type_of(&value) == "&u128"
-        || type_of(&value) == "&usize"
-        || type_of(&value) == "&isize"
-    {
-        true
-    } else {
-        false
-    }
-}
-
-pub fn min_max_f(list: &Vec<f64>) -> (f64, f64) {
-    // check if it is a numerical type
-    println!("========================================================================================================================================================");
-    if type_of(list[0]) == "f64" || type_of(list[0]) == "f32" {
-        let mut positive: Vec<f64> = list
-            .clone()
-            .iter()
-            .filter(|a| **a >= 0.)
-            .map(|a| *a)
-            .collect();
-        let mut negative: Vec<f64> = list
-            .clone()
-            .iter()
-            .filter(|a| **a < 0.)
-            .map(|a| *a)
-            .collect();
-        positive.sort_by(|a, b| a.partial_cmp(b).unwrap());
-        negative.sort_by(|a, b| a.partial_cmp(b).unwrap());
-        println!("{:?}", list);
-        (negative[0], positive[positive.len() - 1])
-    } else {
-        panic!("Input should be a float type");
-    }
-}
-
 pub fn normalize_vector_f(list: &Vec<f64>) -> Vec<f64> {
     println!("========================================================================================================================================================");
     let (minimum, maximum) = min_max_f(&list);
@@ -429,47 +327,4 @@ pub fn logistic_function_f(matrix: &Vec<Vec<f64>>, beta: &Vec<Vec<f64>>) -> Vec<
         .iter()
         .map(|a| a.iter().map(|b| 1. / (1. + ((b * -1.).exp()))).collect())
         .collect()
-}
-
-pub fn make_matrix_float<T>(input: &Vec<Vec<T>>) -> Vec<Vec<f64>>
-where
-    T: std::fmt::Display + Copy,
-{
-    println!("========================================================================================================================================================");
-    input
-        .iter()
-        .map(|a| {
-            a.iter()
-                .map(|b| {
-                    if is_numerical(*b) {
-                        format!("{}", b).parse().unwrap()
-                    } else {
-                        panic!("Non numerical value present in the intput");
-                    }
-                })
-                .collect()
-        })
-        .collect()
-}
-
-pub fn make_vector_float<T>(input: &Vec<T>) -> Vec<f64>
-where
-    T: std::fmt::Display + Copy,
-{
-    println!("========================================================================================================================================================");
-    input
-        .iter()
-        .map(|b| {
-            if is_numerical(*b) {
-                format!("{}", b).parse().unwrap()
-            } else {
-                panic!("Non numerical value present in the intput");
-            }
-        })
-        .collect()
-}
-
-pub fn round_off_f(value: f64, decimals: i32) -> f64 {
-    println!("========================================================================================================================================================");
-    ((value * 10.0f64.powi(decimals)).round()) / 10.0f64.powi(decimals)
 }
