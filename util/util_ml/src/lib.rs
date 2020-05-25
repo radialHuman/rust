@@ -186,6 +186,10 @@ where
     output
 }
 
+//==============================================================================================================================================
+//==============================================================================================================================================
+//==============================================================================================================================================
+
 // https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/
 
 /*
@@ -245,6 +249,18 @@ FUNCTIONS
 13. value_counts :
     > 1. list : A &Vec<T>
     = HashMap<T, u32>
+14. is_numerical :
+    > 1. value: T
+    = bool
+15. min_max_f :
+    > 1. list: A &Vec<f64>
+    = (f64, f64)
+16. min_max :
+    > 1. list: A &Vec<T>
+    = (T, T)
+17. normalize : between [0,1]
+    > 1. list: A &Vec<f64>
+    = Vec<f64>
 */
 
 // use crate::lib_matrix;
@@ -532,6 +548,88 @@ where
     }
     count
 }
+
+pub fn is_numerical<T>(value: T) -> bool {
+    if type_of(&value) == "&i32"
+        || type_of(&value) == "&i8"
+        || type_of(&value) == "&i16"
+        || type_of(&value) == "&i64"
+        || type_of(&value) == "&i128"
+        || type_of(&value) == "&f64"
+        || type_of(&value) == "&f32"
+        || type_of(&value) == "&u32"
+        || type_of(&value) == "&u8"
+        || type_of(&value) == "&u16"
+        || type_of(&value) == "&u64"
+        || type_of(&value) == "&u128"
+        || type_of(&value) == "&usize"
+        || type_of(&value) == "&isize"
+    {
+        true
+    } else {
+        false
+    }
+}
+
+pub fn min_max_f(list: &Vec<f64>) -> (f64, f64) {
+    // check if it is a numerical type
+    if type_of(list[0]) == "f64" || type_of(list[0]) == "f32" {
+        let mut positive: Vec<f64> = list
+            .clone()
+            .iter()
+            .filter(|a| **a >= 0.)
+            .map(|a| *a)
+            .collect();
+        let mut negative: Vec<f64> = list
+            .clone()
+            .iter()
+            .filter(|a| **a < 0.)
+            .map(|a| *a)
+            .collect();
+        positive.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        negative.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        println!("{:?}", list);
+        (negative[0], positive[positive.len() - 1])
+    } else {
+        panic!("Input should be a float type");
+    }
+}
+
+pub fn min_max<T>(list: &Vec<T>) -> (T, T)
+where
+    T: std::cmp::Ord + Copy,
+{
+    if type_of(&list[0]) == "&i32"
+        || type_of(&list[0]) == "&i8"
+        || type_of(&list[0]) == "&i16"
+        || type_of(&list[0]) == "&i64"
+        || type_of(&list[0]) == "&i128"
+        || type_of(&list[0]) == "&u32"
+        || type_of(&list[0]) == "&u8"
+        || type_of(&list[0]) == "&u16"
+        || type_of(&list[0]) == "&u64"
+        || type_of(&list[0]) == "&u128"
+        || type_of(&list[0]) == "&usize"
+        || type_of(&list[0]) == "&isize"
+    {
+        (
+            list.iter().map(|a| *a).min().unwrap(),
+            list.iter().map(|a| *a).max().unwrap(),
+        )
+    } else {
+        panic!("The input should be either int or unsigned")
+    }
+}
+
+pub fn normalize(list: &Vec<f64>) -> Vec<f64> {
+    let (minimum, maximum) = min_max(&list);
+    let range: f64 = maximum - minimum;
+    list.iter().map(|a| 1. - ((maximum - a) / range)).collect()
+}
+
+//==============================================================================================================================================
+//==============================================================================================================================================
+//==============================================================================================================================================
 
 use math::round;
 use rand::*;

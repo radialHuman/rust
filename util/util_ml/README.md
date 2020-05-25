@@ -1,7 +1,6 @@
 ## Description
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
----
 ## List of Functions
 ### lib_matrix
     * dot_product
@@ -26,6 +25,10 @@
     * unique_values
     * value_counts
     * variance
+    * is_numerical
+    * min_max_f
+    * min_max
+    * normalize
 ### lib_nn
     * create_layer (Struct)
     * activation_leaky_relu

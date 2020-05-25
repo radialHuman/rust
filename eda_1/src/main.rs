@@ -5,6 +5,8 @@ use std::io;
 
 use std::any::type_name;
 
+
+
 fn type_of<T>(_: T) -> &'static str {
     type_name::<T>()
 }
@@ -49,6 +51,7 @@ pub struct Table {
 fn main() {
     let columns_count = 26;
     let rows_count = 206;
+    
 
     // reading the file as string
     let x: String = read_file().unwrap();

@@ -1,8 +1,7 @@
 # rust
 | Folder | Description|
 |-|-|
-| general_util |  useful functions in general|
-| matrix_util |  useful generic and well documented functions for matrix and vector manipulation|
+| util |  useful generic and well documented functions for matrix and vector manipulation and more|
 | book_trpl |  https://doc.rust-lang.org/book/ from https://www.youtube.com/watch?v=bR4nGWmfzTk
 | too_many_linked_list |  https://rust-unofficial.github.io/too-many-lists/index.html|
 | eda_1 |  reading in a csv, df.head(), df.column.mean(), df.isnan().sum(), df.column.unique()|

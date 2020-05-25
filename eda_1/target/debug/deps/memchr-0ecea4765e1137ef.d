@@ -1,0 +1,11 @@
+c:\Users\rahul.damani\Downloads\code\rust\eda_1\target\debug\deps\memchr-0ecea4765e1137ef.rmeta: C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\lib.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\fallback.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\iter.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\naive.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\x86\mod.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\x86\avx.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\x86\sse2.rs
+
+c:\Users\rahul.damani\Downloads\code\rust\eda_1\target\debug\deps\memchr-0ecea4765e1137ef.d: C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\lib.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\fallback.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\iter.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\naive.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\x86\mod.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\x86\avx.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\x86\sse2.rs
+
+C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\lib.rs:
+C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\fallback.rs:
+C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\iter.rs:
+C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\naive.rs:
+C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\x86\mod.rs:
+C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\x86\avx.rs:
+C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\memchr-2.3.3\src\x86\sse2.rs:
