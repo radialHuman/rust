@@ -51,11 +51,20 @@ FUNCTIONS
 11. normalize_vector_f : between [0.,1.]
     > 1. list: A &Vec<f64>
     = Vec<f64>
-12. logistic_function_f :
+12. logistic_function_f : sigmoid function
     > 1. matrix: A &Vec<Vec<f64>>
     > 2. beta: A &Vec<Vec<f64>>
     = Vec<Vec<f64>>
-
+13. log_gradient_f :  logistic gradient function
+    > 1. matrix1: A &Vec<Vec<f64>>
+    > 2. beta: A &Vec<Vec<f64>> // same shape as matrix1
+    > 3. matrix2: A &Vec<Vec<f64>> // same shape as matrix1 * beta (square matrix)
+    = Vec<Vec<f64>>
+14. cost_function_f :
+    > 1. matrix1: A &Vec<Vec<f64>>
+    > 2. beta: A &Vec<Vec<f64>> // same shape as matrix1
+    > 3. matrix2: A &Vec<Vec<f64>> // same shape as matrix1 * beta (square matrix)
+    = f64
 */
 
 use crate::lib_matrix;
@@ -327,4 +336,50 @@ pub fn logistic_function_f(matrix: &Vec<Vec<f64>>, beta: &Vec<Vec<f64>>) -> Vec<
         .iter()
         .map(|a| a.iter().map(|b| 1. / (1. + ((b * -1.).exp()))).collect())
         .collect()
+}
+
+pub fn log_gradient_f(
+    matrix1: &Vec<Vec<f64>>,
+    beta: &Vec<Vec<f64>>,
+    matrix2: &Vec<Vec<f64>>,
+) -> Vec<Vec<f64>> {
+    println!("========================================================================================================================================================");
+    //https://www.geeksforgeeks.org/understanding-logistic-regression/
+    let first_calc = matrix_subtraction(&logistic_function_f(matrix1, beta), matrix2);
+    transpose(&matrix_product(&transpose(&first_calc), &matrix1))
+}
+
+pub fn cost_function(
+    matrix1: &Vec<Vec<f64>>,
+    beta: &Vec<Vec<f64>>,
+    matrix2: &Vec<Vec<f64>>,
+) -> f64 {
+    println!("========================================================================================================================================================");
+    //https://www.geeksforgeeks.org/understanding-logistic-regression/
+    let logistic_func_v = logistic_function_f(matrix1, beta);
+    let log_logistic = logistic_func_v
+        .iter()
+        .map(|a| a.iter().map(|b| b.ln()).collect())
+        .collect();
+    let step1 = element_wise_matrix_product(matrix2, &log_logistic);
+    let minus_step1: Vec<Vec<_>> = step1
+        .iter()
+        .map(|a| a.iter().map(|b| b * -1.).collect())
+        .collect();
+    let one_minus_log_logistic = logistic_func_v
+        .iter()
+        .map(|a| a.iter().map(|b| (1. - b).ln()).collect())
+        .collect();
+    let one_minus_matrix2 = matrix2
+        .iter()
+        .map(|a| a.iter().map(|b| 1. - b).collect())
+        .collect();
+    let step2 = element_wise_matrix_product(&one_minus_matrix2, &one_minus_log_logistic);
+    let mut output = 0.;
+    for i in matrix_subtraction(&minus_step1, &step2).iter() {
+        for j in i.iter() {
+            output += j;
+        }
+    }
+    (output / step2.len() as f64) / step2[0].len() as f64
 }

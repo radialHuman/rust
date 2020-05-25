@@ -19,6 +19,9 @@
     14. is_numerical
     15. min_max_f
     16. type_of
+    17. matrix_subtraction
+    18. matrix_addition
+    19. element_wise_matrix_product
 ### lib_ml
     1. coefficient
     2. convert_and_impute
@@ -32,6 +35,8 @@
     10. variance
     11. normalize_vector_f
     12. logistic_function_f
+    13. log_gradient_f
+    14. cost_function_f
 ### lib_nn
     1. create_layer (Struct)
 

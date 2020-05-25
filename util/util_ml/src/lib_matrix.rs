@@ -9,7 +9,7 @@ FUNCTIONS
     > 1. A &Vec<T>
     > 2. A &Vec<T>
     = 1. T
-2. element_wise_multiplication :
+2. element_wise_multiplication : for vector
     > 1. A &mut Vec<T>
     > 2. A &mut Vec<T>
     = 1. Vec<T>
@@ -61,7 +61,19 @@ FUNCTIONS
     = (f64, f64)
 16. type_of : To know the type of a variable
     > 1. _
-    = 1. str
+    = str
+17. matrix_subtraction :
+    > 1. matrix1 : A &Vec<Vec<T>>
+    > 2. matrix2 : A &Vec<Vec<T>>
+    = A &Vec<Vec<T>>
+18. matrix_addition :
+    > 1. matrix1 : A &Vec<Vec<T>>
+    > 2. matrix2 : A &Vec<Vec<T>>
+    = A &Vec<Vec<T>>
+19. element_wise_matrix_product
+    > 1. matrix1 : A &Vec<Vec<T>>
+    > 2. matrix2 : A &Vec<Vec<T>>
+    = A Vec<Vec<T>>
 */
 
 pub fn print_a_matrix<T: std::fmt::Debug>(string: &str, matrix: &Vec<Vec<T>>) {
@@ -331,4 +343,64 @@ where
         };
     }
     output
+}
+
+pub fn matrix_subtraction<T>(matrix1: &Vec<Vec<T>>, matrix2: &Vec<Vec<T>>) -> Vec<Vec<T>>
+where
+    T: Copy + std::ops::Sub<Output = T>,
+{
+    println!("========================================================================================================================================================");
+    let mut output = vec![];
+    if matrix1.len() == matrix2.len() && matrix1[0].len() == matrix2[0].len() {
+        for i in 0..matrix1.len() {
+            let mut row = vec![];
+            for j in 0..matrix1[0].len() {
+                row.push(matrix1[i][j] - matrix2[i][j]);
+            }
+            output.push(row);
+        }
+        output
+    } else {
+        panic!("The matrix are not of same dimensions");
+    }
+}
+
+pub fn matrix_addition<T>(matrix1: &Vec<Vec<T>>, matrix2: &Vec<Vec<T>>) -> Vec<Vec<T>>
+where
+    T: Copy + std::ops::Add<Output = T>,
+{
+    println!("========================================================================================================================================================");
+    let mut output = vec![];
+    if matrix1.len() == matrix2.len() && matrix1[0].len() == matrix2[0].len() {
+        for i in 0..matrix1.len() {
+            let mut row = vec![];
+            for j in 0..matrix1[0].len() {
+                row.push(matrix1[i][j] + matrix2[i][j]);
+            }
+            output.push(row);
+        }
+        output
+    } else {
+        panic!("The matrix are not of same dimensions");
+    }
+}
+
+pub fn element_wise_matrix_product<T>(matrix1: &Vec<Vec<T>>, matrix2: &Vec<Vec<T>>) -> Vec<Vec<T>>
+where
+    T: Copy + std::ops::Mul<Output = T>,
+{
+    println!("========================================================================================================================================================");
+    let mut output = vec![];
+    if matrix1.len() == matrix2.len() && matrix1[0].len() == matrix2[0].len() {
+        for i in 0..matrix1.len() {
+            let mut row = vec![];
+            for j in 0..matrix1[0].len() {
+                row.push(matrix1[i][j] * matrix2[i][j]);
+            }
+            output.push(row);
+        }
+        output
+    } else {
+        panic!("The matrix are not of same dimensions");
+    }
 }
