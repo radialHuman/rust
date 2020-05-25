@@ -843,6 +843,32 @@ FUNCTIONS
     &gt; 1. A &amp;Vec&lt;T&gt;
     &gt; 2. A &amp;Vec&lt;T&gt;
     = 1. Vec&lt;T&gt;
+9. make_matrix_float :
+    &gt; 1. input: A &amp;Vec&lt;Vec&lt;T&gt;&gt;
+    = Vec&lt;Vec&lt;f64&gt;&gt;
+10. make_vector_float :
+    &gt; 1. input: &amp;Vec&lt;T&gt;
+    = Vec&lt;f64&gt;
+11. round_off_f :
+    &gt; 1. value: f64
+    &gt; 2. decimals: i32
+    = f64
+12. unique_values : of a Vector
+    &gt; 1. list : A &amp;Vec&lt;T&gt;
+    = 1. Vec&lt;T&gt;
+13. value_counts :
+    &gt; 1. list : A &amp;Vec&lt;T&gt;
+    = HashMap&lt;T, u32&gt;
+14. is_numerical :
+    &gt; 1. value: T
+    = bool
+15. min_max_f :
+    &gt; 1. list: A &amp;Vec&lt;f64&gt;
+    = (f64, f64)
+16. type_of : To know the type of a variable
+    &gt; 1. _
+    = 1. str
+
 */</span>
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">print_a_matrix</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span><span class="op">&gt;</span>(<span class="ident">string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">matrix</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
@@ -1039,46 +1065,20 @@ FUNCTIONS
     &gt; 1. train : A &amp;Vec&lt;(T,T)&gt;
     &gt; 2. test : A &amp;Vec&lt;(T,T)&gt;
     = 1. Vec&lt;T&gt;
-9. type_of : To know the type of a variable
-    &gt; 1. _
-    = 1. str
-10. unique_values : of a Vector
-    &gt; 1. list : A &amp;Vec&lt;T&gt;
-    = 1. Vec&lt;T&gt;
-11. variance :
+9. variance :
     &gt; 1. list : A &amp;Vec&lt;T&gt;
     = 1. f64
-12. turn_string_categorical :
+10. turn_string_categorical :
     &gt; 1. list : A &amp;Vec&lt;T&gt;
     &gt; 2. extra_class : bool if true more than 10 classes else less
     = Vec&lt;usize&gt;
-13. value_counts :
-    &gt; 1. list : A &amp;Vec&lt;T&gt;
-    = HashMap&lt;T, u32&gt;
-14. is_numerical :
-    &gt; 1. value: T
-    = bool
-15. min_max_f :
-    &gt; 1. list: A &amp;Vec&lt;f64&gt;
-    = (f64, f64)
-16. normalize_vector_f : between [0.,1.]
+11. normalize_vector_f : between [0.,1.]
     &gt; 1. list: A &amp;Vec&lt;f64&gt;
     = Vec&lt;f64&gt;
-17. logistic_function_f :
+12. logistic_function_f :
     &gt; 1. matrix: A &amp;Vec&lt;Vec&lt;f64&gt;&gt;
     &gt; 2. beta: A &amp;Vec&lt;Vec&lt;f64&gt;&gt;
-    = Vec&lt;Vec&lt;f64&gt;&gt;
-18. make_matrix_float :
-    &gt; 1. input: A &amp;Vec&lt;Vec&lt;T&gt;&gt;
-    = Vec&lt;Vec&lt;f64&gt;&gt;
-19. make_vector_float :
-    &gt; 1. input: &amp;Vec&lt;T&gt;
-    = Vec&lt;f64&gt;
-20. round_off_f :
-    &gt; 1. value: f64
-    &gt; 2. decimals: i32
-    = f64
-*/</span>
+    = Vec&lt;Vec&lt;f64&gt;&gt;*/</span>
 
 <span class="comment">// use crate::lib_matrix;</span>
 <span class="comment">// use lib_matrix::*;</span>
