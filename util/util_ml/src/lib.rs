@@ -255,12 +255,23 @@ FUNCTIONS
 15. min_max_f :
     > 1. list: A &Vec<f64>
     = (f64, f64)
-16. min_max :
-    > 1. list: A &Vec<T>
-    = (T, T)
-17. normalize : between [0,1]
+16. normalize_vector_f : between [0.,1.]
     > 1. list: A &Vec<f64>
     = Vec<f64>
+17. logistic_function_f :
+    > 1. matrix: A &Vec<Vec<f64>>
+    > 2. beta: A &Vec<Vec<f64>>
+    = Vec<Vec<f64>>
+18. make_matrix_float :
+    > 1. input: A &Vec<Vec<T>>
+    = Vec<Vec<f64>>
+19. make_vector_float :
+    > 1. input: &Vec<T>
+    = Vec<f64>
+20. round_off_f :
+    > 1. value: f64
+    > 2. decimals: i32
+    = f64
 */
 
 // use crate::lib_matrix;
@@ -595,36 +606,58 @@ pub fn min_max_f(list: &Vec<f64>) -> (f64, f64) {
     }
 }
 
-pub fn min_max<T>(list: &Vec<T>) -> (T, T)
-where
-    T: std::cmp::Ord + Copy,
-{
-    if type_of(&list[0]) == "&i32"
-        || type_of(&list[0]) == "&i8"
-        || type_of(&list[0]) == "&i16"
-        || type_of(&list[0]) == "&i64"
-        || type_of(&list[0]) == "&i128"
-        || type_of(&list[0]) == "&u32"
-        || type_of(&list[0]) == "&u8"
-        || type_of(&list[0]) == "&u16"
-        || type_of(&list[0]) == "&u64"
-        || type_of(&list[0]) == "&u128"
-        || type_of(&list[0]) == "&usize"
-        || type_of(&list[0]) == "&isize"
-    {
-        (
-            list.iter().map(|a| *a).min().unwrap(),
-            list.iter().map(|a| *a).max().unwrap(),
-        )
-    } else {
-        panic!("The input should be either int or unsigned")
-    }
-}
-
-pub fn normalize(list: &Vec<f64>) -> Vec<f64> {
-    let (minimum, maximum) = min_max(&list);
+pub fn normalize_vector_f(list: &Vec<f64>) -> Vec<f64> {
+    let (minimum, maximum) = min_max_f(&list);
     let range: f64 = maximum - minimum;
     list.iter().map(|a| 1. - ((maximum - a) / range)).collect()
+}
+
+pub fn logistic_function_f(matrix: &Vec<Vec<f64>>, beta: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
+    //https://www.geeksforgeeks.org/understanding-logistic-regression/
+    matrix_product(matrix, &transpose(beta))
+        .iter()
+        .map(|a| a.iter().map(|b| 1. / (1. + ((b * -1.).exp()))).collect())
+        .collect()
+}
+
+pub fn make_matrix_float<T>(input: &Vec<Vec<T>>) -> Vec<Vec<f64>>
+where
+    T: std::fmt::Display + Copy,
+{
+    input
+        .iter()
+        .map(|a| {
+            a.iter()
+                .map(|b| {
+                    if is_numerical(*b) {
+                        format!("{}", b).parse().unwrap()
+                    } else {
+                        panic!("Non numerical value present in the intput");
+                    }
+                })
+                .collect()
+        })
+        .collect()
+}
+
+pub fn make_vector_float<T>(input: &Vec<T>) -> Vec<f64>
+where
+    T: std::fmt::Display + Copy,
+{
+    input
+        .iter()
+        .map(|b| {
+            if is_numerical(*b) {
+                format!("{}", b).parse().unwrap()
+            } else {
+                panic!("Non numerical value present in the intput");
+            }
+        })
+        .collect()
+}
+
+pub fn round_off_f(value: f64, decimals: i32) -> f64 {
+    ((value * 10.0f64.powi(decimals)).round()) / 10.0f64.powi(decimals)
 }
 
 //==============================================================================================================================================

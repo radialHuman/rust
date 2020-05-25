@@ -1,37 +1,41 @@
 ## Description
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
-## List of Functions
+## List of Functions and Structs
 ### lib_matrix
-    * dot_product
-    * element_wise_multiplication
-    * matrix_product
-    * pad_with_zero
-    * print_a_matrix
-    * shape_changer
-    * transpose
-    * vector_addition
+    1. dot_product
+    2. element_wise_multiplication
+    3. matrix_product
+    4. pad_with_zero
+    5. print_a_matrix
+    6. shape_changer
+    7. transpose
+    8. vector_addition
 ### lib_ml
-    * coefficient
-    * convert_and_impute
-    * covariance
-    * impute_string
-    * mean
-    * read_csv
-    * root_mean_square
-    * simple_linear_regression_prediction
-    * turn_string_categorical
-    * type_of
-    * unique_values
-    * value_counts
-    * variance
-    * is_numerical
-    * min_max_f
-    * min_max
-    * normalize
+    1. coefficient
+    2. convert_and_impute
+    3. covariance
+    4. impute_string
+    5. mean
+    6. read_csv
+    7. root_mean_square
+    8. simple_linear_regression_prediction
+    9. turn_string_categorical
+    10. type_of
+    11. unique_values
+    12. value_counts
+    13. variance
+    14. is_numerical
+    15. min_max_f
+    16. normalize_vector_f
+    17. logistic_function_f
+    18. make_matrix_float
+    19. make_vector_float
+    20. round_off_f
 ### lib_nn
-    * create_layer (Struct)
-    * activation_leaky_relu
-    * activation_relu
-    * activation_sigmoid
-    * activation_tanh
+    1. create_layer (Struct)
+
+    1. activation_leaky_relu
+    2. activation_relu
+    3. activation_sigmoid
+    4. activation_tanh

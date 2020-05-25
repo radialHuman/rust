@@ -19,4 +19,12 @@ fn main() {
     ];
     // let (min, max) = min_max(&v1);
     // println!("min is {:?}\nmax is {:?}", min, max);
+
+    let a = vec![vec![1, 2], vec![2, 3], vec![3, 7], vec![34, 76]];
+    // let b = vec![vec![0.2, 0.3], vec![0.4, 0.7], vec![1., 2.], vec![0.6, 0.]];
+    // println!("{:?}", logit_function_f(&a, &b));
+    // println!("{:?} becomes\n{:?}", &v1, make_vector_float(&v1));
+    let v2 = vec![1.356785, 2.56836, 5.807422];
+    // let rv: Vec<_> = v2.iter().map(|a| round_off_f(*a, 3)).collect();
+    // println!("{:?}\n{:?}", v2, rv);
 }
