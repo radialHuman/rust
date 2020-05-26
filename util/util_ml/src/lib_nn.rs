@@ -63,7 +63,7 @@ impl LayerDetails {
         bias: &mut Vec<f64>,
         f: fn(input: &Vec<f64>) -> Vec<f64>,
     ) -> Vec<Vec<f64>> {
-        let mut mat_mul = transpose(&matrix_product(&input, &weights));
+        let mut mat_mul = transpose(&matrix_multiplication(&input, &weights));
         // println!("input * weights = {:?}", mat_mul);
         let mut output: Vec<Vec<f64>> = vec![];
         for i in &mut mat_mul {

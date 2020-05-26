@@ -2,10 +2,11 @@
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
 ## List of Functions and Structs
+
 ### lib_matrix
     1. dot_product
-    2. element_wise_multiplication
-    3. matrix_product
+    2. element_wise_operation
+    3. matrix_multiplication
     4. pad_with_zero
     5. print_a_matrix
     6. shape_changer
@@ -19,9 +20,7 @@
     14. is_numerical
     15. min_max_f
     16. type_of
-    17. matrix_subtraction
-    18. matrix_addition
-    19. element_wise_matrix_product
+    17. element_wise_matrix_operation
 ### lib_ml
     1. coefficient
     2. convert_and_impute

@@ -906,38 +906,390 @@
 <span id="906">906</span>
 <span id="907">907</span>
 <span id="908">908</span>
-<span id="909">909</span>
-<span id="910">910</span>
-<span id="911">911</span>
-<span id="912">912</span>
-<span id="913">913</span>
-<span id="914">914</span>
-<span id="915">915</span>
-<span id="916">916</span>
-<span id="917">917</span>
-<span id="918">918</span>
-<span id="919">919</span>
-<span id="920">920</span>
-<span id="921">921</span>
-<span id="922">922</span>
-<span id="923">923</span>
-<span id="924">924</span>
-<span id="925">925</span>
-<span id="926">926</span>
-<span id="927">927</span>
-<span id="928">928</span>
-<span id="929">929</span>
-<span id="930">930</span>
-<span id="931">931</span>
-<span id="932">932</span>
-<span id="933">933</span>
-<span id="934">934</span>
-<span id="935">935</span>
-<span id="936">936</span>
-<span id="937">937</span>
-<span id="938">938</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="comment">//</span>
+<span class="comment">/*
+DESCRIPTION
+-----------------------------------------
+STRUCTS
+-------
+FUNCTIONS
+---------
+1. dot_product :
+    &gt; 1. A &amp;Vec&lt;T&gt;
+    &gt; 2. A &amp;Vec&lt;T&gt;
+    = 1. T
+2. element_wise_operation : for vector
+    &gt; 1. A &amp;mut Vec&lt;T&gt;
+    &gt; 2. A &amp;mut Vec&lt;T&gt;
+    &gt; 3. operation &amp;str (&quot;Add&quot;,&quot;Sub&quot;,&quot;Mul&quot;,&quot;Div&quot;)
+    = 1. Vec&lt;T&gt;
+3. matrix_multiplication :
+    &gt; 1. A &amp;Vec&lt;Vec&lt;T&gt;&gt;
+    &gt; 2. A &amp;Vec&lt;Vec&lt;T&gt;&gt;
+    = 1. Vec&lt;Vec&lt;T&gt;&gt;
+4. pad_with_zero :
+    &gt; 1. A &amp;mut Vec&lt;T&gt; to be modified
+    &gt; 2. usize of number of 0s to be added
+    = 1. Vec&lt;T&gt;
+5. print_a_matrix :
+    &gt; 1. A &amp;str as parameter to describe the matrix
+    &gt; 2. To print &amp;Vec&lt;Vec&lt;T&gt;&gt; line by line for better visual
+    = 1. ()
+6. shape_changer :
+    &gt; 1. A &amp;Vec&lt;T&gt; to be converter into Vec&lt;Vec&lt;T&gt;&gt;
+    &gt; 2. number of columns to be converted to
+    &gt; 3. number of rows to be converted to
+    = 1. Vec&lt;Vec&lt;T&gt;&gt;
+7. transpose :
+    &gt; 1. A &amp;Vec&lt;Vec&lt;T&gt;&gt; to be transposed
+    = 1. Vec&lt;Vec&lt;T&gt;&gt;
+8. vector_addition :
+    &gt; 1. A &amp;Vec&lt;T&gt;
+    &gt; 2. A &amp;Vec&lt;T&gt;
+    = 1. Vec&lt;T&gt;
+9. make_matrix_float :
+    &gt; 1. input: A &amp;Vec&lt;Vec&lt;T&gt;&gt;
+    = Vec&lt;Vec&lt;f64&gt;&gt;
+10. make_vector_float :
+    &gt; 1. input: &amp;Vec&lt;T&gt;
+    = Vec&lt;f64&gt;
+11. round_off_f :
+    &gt; 1. value: f64
+    &gt; 2. decimals: i32
+    = f64
+12. unique_values : of a Vector
+    &gt; 1. list : A &amp;Vec&lt;T&gt;
+    = 1. Vec&lt;T&gt;
+13. value_counts :
+    &gt; 1. list : A &amp;Vec&lt;T&gt;
+    = HashMap&lt;T, u32&gt;
+14. is_numerical :
+    &gt; 1. value: T
+    = bool
+15. min_max_f :
+    &gt; 1. list: A &amp;Vec&lt;f64&gt;
+    = (f64, f64)
+16. type_of : To know the type of a variable
+    &gt; 1. _
+    = &amp;str
+17. element_wise_matrix_operation : for matrices
+    &gt; 1. matrix1 : A &amp;Vec&lt;Vec&lt;T&gt;&gt;
+    &gt; 2. matrix2 : A &amp;Vec&lt;Vec&lt;T&gt;&gt;
+    &gt; 3. fucntion : &amp;str (&quot;Add&quot;,&quot;Sub&quot;,&quot;Mul&quot;,&quot;Div&quot;)
+    = A Vec&lt;Vec&lt;T&gt;&gt;
+*/</span>
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">print_a_matrix</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span><span class="op">&gt;</span>(<span class="ident">string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">matrix</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
+    <span class="comment">// To print a matrix in a manner that resembles a matrix</span>
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">string</span>);
+    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">matrix</span>.<span class="ident">iter</span>() {
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">i</span>);
+    }
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;&quot;</span>);
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;&quot;</span>);
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shape_changer</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">columns</span>: <span class="ident">usize</span>, <span class="ident">rows</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">clone</span>::<span class="ident">Clone</span>,
+{
+    <span class="comment">/*Changes a list to desired shape matrix*/</span>
+    <span class="comment">// println!(&quot;{},{}&quot;, &amp;columns, &amp;rows);</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">l</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">clone</span>();
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="macro">vec</span><span class="macro">!</span>[]; <span class="ident">rows</span>];
+    <span class="kw">if</span> <span class="ident">columns</span> <span class="op">*</span> <span class="ident">rows</span> <span class="op">=</span><span class="op">=</span> <span class="ident">list</span>.<span class="ident">len</span>() {
+        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">rows</span> {
+            <span class="ident">output</span>[<span class="ident">i</span>] <span class="op">=</span> <span class="ident">l</span>[..<span class="ident">columns</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>();
+            <span class="comment">// remove the ones pushed to output</span>
+            <span class="ident">l</span> <span class="op">=</span> <span class="ident">l</span>[<span class="ident">columns</span>..].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>();
+        }
+        <span class="ident">output</span>
+    } <span class="kw">else</span> {
+        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;!!! The shape transformation is not possible, check the vlaues entered !!!&quot;</span>);
+        <span class="comment">// vec![]</span>
+    }
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transpose</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">clone</span>::<span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Copy</span><span class="op">&gt;</span>(<span class="ident">matrix</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="comment">// to transform a matrix</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+    <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">matrix</span>[<span class="number">0</span>].<span class="ident">len</span>() {
+        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">matrix</span>.<span class="ident">len</span>() {
+            <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">matrix</span>[<span class="ident">i</span>][<span class="ident">j</span>]);
+        }
+    }
+    <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">matrix</span>[<span class="number">0</span>].<span class="ident">len</span>();
+    <span class="ident">shape_changer</span>(<span class="kw-2">&amp;</span><span class="ident">output</span>, <span class="ident">matrix</span>.<span class="ident">len</span>(), <span class="ident">x</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vector_addition</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
+    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
+{
+    <span class="comment">// index wise vector addition</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+    <span class="kw">if</span> <span class="ident">a</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">b</span>.<span class="ident">len</span>() {
+        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">a</span>.<span class="ident">len</span>() {
+            <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">a</span>[<span class="ident">i</span>] <span class="op">+</span> <span class="ident">b</span>[<span class="ident">i</span>]);
+        }
+        <span class="ident">output</span>
+    } <span class="kw">else</span> {
+        <span class="comment">// padding with zeros</span>
+        <span class="kw">if</span> <span class="ident">a</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="ident">b</span>.<span class="ident">len</span>() {
+            <span class="kw">let</span> <span class="ident">new_a</span> <span class="op">=</span> <span class="ident">pad_with_zero</span>(<span class="ident">a</span>, <span class="ident">b</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">a</span>.<span class="ident">len</span>());
+            <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;The changed vector is {:?}&quot;</span>, <span class="ident">new_a</span>);
+            <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">a</span>.<span class="ident">len</span>() {
+                <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">a</span>[<span class="ident">i</span>] <span class="op">+</span> <span class="ident">b</span>[<span class="ident">i</span>]);
+            }
+            <span class="ident">output</span>
+        } <span class="kw">else</span> {
+            <span class="kw">let</span> <span class="ident">new_b</span> <span class="op">=</span> <span class="ident">pad_with_zero</span>(<span class="ident">b</span>, <span class="ident">a</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">b</span>.<span class="ident">len</span>());
+            <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;The changed vector is {:?}&quot;</span>, <span class="ident">new_b</span>);
+            <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">a</span>.<span class="ident">len</span>() {
+                <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">a</span>[<span class="ident">i</span>] <span class="op">+</span> <span class="ident">b</span>[<span class="ident">i</span>]);
+            }
+            <span class="ident">output</span>
+        }
+    }
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">matrix_multiplication</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">weights</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>,
+{
+    <span class="comment">// Matrix multiplcation</span>
+    <span class="macro">println</span><span class="macro">!</span>(
+        <span class="string">&quot;Multiplication of {}x{} and {}x{}&quot;</span>,
+        <span class="ident">input</span>.<span class="ident">len</span>(),
+        <span class="ident">input</span>[<span class="number">0</span>].<span class="ident">len</span>(),
+        <span class="ident">weights</span>.<span class="ident">len</span>(),
+        <span class="ident">weights</span>[<span class="number">0</span>].<span class="ident">len</span>()
+    );
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Output will be {}x{}&quot;</span>, <span class="ident">input</span>.<span class="ident">len</span>(), <span class="ident">weights</span>[<span class="number">0</span>].<span class="ident">len</span>());
+    <span class="kw">let</span> <span class="ident">weights_t</span> <span class="op">=</span> <span class="ident">transpose</span>(<span class="kw-2">&amp;</span><span class="ident">weights</span>);
+    <span class="comment">// print_a_matrix(&amp;weights_t);</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+    <span class="kw">if</span> <span class="ident">input</span>[<span class="number">0</span>].<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">weights</span>.<span class="ident">len</span>() {
+        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">input</span>.<span class="ident">iter</span>() {
+            <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="ident">weights_t</span>.<span class="ident">iter</span>() {
+                <span class="comment">// println!(&quot;{:?}x{:?},&quot;, i, j);</span>
+                <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">dot_product</span>(<span class="kw-2">&amp;</span><span class="ident">i</span>, <span class="kw-2">&amp;</span><span class="ident">j</span>));
+            }
+        }
+        <span class="comment">// println!(&quot;{:?}&quot;, output);</span>
+        <span class="ident">shape_changer</span>(<span class="kw-2">&amp;</span><span class="ident">output</span>, <span class="ident">input</span>.<span class="ident">len</span>(), <span class="ident">weights_t</span>.<span class="ident">len</span>())
+    } <span class="kw">else</span> {
+        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;These cant be multiplied due to the dimensions&quot;</span>)
+    }
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dot_product</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span> <span class="op">+</span> <span class="ident">Copy</span>,
+{
+    <span class="kw">let</span> <span class="ident">output</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">b</span>.<span class="ident">iter</span>()).<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">x</span>, <span class="ident">y</span>)<span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">*</span> <span class="kw-2">*</span><span class="ident">y</span>).<span class="ident">sum</span>();
+    <span class="ident">output</span>
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">element_wise_operation</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">operation</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">Copy</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">PartialEq</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
+    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
+{
+    <span class="kw">if</span> <span class="ident">a</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">b</span>.<span class="ident">len</span>() {
+        <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">b</span>.<span class="ident">iter</span>()).<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">x</span>, <span class="ident">y</span>)<span class="op">|</span> <span class="kw">match</span> <span class="ident">operation</span> {
+                        <span class="string">&quot;Mul&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">*</span> <span class="kw-2">*</span><span class="ident">y</span>,
+                        <span class="string">&quot;Add&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">+</span> <span class="kw-2">*</span><span class="ident">y</span>,
+                        <span class="string">&quot;Sub&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">-</span> <span class="kw-2">*</span><span class="ident">y</span>,
+                        <span class="string">&quot;Div&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">/</span> <span class="kw-2">*</span><span class="ident">y</span>,
+                        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Operation unsuccessful!\nEnter any of the following(case sensitive):\n&gt; Add\n&gt; Sub\n&gt; Mul\n&gt; Div&quot;</span>),
+                    })
+                    .<span class="ident">collect</span>()
+    } <span class="kw">else</span> {
+        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Dimension mismatch&quot;</span>)
+    }
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pad_with_zero</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">vector</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">count</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
+    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
+{
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">vector</span>.<span class="ident">clone</span>();
+    <span class="kw">let</span> <span class="ident">zero</span> <span class="op">=</span> <span class="string">&quot;0&quot;</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
+    <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">count</span> {
+        <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">zero</span>);
+    }
+    <span class="ident">output</span>
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">make_matrix_float</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span> <span class="op">+</span> <span class="ident">Copy</span>,
+{
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
+    <span class="ident">input</span>
+        .<span class="ident">iter</span>()
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> {
+            <span class="ident">a</span>.<span class="ident">iter</span>()
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> {
+                    <span class="kw">if</span> <span class="ident">is_numerical</span>(<span class="kw-2">*</span><span class="ident">b</span>) {
+                        <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">b</span>).<span class="ident">parse</span>().<span class="ident">unwrap</span>()
+                    } <span class="kw">else</span> {
+                        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Non numerical value present in the intput&quot;</span>);
+                    }
+                })
+                .<span class="ident">collect</span>()
+        })
+        .<span class="ident">collect</span>()
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">make_vector_float</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span> <span class="op">+</span> <span class="ident">Copy</span>,
+{
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
+    <span class="ident">input</span>
+        .<span class="ident">iter</span>()
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> {
+            <span class="kw">if</span> <span class="ident">is_numerical</span>(<span class="kw-2">*</span><span class="ident">b</span>) {
+                <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">b</span>).<span class="ident">parse</span>().<span class="ident">unwrap</span>()
+            } <span class="kw">else</span> {
+                <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Non numerical value present in the intput&quot;</span>);
+            }
+        })
+        .<span class="ident">collect</span>()
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">round_off_f</span>(<span class="ident">value</span>: <span class="ident">f64</span>, <span class="ident">decimals</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
+    ((<span class="ident">value</span> <span class="op">*</span> <span class="number">10.0f64</span>.<span class="ident">powi</span>(<span class="ident">decimals</span>)).<span class="ident">round</span>()) <span class="op">/</span> <span class="number">10.0f64</span>.<span class="ident">powi</span>(<span class="ident">decimals</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">min_max_f</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">f64</span>, <span class="ident">f64</span>) {
+    <span class="comment">// check if it is a numerical type</span>
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
+    <span class="kw">if</span> <span class="ident">type_of</span>(<span class="ident">list</span>[<span class="number">0</span>]) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;f64&quot;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="ident">list</span>[<span class="number">0</span>]) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;f32&quot;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">positive</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">list</span>
+            .<span class="ident">clone</span>()
+            .<span class="ident">iter</span>()
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0.</span>)
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">a</span>)
+            .<span class="ident">collect</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">negative</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">list</span>
+            .<span class="ident">clone</span>()
+            .<span class="ident">iter</span>()
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span> <span class="op">&lt;</span> <span class="number">0.</span>)
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">a</span>)
+            .<span class="ident">collect</span>();
+        <span class="ident">positive</span>.<span class="ident">sort_by</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">partial_cmp</span>(<span class="ident">b</span>).<span class="ident">unwrap</span>());
+        <span class="ident">negative</span>.<span class="ident">sort_by</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">partial_cmp</span>(<span class="ident">b</span>).<span class="ident">unwrap</span>());
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">list</span>);
+        (<span class="ident">negative</span>[<span class="number">0</span>], <span class="ident">positive</span>[<span class="ident">positive</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>])
+    } <span class="kw">else</span> {
+        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Input should be a float type&quot;</span>);
+    }
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_numerical</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">value</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">if</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;i32&quot;</span>
+        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;i8&quot;</span>
+        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;i16&quot;</span>
+        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;i64&quot;</span>
+        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;i128&quot;</span>
+        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;f64&quot;</span>
+        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;f32&quot;</span>
+        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;u32&quot;</span>
+        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;u8&quot;</span>
+        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;u16&quot;</span>
+        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;u64&quot;</span>
+        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;u128&quot;</span>
+        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;usize&quot;</span>
+        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;isize&quot;</span>
+    {
+        <span class="bool-val">true</span>
+    } <span class="kw">else</span> {
+        <span class="bool-val">false</span>
+    }
+}
+
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_counts</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">u32</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">Eq</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">hash</span>::<span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Copy</span>,
+{
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">count</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">u32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
+    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">list</span> {
+        <span class="ident">count</span>.<span class="ident">insert</span>(<span class="kw-2">*</span><span class="ident">i</span>, <span class="number">1</span> <span class="op">+</span> <span class="kw">if</span> <span class="ident">count</span>.<span class="ident">contains_key</span>(<span class="ident">i</span>) { <span class="ident">count</span>[<span class="ident">i</span>] } <span class="kw">else</span> { <span class="number">0</span> });
+    }
+    <span class="ident">count</span>
+}
+
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">any</span>::<span class="ident">type_name</span>;
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">type_of</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw">_</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
+    <span class="ident">type_name</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>()
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unique_values</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Copy</span>,
+{
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">list</span>.<span class="ident">iter</span>() {
+        <span class="kw">if</span> <span class="ident">output</span>.<span class="ident">contains</span>(<span class="ident">i</span>) {
+        } <span class="kw">else</span> {
+            <span class="ident">output</span>.<span class="ident">push</span>(<span class="kw-2">*</span><span class="ident">i</span>)
+        };
+    }
+    <span class="ident">output</span>
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">element_wise_matrix_operation</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(
+    <span class="ident">matrix1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">matrix2</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">operation</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">Copy</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">PartialEq</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
+    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
+{
+    <span class="kw">if</span> <span class="ident">matrix1</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">matrix2</span>.<span class="ident">len</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">matrix1</span>[<span class="number">0</span>].<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">matrix2</span>[<span class="number">0</span>].<span class="ident">len</span>() {
+        <span class="ident">matrix1</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">zip</span>(<span class="ident">matrix2</span>.<span class="ident">iter</span>())
+            .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">x</span>, <span class="ident">y</span>)<span class="op">|</span> {
+                <span class="ident">x</span>.<span class="ident">iter</span>()
+                    .<span class="ident">zip</span>(<span class="ident">y</span>.<span class="ident">iter</span>())
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">operation</span> {
+                        <span class="string">&quot;Mul&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">a</span>.<span class="number">0</span> <span class="op">*</span> <span class="kw-2">*</span><span class="ident">a</span>.<span class="number">1</span>,
+                        <span class="string">&quot;Add&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">a</span>.<span class="number">0</span> <span class="op">+</span> <span class="kw-2">*</span><span class="ident">a</span>.<span class="number">1</span>,
+                        <span class="string">&quot;Sub&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">a</span>.<span class="number">0</span> <span class="op">-</span> <span class="kw-2">*</span><span class="ident">a</span>.<span class="number">1</span>,
+                        <span class="string">&quot;Div&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">a</span>.<span class="number">0</span> <span class="op">/</span> <span class="kw-2">*</span><span class="ident">a</span>.<span class="number">1</span>,
+                        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Operation unsuccessful!\nEnter any of the following(case sensitive):\n&gt; Add\n&gt; Sub\n&gt; Mul\n&gt; Div&quot;</span>),
+                    })
+                    .<span class="ident">collect</span>()
+            })
+            .<span class="ident">collect</span>()
+    } <span class="kw">else</span> {
+        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Dimension mismatch&quot;</span>)
+    }
+}
 
 <span class="comment">/*
 DESCRIPTION
@@ -947,38 +1299,38 @@ STRUCTS
 FUNCTIONS
 ---------
 1. coefficient : To find slope(b1) and intercept(b0) of a line
-    &gt; 1. list1 : A &amp;Vec&lt;T&gt;
-    &gt; 2. list2 : A &amp;Vec&lt;T&gt;
-    = 1. b0
-    = 2. b1
+&gt; 1. list1 : A &amp;Vec&lt;T&gt;
+&gt; 2. list2 : A &amp;Vec&lt;T&gt;
+= 1. b0
+= 2. b1
 2. convert_and_impute : To convert type and replace missing values with a constant input
-    &gt; 1. list : A &amp;Vec&lt;String&gt; to be converted to a different type
-    &gt; 2. to : A value which provides the type(U) to be converted to
-    &gt; 3. impute_with : A value(U) to be swapped with missing elemets of the same type as &quot;to&quot;
-    = 1. Result with Vec&lt;U&gt; and Error propagated
-    = 2. A Vec&lt;uszie&gt; to show the list of indexes where values were missing
+&gt; 1. list : A &amp;Vec&lt;String&gt; to be converted to a different type
+&gt; 2. to : A value which provides the type(U) to be converted to
+&gt; 3. impute_with : A value(U) to be swapped with missing elemets of the same type as &quot;to&quot;
+= 1. Result with Vec&lt;U&gt; and Error propagated
+= 2. A Vec&lt;uszie&gt; to show the list of indexes where values were missing
 3. covariance :
-    &gt; 1. list1 : A &amp;Vec&lt;T&gt;
-    &gt; 2. list2 : A &amp;Vec&lt;T&gt;
-    = 1. f64
+&gt; 1. list1 : A &amp;Vec&lt;T&gt;
+&gt; 2. list2 : A &amp;Vec&lt;T&gt;
+= 1. f64
 4. impute_string :
-    &gt; 1. list : A &amp;mut Vec&lt;String&gt; to be imputed
-    &gt; 2. impute_with : A value(U) to be swapped with missing elemets of the same type as &quot;to&quot;
-    = 1. A Vec&lt;&amp;str&gt; with missing values replaced
+&gt; 1. list : A &amp;mut Vec&lt;String&gt; to be imputed
+&gt; 2. impute_with : A value(U) to be swapped with missing elemets of the same type as &quot;to&quot;
+= 1. A Vec&lt;&amp;str&gt; with missing values replaced
 5. mean :
-    &gt; 1. list : A &amp;Vec&lt;T&gt;
-    = 1. f64
+&gt; 1. list : A &amp;Vec&lt;T&gt;
+= 1. f64
 6. read_csv :
-    &gt; 1. path : A String for file path
-    &gt; 2. columns : number of columns to be converted to
-    = 1. HashMap&lt;String,Vec&lt;String&gt;) as a table with headers and its values in vector
+&gt; 1. path : A String for file path
+&gt; 2. columns : number of columns to be converted to
+= 1. HashMap&lt;String,Vec&lt;String&gt;) as a table with headers and its values in vector
 7. root_mean_square :
-    &gt; 1. list1 : A &amp;Vec&lt;T&gt;
-    &gt; 2. list2 : A &amp;Vec&lt;T&gt;
-    = 1. f64
-8. simple_linear_regression_prediction :
-    &gt; 1. train : A &amp;Vec&lt;(T,T)&gt;
-    &gt; 2. test : A &amp;Vec&lt;(T,T)&gt;
+&gt; 1. list1 : A &amp;Vec&lt;T&gt;
+&gt; 2. list2 : A &amp;Vec&lt;T&gt;
+= 1. f64
+8. simple_linear_regression_prediction : // https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/
+&gt; 1. train : A &amp;Vec&lt;(T,T)&gt;
+&gt; 2. test : A &amp;Vec&lt;(T,T)&gt;
     = 1. Vec&lt;T&gt;
 9. variance :
     &gt; 1. list : A &amp;Vec&lt;T&gt;
@@ -1102,7 +1454,6 @@ FUNCTIONS
     (<span class="ident">b0</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>(), <span class="ident">b1</span>)
 }
 
-<span class="comment">// https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">simple_linear_regression_prediction</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">train</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">T</span>)<span class="op">&gt;</span>, <span class="ident">test</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">T</span>)<span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
@@ -1155,7 +1506,7 @@ FUNCTIONS
 }
 
 <span class="comment">// reading in files for multi column operations</span>
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
+<span class="comment">// use std::collections::HashMap;</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_csv</span>(<span class="ident">path</span>: <span class="ident">String</span>, <span class="ident">columns</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
@@ -1272,7 +1623,7 @@ FUNCTIONS
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">logistic_function_f</span>(<span class="ident">matrix</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">beta</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
     <span class="comment">//https://www.geeksforgeeks.org/understanding-logistic-regression/</span>
-    <span class="ident">matrix_product</span>(<span class="ident">matrix</span>, <span class="kw-2">&amp;</span><span class="ident">transpose</span>(<span class="ident">beta</span>))
+    <span class="ident">matrix_multiplication</span>(<span class="ident">matrix</span>, <span class="kw-2">&amp;</span><span class="ident">transpose</span>(<span class="ident">beta</span>))
         .<span class="ident">iter</span>()
         .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="number">1.</span> <span class="op">/</span> (<span class="number">1.</span> <span class="op">+</span> ((<span class="ident">b</span> <span class="op">*</span> <span class="op">-</span><span class="number">1.</span>).<span class="ident">exp</span>()))).<span class="ident">collect</span>())
         .<span class="ident">collect</span>()
@@ -1285,8 +1636,9 @@ FUNCTIONS
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
     <span class="comment">//https://www.geeksforgeeks.org/understanding-logistic-regression/</span>
-    <span class="kw">let</span> <span class="ident">first_calc</span> <span class="op">=</span> <span class="ident">matrix_subtraction</span>(<span class="kw-2">&amp;</span><span class="ident">logistic_function_f</span>(<span class="ident">matrix1</span>, <span class="ident">beta</span>), <span class="ident">matrix2</span>);
-    <span class="ident">transpose</span>(<span class="kw-2">&amp;</span><span class="ident">matrix_product</span>(<span class="kw-2">&amp;</span><span class="ident">transpose</span>(<span class="kw-2">&amp;</span><span class="ident">first_calc</span>), <span class="kw-2">&amp;</span><span class="ident">matrix1</span>))
+    <span class="kw">let</span> <span class="ident">first_calc</span> <span class="op">=</span>
+        <span class="ident">element_wise_matrix_operation</span>(<span class="kw-2">&amp;</span><span class="ident">logistic_function_f</span>(<span class="ident">matrix1</span>, <span class="ident">beta</span>), <span class="ident">matrix2</span>, <span class="string">&quot;Sub&quot;</span>);
+    <span class="ident">transpose</span>(<span class="kw-2">&amp;</span><span class="ident">matrix_multiplication</span>(<span class="kw-2">&amp;</span><span class="ident">transpose</span>(<span class="kw-2">&amp;</span><span class="ident">first_calc</span>), <span class="kw-2">&amp;</span><span class="ident">matrix1</span>))
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cost_function</span>(
@@ -1301,7 +1653,7 @@ FUNCTIONS
         .<span class="ident">iter</span>()
         .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">b</span>.<span class="ident">ln</span>()).<span class="ident">collect</span>())
         .<span class="ident">collect</span>();
-    <span class="kw">let</span> <span class="ident">step1</span> <span class="op">=</span> <span class="ident">element_wise_matrix_product</span>(<span class="ident">matrix2</span>, <span class="kw-2">&amp;</span><span class="ident">log_logistic</span>);
+    <span class="kw">let</span> <span class="ident">step1</span> <span class="op">=</span> <span class="ident">element_wise_matrix_operation</span>(<span class="ident">matrix2</span>, <span class="kw-2">&amp;</span><span class="ident">log_logistic</span>, <span class="string">&quot;Mul&quot;</span>);
     <span class="kw">let</span> <span class="ident">minus_step1</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">step1</span>
         .<span class="ident">iter</span>()
         .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">b</span> <span class="op">*</span> <span class="op">-</span><span class="number">1.</span>).<span class="ident">collect</span>())
@@ -1314,427 +1666,15 @@ FUNCTIONS
         .<span class="ident">iter</span>()
         .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="number">1.</span> <span class="op">-</span> <span class="ident">b</span>).<span class="ident">collect</span>())
         .<span class="ident">collect</span>();
-    <span class="kw">let</span> <span class="ident">step2</span> <span class="op">=</span> <span class="ident">element_wise_matrix_product</span>(<span class="kw-2">&amp;</span><span class="ident">one_minus_matrix2</span>, <span class="kw-2">&amp;</span><span class="ident">one_minus_log_logistic</span>);
+    <span class="kw">let</span> <span class="ident">step2</span> <span class="op">=</span> <span class="ident">element_wise_matrix_operation</span>(<span class="kw-2">&amp;</span><span class="ident">one_minus_matrix2</span>, <span class="kw-2">&amp;</span><span class="ident">one_minus_log_logistic</span>, <span class="string">&quot;Mul&quot;</span>);
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="number">0.</span>;
-    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">matrix_subtraction</span>(<span class="kw-2">&amp;</span><span class="ident">minus_step1</span>, <span class="kw-2">&amp;</span><span class="ident">step2</span>).<span class="ident">iter</span>() {
+    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">element_wise_matrix_operation</span>(<span class="kw-2">&amp;</span><span class="ident">minus_step1</span>, <span class="kw-2">&amp;</span><span class="ident">step2</span>, <span class="string">&quot;Sub&quot;</span>).<span class="ident">iter</span>() {
         <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="ident">i</span>.<span class="ident">iter</span>() {
             <span class="ident">output</span> <span class="op">+</span><span class="op">=</span> <span class="ident">j</span>;
         }
     }
     (<span class="ident">output</span> <span class="op">/</span> <span class="ident">step2</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>) <span class="op">/</span> <span class="ident">step2</span>[<span class="number">0</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>
 }
-
-<span class="comment">//==============================================================================================================================================</span>
-<span class="comment">//==============================================================================================================================================</span>
-<span class="comment">//==============================================================================================================================================</span>
-
-<span class="comment">/*
-DESCRIPTION
------------------------------------------
-STRUCTS
--------
-FUNCTIONS
----------
-1. dot_product :
-    &gt; 1. A &amp;Vec&lt;T&gt;
-    &gt; 2. A &amp;Vec&lt;T&gt;
-    = 1. T
-2. element_wise_multiplication : for vector
-    &gt; 1. A &amp;mut Vec&lt;T&gt;
-    &gt; 2. A &amp;mut Vec&lt;T&gt;
-    = 1. Vec&lt;T&gt;
-3. matrix_product :
-    &gt; 1. A &amp;Vec&lt;Vec&lt;T&gt;&gt;
-    &gt; 2. A &amp;Vec&lt;Vec&lt;T&gt;&gt;
-    = 1. Vec&lt;Vec&lt;T&gt;&gt;
-4. pad_with_zero :
-    &gt; 1. A &amp;mut Vec&lt;T&gt; to be modified
-    &gt; 2. usize of number of 0s to be added
-    = 1. Vec&lt;T&gt;
-5. print_a_matrix :
-    &gt; 1. A &amp;str as parameter to describe the matrix
-    &gt; 2. To print &amp;Vec&lt;Vec&lt;T&gt;&gt; line by line for better visual
-    = 1. ()
-6. shape_changer :
-    &gt; 1. A &amp;Vec&lt;T&gt; to be converter into Vec&lt;Vec&lt;T&gt;&gt;
-    &gt; 2. number of columns to be converted to
-    &gt; 3. number of rows to be converted to
-    = 1. Vec&lt;Vec&lt;T&gt;&gt;
-7. transpose :
-    &gt; 1. A &amp;Vec&lt;Vec&lt;T&gt;&gt; to be transposed
-    = 1. Vec&lt;Vec&lt;T&gt;&gt;
-8. vector_addition :
-    &gt; 1. A &amp;Vec&lt;T&gt;
-    &gt; 2. A &amp;Vec&lt;T&gt;
-    = 1. Vec&lt;T&gt;
-9. make_matrix_float :
-    &gt; 1. input: A &amp;Vec&lt;Vec&lt;T&gt;&gt;
-    = Vec&lt;Vec&lt;f64&gt;&gt;
-10. make_vector_float :
-    &gt; 1. input: &amp;Vec&lt;T&gt;
-    = Vec&lt;f64&gt;
-11. round_off_f :
-    &gt; 1. value: f64
-    &gt; 2. decimals: i32
-    = f64
-12. unique_values : of a Vector
-    &gt; 1. list : A &amp;Vec&lt;T&gt;
-    = 1. Vec&lt;T&gt;
-13. value_counts :
-    &gt; 1. list : A &amp;Vec&lt;T&gt;
-    = HashMap&lt;T, u32&gt;
-14. is_numerical :
-    &gt; 1. value: T
-    = bool
-15. min_max_f :
-    &gt; 1. list: A &amp;Vec&lt;f64&gt;
-    = (f64, f64)
-16. type_of : To know the type of a variable
-    &gt; 1. _
-    = str
-17. matrix_subtraction :
-    &gt; 1. matrix1 : A &amp;Vec&lt;Vec&lt;T&gt;&gt;
-    &gt; 2. matrix2 : A &amp;Vec&lt;Vec&lt;T&gt;&gt;
-    = A Vec&lt;Vec&lt;T&gt;&gt;
-18. matrix_addition :
-    &gt; 1. matrix1 : A &amp;Vec&lt;Vec&lt;T&gt;&gt;
-    &gt; 2. matrix2 : A &amp;Vec&lt;Vec&lt;T&gt;&gt;
-    = A Vec&lt;Vec&lt;T&gt;&gt;
-19. element_wise_matrix_product
-    &gt; 1. matrix1 : A &amp;Vec&lt;Vec&lt;T&gt;&gt;
-    &gt; 2. matrix2 : A &amp;Vec&lt;Vec&lt;T&gt;&gt;
-    = A Vec&lt;Vec&lt;T&gt;&gt;
-*/</span>
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">print_a_matrix</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span><span class="op">&gt;</span>(<span class="ident">string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">matrix</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
-    <span class="comment">// To print a matrix in a manner that resembles a matrix</span>
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">string</span>);
-    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">matrix</span>.<span class="ident">iter</span>() {
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">i</span>);
-    }
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;&quot;</span>);
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;&quot;</span>);
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shape_changer</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">columns</span>: <span class="ident">usize</span>, <span class="ident">rows</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">clone</span>::<span class="ident">Clone</span>,
-{
-    <span class="comment">/*Changes a list to desired shape matrix*/</span>
-    <span class="comment">// println!(&quot;{},{}&quot;, &amp;columns, &amp;rows);</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">l</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">clone</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="macro">vec</span><span class="macro">!</span>[]; <span class="ident">rows</span>];
-    <span class="kw">if</span> <span class="ident">columns</span> <span class="op">*</span> <span class="ident">rows</span> <span class="op">=</span><span class="op">=</span> <span class="ident">list</span>.<span class="ident">len</span>() {
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">rows</span> {
-            <span class="ident">output</span>[<span class="ident">i</span>] <span class="op">=</span> <span class="ident">l</span>[..<span class="ident">columns</span>].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>();
-            <span class="comment">// remove the ones pushed to output</span>
-            <span class="ident">l</span> <span class="op">=</span> <span class="ident">l</span>[<span class="ident">columns</span>..].<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>();
-        }
-        <span class="ident">output</span>
-    } <span class="kw">else</span> {
-        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;!!! The shape transformation is not possible, check the vlaues entered !!!&quot;</span>);
-        <span class="comment">// vec![]</span>
-    }
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transpose</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">clone</span>::<span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Copy</span><span class="op">&gt;</span>(<span class="ident">matrix</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="comment">// to transform a matrix</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">matrix</span>[<span class="number">0</span>].<span class="ident">len</span>() {
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">matrix</span>.<span class="ident">len</span>() {
-            <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">matrix</span>[<span class="ident">i</span>][<span class="ident">j</span>]);
-        }
-    }
-    <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">matrix</span>[<span class="number">0</span>].<span class="ident">len</span>();
-    <span class="ident">shape_changer</span>(<span class="kw-2">&amp;</span><span class="ident">output</span>, <span class="ident">matrix</span>.<span class="ident">len</span>(), <span class="ident">x</span>)
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">vector_addition</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
-    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
-{
-    <span class="comment">// index wise vector addition</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">if</span> <span class="ident">a</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">b</span>.<span class="ident">len</span>() {
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">a</span>.<span class="ident">len</span>() {
-            <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">a</span>[<span class="ident">i</span>] <span class="op">+</span> <span class="ident">b</span>[<span class="ident">i</span>]);
-        }
-        <span class="ident">output</span>
-    } <span class="kw">else</span> {
-        <span class="comment">// padding with zeros</span>
-        <span class="kw">if</span> <span class="ident">a</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="ident">b</span>.<span class="ident">len</span>() {
-            <span class="kw">let</span> <span class="ident">new_a</span> <span class="op">=</span> <span class="ident">pad_with_zero</span>(<span class="ident">a</span>, <span class="ident">b</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">a</span>.<span class="ident">len</span>());
-            <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;The changed vector is {:?}&quot;</span>, <span class="ident">new_a</span>);
-            <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">a</span>.<span class="ident">len</span>() {
-                <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">a</span>[<span class="ident">i</span>] <span class="op">+</span> <span class="ident">b</span>[<span class="ident">i</span>]);
-            }
-            <span class="ident">output</span>
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">new_b</span> <span class="op">=</span> <span class="ident">pad_with_zero</span>(<span class="ident">b</span>, <span class="ident">a</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">b</span>.<span class="ident">len</span>());
-            <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;The changed vector is {:?}&quot;</span>, <span class="ident">new_b</span>);
-            <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">a</span>.<span class="ident">len</span>() {
-                <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">a</span>[<span class="ident">i</span>] <span class="op">+</span> <span class="ident">b</span>[<span class="ident">i</span>]);
-            }
-            <span class="ident">output</span>
-        }
-    }
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">matrix_product</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">weights</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>,
-{
-    <span class="comment">// Matrix multiplcation</span>
-    <span class="macro">println</span><span class="macro">!</span>(
-        <span class="string">&quot;Multiplication of {}x{} and {}x{}&quot;</span>,
-        <span class="ident">input</span>.<span class="ident">len</span>(),
-        <span class="ident">input</span>[<span class="number">0</span>].<span class="ident">len</span>(),
-        <span class="ident">weights</span>.<span class="ident">len</span>(),
-        <span class="ident">weights</span>[<span class="number">0</span>].<span class="ident">len</span>()
-    );
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Output will be {}x{}&quot;</span>, <span class="ident">input</span>.<span class="ident">len</span>(), <span class="ident">weights</span>[<span class="number">0</span>].<span class="ident">len</span>());
-    <span class="kw">let</span> <span class="ident">weights_t</span> <span class="op">=</span> <span class="ident">transpose</span>(<span class="kw-2">&amp;</span><span class="ident">weights</span>);
-    <span class="comment">// print_a_matrix(&amp;weights_t);</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">if</span> <span class="ident">input</span>[<span class="number">0</span>].<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">weights</span>.<span class="ident">len</span>() {
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">input</span>.<span class="ident">iter</span>() {
-            <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="ident">weights_t</span>.<span class="ident">iter</span>() {
-                <span class="comment">// println!(&quot;{:?}x{:?},&quot;, i, j);</span>
-                <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">dot_product</span>(<span class="kw-2">&amp;</span><span class="ident">i</span>, <span class="kw-2">&amp;</span><span class="ident">j</span>));
-            }
-        }
-        <span class="comment">// println!(&quot;{:?}&quot;, output);</span>
-        <span class="ident">shape_changer</span>(<span class="kw-2">&amp;</span><span class="ident">output</span>, <span class="ident">input</span>.<span class="ident">len</span>(), <span class="ident">weights_t</span>.<span class="ident">len</span>())
-    } <span class="kw">else</span> {
-        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;These cant be multiplied due to the dimensions&quot;</span>)
-    }
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dot_product</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">T</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span> <span class="op">+</span> <span class="ident">Copy</span>,
-{
-    <span class="kw">let</span> <span class="ident">output</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">b</span>.<span class="ident">iter</span>()).<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">x</span>, <span class="ident">y</span>)<span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">*</span> <span class="kw-2">*</span><span class="ident">y</span>).<span class="ident">sum</span>();
-    <span class="ident">output</span>
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">element_wise_multiplication</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
-    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
-{
-    <span class="kw">if</span> <span class="ident">a</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">b</span>.<span class="ident">len</span>() {
-        <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">b</span>.<span class="ident">iter</span>()).<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">x</span>, <span class="ident">y</span>)<span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">*</span> <span class="kw-2">*</span><span class="ident">y</span>).<span class="ident">collect</span>()
-    } <span class="kw">else</span> {
-        <span class="comment">// padding with zeros</span>
-        <span class="kw">if</span> <span class="ident">a</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="ident">b</span>.<span class="ident">len</span>() {
-            <span class="kw">let</span> <span class="ident">new_a</span> <span class="op">=</span> <span class="ident">pad_with_zero</span>(<span class="ident">a</span>, <span class="ident">b</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">a</span>.<span class="ident">len</span>());
-            <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;The changed vector is {:?}&quot;</span>, <span class="ident">new_a</span>);
-            <span class="ident">new_a</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">b</span>.<span class="ident">iter</span>()).<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">x</span>, <span class="ident">y</span>)<span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">*</span> <span class="kw-2">*</span><span class="ident">y</span>).<span class="ident">collect</span>()
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">new_b</span> <span class="op">=</span> <span class="ident">pad_with_zero</span>(<span class="ident">b</span>, <span class="ident">a</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">b</span>.<span class="ident">len</span>());
-            <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;The changed vector is {:?}&quot;</span>, <span class="ident">new_b</span>);
-            <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">new_b</span>.<span class="ident">iter</span>()).<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">x</span>, <span class="ident">y</span>)<span class="op">|</span> <span class="kw-2">*</span><span class="ident">x</span> <span class="op">*</span> <span class="kw-2">*</span><span class="ident">y</span>).<span class="ident">collect</span>()
-        }
-    }
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pad_with_zero</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">vector</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">count</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
-    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
-{
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">vector</span>.<span class="ident">clone</span>();
-    <span class="kw">let</span> <span class="ident">zero</span> <span class="op">=</span> <span class="string">&quot;0&quot;</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
-    <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">count</span> {
-        <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">zero</span>);
-    }
-    <span class="ident">output</span>
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">make_matrix_float</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span> <span class="op">+</span> <span class="ident">Copy</span>,
-{
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
-    <span class="ident">input</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> {
-            <span class="ident">a</span>.<span class="ident">iter</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> {
-                    <span class="kw">if</span> <span class="ident">is_numerical</span>(<span class="kw-2">*</span><span class="ident">b</span>) {
-                        <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">b</span>).<span class="ident">parse</span>().<span class="ident">unwrap</span>()
-                    } <span class="kw">else</span> {
-                        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Non numerical value present in the intput&quot;</span>);
-                    }
-                })
-                .<span class="ident">collect</span>()
-        })
-        .<span class="ident">collect</span>()
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">make_vector_float</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span> <span class="op">+</span> <span class="ident">Copy</span>,
-{
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
-    <span class="ident">input</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> {
-            <span class="kw">if</span> <span class="ident">is_numerical</span>(<span class="kw-2">*</span><span class="ident">b</span>) {
-                <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">b</span>).<span class="ident">parse</span>().<span class="ident">unwrap</span>()
-            } <span class="kw">else</span> {
-                <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Non numerical value present in the intput&quot;</span>);
-            }
-        })
-        .<span class="ident">collect</span>()
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">round_off_f</span>(<span class="ident">value</span>: <span class="ident">f64</span>, <span class="ident">decimals</span>: <span class="ident">i32</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
-    ((<span class="ident">value</span> <span class="op">*</span> <span class="number">10.0f64</span>.<span class="ident">powi</span>(<span class="ident">decimals</span>)).<span class="ident">round</span>()) <span class="op">/</span> <span class="number">10.0f64</span>.<span class="ident">powi</span>(<span class="ident">decimals</span>)
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">min_max_f</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">f64</span>, <span class="ident">f64</span>) {
-    <span class="comment">// check if it is a numerical type</span>
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
-    <span class="kw">if</span> <span class="ident">type_of</span>(<span class="ident">list</span>[<span class="number">0</span>]) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;f64&quot;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="ident">list</span>[<span class="number">0</span>]) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;f32&quot;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">positive</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">list</span>
-            .<span class="ident">clone</span>()
-            .<span class="ident">iter</span>()
-            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0.</span>)
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">a</span>)
-            .<span class="ident">collect</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">negative</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">list</span>
-            .<span class="ident">clone</span>()
-            .<span class="ident">iter</span>()
-            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span> <span class="op">&lt;</span> <span class="number">0.</span>)
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">a</span>)
-            .<span class="ident">collect</span>();
-        <span class="ident">positive</span>.<span class="ident">sort_by</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">partial_cmp</span>(<span class="ident">b</span>).<span class="ident">unwrap</span>());
-        <span class="ident">negative</span>.<span class="ident">sort_by</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">partial_cmp</span>(<span class="ident">b</span>).<span class="ident">unwrap</span>());
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">list</span>);
-        (<span class="ident">negative</span>[<span class="number">0</span>], <span class="ident">positive</span>[<span class="ident">positive</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>])
-    } <span class="kw">else</span> {
-        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Input should be a float type&quot;</span>);
-    }
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_numerical</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">value</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-    <span class="kw">if</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;i32&quot;</span>
-        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;i8&quot;</span>
-        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;i16&quot;</span>
-        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;i64&quot;</span>
-        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;i128&quot;</span>
-        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;f64&quot;</span>
-        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;f32&quot;</span>
-        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;u32&quot;</span>
-        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;u8&quot;</span>
-        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;u16&quot;</span>
-        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;u64&quot;</span>
-        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;u128&quot;</span>
-        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;usize&quot;</span>
-        <span class="op">|</span><span class="op">|</span> <span class="ident">type_of</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>) <span class="op">=</span><span class="op">=</span> <span class="string">&quot;&amp;isize&quot;</span>
-    {
-        <span class="bool-val">true</span>
-    } <span class="kw">else</span> {
-        <span class="bool-val">false</span>
-    }
-}
-
-<span class="comment">// use std::collections::HashMap;</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">value_counts</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">u32</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">Eq</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">hash</span>::<span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Copy</span>,
-{
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">count</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">u32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
-    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">list</span> {
-        <span class="ident">count</span>.<span class="ident">insert</span>(<span class="kw-2">*</span><span class="ident">i</span>, <span class="number">1</span> <span class="op">+</span> <span class="kw">if</span> <span class="ident">count</span>.<span class="ident">contains_key</span>(<span class="ident">i</span>) { <span class="ident">count</span>[<span class="ident">i</span>] } <span class="kw">else</span> { <span class="number">0</span> });
-    }
-    <span class="ident">count</span>
-}
-
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">any</span>::<span class="ident">type_name</span>;
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">type_of</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw">_</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
-    <span class="ident">type_name</span>::<span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>()
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unique_values</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Copy</span>,
-{
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">list</span>.<span class="ident">iter</span>() {
-        <span class="kw">if</span> <span class="ident">output</span>.<span class="ident">contains</span>(<span class="ident">i</span>) {
-        } <span class="kw">else</span> {
-            <span class="ident">output</span>.<span class="ident">push</span>(<span class="kw-2">*</span><span class="ident">i</span>)
-        };
-    }
-    <span class="ident">output</span>
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">matrix_subtraction</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">matrix1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">matrix2</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>,
-{
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">if</span> <span class="ident">matrix1</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">matrix2</span>.<span class="ident">len</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">matrix1</span>[<span class="number">0</span>].<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">matrix2</span>[<span class="number">0</span>].<span class="ident">len</span>() {
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">matrix1</span>.<span class="ident">len</span>() {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">row</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-            <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">matrix1</span>[<span class="number">0</span>].<span class="ident">len</span>() {
-                <span class="ident">row</span>.<span class="ident">push</span>(<span class="ident">matrix1</span>[<span class="ident">i</span>][<span class="ident">j</span>] <span class="op">-</span> <span class="ident">matrix2</span>[<span class="ident">i</span>][<span class="ident">j</span>]);
-            }
-            <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">row</span>);
-        }
-        <span class="ident">output</span>
-    } <span class="kw">else</span> {
-        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;The matrix are not of same dimensions&quot;</span>);
-    }
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">matrix_addition</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">matrix1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">matrix2</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>,
-{
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">if</span> <span class="ident">matrix1</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">matrix2</span>.<span class="ident">len</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">matrix1</span>[<span class="number">0</span>].<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">matrix2</span>[<span class="number">0</span>].<span class="ident">len</span>() {
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">matrix1</span>.<span class="ident">len</span>() {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">row</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-            <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">matrix1</span>[<span class="number">0</span>].<span class="ident">len</span>() {
-                <span class="ident">row</span>.<span class="ident">push</span>(<span class="ident">matrix1</span>[<span class="ident">i</span>][<span class="ident">j</span>] <span class="op">+</span> <span class="ident">matrix2</span>[<span class="ident">i</span>][<span class="ident">j</span>]);
-            }
-            <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">row</span>);
-        }
-        <span class="ident">output</span>
-    } <span class="kw">else</span> {
-        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;The matrix are not of same dimensions&quot;</span>);
-    }
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">element_wise_matrix_product</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">matrix1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">matrix2</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>,
-{
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">if</span> <span class="ident">matrix1</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">matrix2</span>.<span class="ident">len</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">matrix1</span>[<span class="number">0</span>].<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">matrix2</span>[<span class="number">0</span>].<span class="ident">len</span>() {
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">matrix1</span>.<span class="ident">len</span>() {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">row</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-            <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">matrix1</span>[<span class="number">0</span>].<span class="ident">len</span>() {
-                <span class="ident">row</span>.<span class="ident">push</span>(<span class="ident">matrix1</span>[<span class="ident">i</span>][<span class="ident">j</span>] <span class="op">*</span> <span class="ident">matrix2</span>[<span class="ident">i</span>][<span class="ident">j</span>]);
-            }
-            <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">row</span>);
-        }
-        <span class="ident">output</span>
-    } <span class="kw">else</span> {
-        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;The matrix are not of same dimensions&quot;</span>);
-    }
-}
-
-<span class="comment">//==============================================================================================================================================</span>
-<span class="comment">//==============================================================================================================================================</span>
-<span class="comment">//==============================================================================================================================================</span>
 
 <span class="kw">use</span> <span class="ident">math</span>::<span class="ident">round</span>;
 <span class="kw">use</span> <span class="ident">rand</span>::<span class="kw-2">*</span>;
@@ -1801,7 +1741,7 @@ FUNCTIONS
         <span class="ident">bias</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>,
         <span class="ident">f</span>: <span class="kw">fn</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mat_mul</span> <span class="op">=</span> <span class="ident">transpose</span>(<span class="kw-2">&amp;</span><span class="ident">matrix_product</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>, <span class="kw-2">&amp;</span><span class="ident">weights</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mat_mul</span> <span class="op">=</span> <span class="ident">transpose</span>(<span class="kw-2">&amp;</span><span class="ident">matrix_multiplication</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>, <span class="kw-2">&amp;</span><span class="ident">weights</span>));
         <span class="comment">// println!(&quot;input * weights = {:?}&quot;, mat_mul);</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
         <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">mat_mul</span> {

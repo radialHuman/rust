@@ -1,5 +1,3 @@
-// https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/
-
 /*
 DESCRIPTION
 -----------------------------------------
@@ -8,38 +6,38 @@ STRUCTS
 FUNCTIONS
 ---------
 1. coefficient : To find slope(b1) and intercept(b0) of a line
-    > 1. list1 : A &Vec<T>
-    > 2. list2 : A &Vec<T>
-    = 1. b0
-    = 2. b1
+> 1. list1 : A &Vec<T>
+> 2. list2 : A &Vec<T>
+= 1. b0
+= 2. b1
 2. convert_and_impute : To convert type and replace missing values with a constant input
-    > 1. list : A &Vec<String> to be converted to a different type
-    > 2. to : A value which provides the type(U) to be converted to
-    > 3. impute_with : A value(U) to be swapped with missing elemets of the same type as "to"
-    = 1. Result with Vec<U> and Error propagated
-    = 2. A Vec<uszie> to show the list of indexes where values were missing
+> 1. list : A &Vec<String> to be converted to a different type
+> 2. to : A value which provides the type(U) to be converted to
+> 3. impute_with : A value(U) to be swapped with missing elemets of the same type as "to"
+= 1. Result with Vec<U> and Error propagated
+= 2. A Vec<uszie> to show the list of indexes where values were missing
 3. covariance :
-    > 1. list1 : A &Vec<T>
-    > 2. list2 : A &Vec<T>
-    = 1. f64
+> 1. list1 : A &Vec<T>
+> 2. list2 : A &Vec<T>
+= 1. f64
 4. impute_string :
-    > 1. list : A &mut Vec<String> to be imputed
-    > 2. impute_with : A value(U) to be swapped with missing elemets of the same type as "to"
-    = 1. A Vec<&str> with missing values replaced
+> 1. list : A &mut Vec<String> to be imputed
+> 2. impute_with : A value(U) to be swapped with missing elemets of the same type as "to"
+= 1. A Vec<&str> with missing values replaced
 5. mean :
-    > 1. list : A &Vec<T>
-    = 1. f64
+> 1. list : A &Vec<T>
+= 1. f64
 6. read_csv :
-    > 1. path : A String for file path
-    > 2. columns : number of columns to be converted to
-    = 1. HashMap<String,Vec<String>) as a table with headers and its values in vector
+> 1. path : A String for file path
+> 2. columns : number of columns to be converted to
+= 1. HashMap<String,Vec<String>) as a table with headers and its values in vector
 7. root_mean_square :
-    > 1. list1 : A &Vec<T>
-    > 2. list2 : A &Vec<T>
-    = 1. f64
-8. simple_linear_regression_prediction :
-    > 1. train : A &Vec<(T,T)>
-    > 2. test : A &Vec<(T,T)>
+> 1. list1 : A &Vec<T>
+> 2. list2 : A &Vec<T>
+= 1. f64
+8. simple_linear_regression_prediction : // https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/
+> 1. train : A &Vec<(T,T)>
+> 2. test : A &Vec<(T,T)>
     = 1. Vec<T>
 9. variance :
     > 1. list : A &Vec<T>
@@ -332,7 +330,7 @@ pub fn normalize_vector_f(list: &Vec<f64>) -> Vec<f64> {
 pub fn logistic_function_f(matrix: &Vec<Vec<f64>>, beta: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
     println!("========================================================================================================================================================");
     //https://www.geeksforgeeks.org/understanding-logistic-regression/
-    matrix_product(matrix, &transpose(beta))
+    matrix_multiplication(matrix, &transpose(beta))
         .iter()
         .map(|a| a.iter().map(|b| 1. / (1. + ((b * -1.).exp()))).collect())
         .collect()
@@ -345,8 +343,9 @@ pub fn log_gradient_f(
 ) -> Vec<Vec<f64>> {
     println!("========================================================================================================================================================");
     //https://www.geeksforgeeks.org/understanding-logistic-regression/
-    let first_calc = matrix_subtraction(&logistic_function_f(matrix1, beta), matrix2);
-    transpose(&matrix_product(&transpose(&first_calc), &matrix1))
+    let first_calc =
+        element_wise_matrix_operation(&logistic_function_f(matrix1, beta), matrix2, "Sub");
+    transpose(&matrix_multiplication(&transpose(&first_calc), &matrix1))
 }
 
 pub fn cost_function(
@@ -361,7 +360,7 @@ pub fn cost_function(
         .iter()
         .map(|a| a.iter().map(|b| b.ln()).collect())
         .collect();
-    let step1 = element_wise_matrix_product(matrix2, &log_logistic);
+    let step1 = element_wise_matrix_operation(matrix2, &log_logistic, "Mul");
     let minus_step1: Vec<Vec<_>> = step1
         .iter()
         .map(|a| a.iter().map(|b| b * -1.).collect())
@@ -374,9 +373,9 @@ pub fn cost_function(
         .iter()
         .map(|a| a.iter().map(|b| 1. - b).collect())
         .collect();
-    let step2 = element_wise_matrix_product(&one_minus_matrix2, &one_minus_log_logistic);
+    let step2 = element_wise_matrix_operation(&one_minus_matrix2, &one_minus_log_logistic, "Mul");
     let mut output = 0.;
-    for i in matrix_subtraction(&minus_step1, &step2).iter() {
+    for i in element_wise_matrix_operation(&minus_step1, &step2, "Sub").iter() {
         for j in i.iter() {
             output += j;
         }

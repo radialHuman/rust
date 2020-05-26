@@ -14,26 +14,31 @@ fn main() {
     // lib_matrix.rs
 
     let v1 = vec![1., 2., 5., 8., 3., 7., 5., -2., -3., -5.];
-    let mut v2 = vec![1, 6, 2, 7, 3, 7, 99, 6, 3, 6, -12, -34];
+    let mut v2 = vec![1, 6, 2, 7, 3, 7, 99, 6, 3, 6];
 
     // vector addition check
-    let v1_plus_v2 =
-        lib_matrix::vector_addition(&mut v1.iter().map(|x| *x as i32).collect(), &mut v2);
+    let v1_plus_v2 = lib_matrix::element_wise_operation(
+        &mut v1.iter().map(|x| *x as i32).collect(),
+        &mut v2,
+        "Add",
+    );
     println!(
-        "The addition of of {:?} with {:?} is: {:?}",
+        "The addition of {:?} with {:?} is: {:?}",
         v1, v2, v1_plus_v2
     );
 
     // elemnt wise multiplicaiton check
-    let v1_into_v2 = lib_matrix::element_wise_multiplication(
+    let v1_into_v2 = lib_matrix::element_wise_operation(
         &mut v1.iter().map(|x| *x as i32).collect(),
         &mut v2,
+        "Mul",
     );
     println!(
         "The multiplication of {:?} with {:?} is: {:?}",
         v1, v2, v1_into_v2
     );
 
+    v2 = vec![1, 6, 2, 7, 3, 7, 99, 6, 3, 6, -12, -34];
     // Shape changer
     let v2 = lib_matrix::shape_changer(&v2, 4, 3);
     lib_matrix::print_a_matrix("\n2x5 version is:", &v2);
@@ -45,7 +50,7 @@ fn main() {
     // matrix multiplcation and dot product
     let v3 = vec![vec![1, 4, 4], vec![5, 8, 9], vec![0, 1, 6]];
     let v4 = vec![vec![1, 4, 4, 5], vec![5, 8, 9, 1], vec![0, 1, 6, 0]];
-    let v3_v4 = lib_matrix::matrix_product(&v3, &v4);
+    let v3_v4 = lib_matrix::matrix_multiplication(&v3, &v4);
     lib_matrix::print_a_matrix(
         &format!("The multiplicaiton of {:?} and {:?}", v3, v4),
         &v3_v4,
@@ -247,13 +252,22 @@ fn main() {
     println!("{:?}", lib_ml::cost_function(&a_f, &b, &y));
 
     // matrix addition
-    println!("{:?}", lib_matrix::matrix_addition(&a_f, &b));
+    println!(
+        "{:?}",
+        lib_matrix::element_wise_matrix_operation(&a_f, &b, "Add")
+    );
 
     // matrix subtraction
-    println!("{:?}", lib_matrix::matrix_subtraction(&a_f, &b));
+    println!(
+        "{:?}",
+        lib_matrix::element_wise_matrix_operation(&a_f, &b, "Sub")
+    );
 
     // element wise matrix multiplication
-    println!("{:?}", lib_matrix::element_wise_matrix_product(&a_f, &b));
+    println!(
+        "{:?}",
+        lib_matrix::element_wise_matrix_operation(&a_f, &b, "Mul")
+    );
 
     //================================================================================================================
     section_break("ML OVER");

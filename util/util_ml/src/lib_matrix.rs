@@ -9,11 +9,12 @@ FUNCTIONS
     > 1. A &Vec<T>
     > 2. A &Vec<T>
     = 1. T
-2. element_wise_multiplication : for vector
+2. element_wise_operation : for vector
     > 1. A &mut Vec<T>
     > 2. A &mut Vec<T>
+    > 3. operation &str ("Add","Sub","Mul","Div")
     = 1. Vec<T>
-3. matrix_product :
+3. matrix_multiplication :
     > 1. A &Vec<Vec<T>>
     > 2. A &Vec<Vec<T>>
     = 1. Vec<Vec<T>>
@@ -61,18 +62,11 @@ FUNCTIONS
     = (f64, f64)
 16. type_of : To know the type of a variable
     > 1. _
-    = str
-17. matrix_subtraction :
+    = &str
+17. element_wise_matrix_operation : for matrices
     > 1. matrix1 : A &Vec<Vec<T>>
     > 2. matrix2 : A &Vec<Vec<T>>
-    = A &Vec<Vec<T>>
-18. matrix_addition :
-    > 1. matrix1 : A &Vec<Vec<T>>
-    > 2. matrix2 : A &Vec<Vec<T>>
-    = A &Vec<Vec<T>>
-19. element_wise_matrix_product
-    > 1. matrix1 : A &Vec<Vec<T>>
-    > 2. matrix2 : A &Vec<Vec<T>>
+    > 3. fucntion : &str ("Add","Sub","Mul","Div")
     = A Vec<Vec<T>>
 */
 
@@ -151,7 +145,7 @@ where
     }
 }
 
-pub fn matrix_product<T>(input: &Vec<Vec<T>>, weights: &Vec<Vec<T>>) -> Vec<Vec<T>>
+pub fn matrix_multiplication<T>(input: &Vec<Vec<T>>, weights: &Vec<Vec<T>>) -> Vec<Vec<T>>
 where
     T: Copy + std::iter::Sum + std::ops::Mul<Output = T>,
 {
@@ -189,24 +183,29 @@ where
     output
 }
 
-pub fn element_wise_multiplication<T>(a: &mut Vec<T>, b: &mut Vec<T>) -> Vec<T>
+pub fn element_wise_operation<T>(a: &Vec<T>, b: &Vec<T>, operation: &str) -> Vec<T>
 where
-    T: std::ops::Mul<Output = T> + Copy + std::fmt::Debug + std::str::FromStr,
+    T: Copy
+        + std::fmt::Debug
+        + std::ops::Mul<Output = T>
+        + std::ops::Add<Output = T>
+        + std::ops::Sub<Output = T>
+        + std::ops::Div<Output = T>
+        + std::cmp::PartialEq
+        + std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
     if a.len() == b.len() {
-        a.iter().zip(b.iter()).map(|(x, y)| *x * *y).collect()
+        a.iter().zip(b.iter()).map(|(x, y)| match operation {
+                        "Mul" => *x * *y,
+                        "Add" => *x + *y,
+                        "Sub" => *x - *y,
+                        "Div" => *x / *y,
+                        _ => panic!("Operation unsuccessful!\nEnter any of the following(case sensitive):\n> Add\n> Sub\n> Mul\n> Div"),
+                    })
+                    .collect()
     } else {
-        // padding with zeros
-        if a.len() < b.len() {
-            let new_a = pad_with_zero(a, b.len() - a.len());
-            println!("The changed vector is {:?}", new_a);
-            new_a.iter().zip(b.iter()).map(|(x, y)| *x * *y).collect()
-        } else {
-            let new_b = pad_with_zero(b, a.len() - b.len());
-            println!("The changed vector is {:?}", new_b);
-            a.iter().zip(new_b.iter()).map(|(x, y)| *x * *y).collect()
-        }
+        panic!("Dimension mismatch")
     }
 }
 
@@ -345,62 +344,40 @@ where
     output
 }
 
-pub fn matrix_subtraction<T>(matrix1: &Vec<Vec<T>>, matrix2: &Vec<Vec<T>>) -> Vec<Vec<T>>
+pub fn element_wise_matrix_operation<T>(
+    matrix1: &Vec<Vec<T>>,
+    matrix2: &Vec<Vec<T>>,
+    operation: &str,
+) -> Vec<Vec<T>>
 where
-    T: Copy + std::ops::Sub<Output = T>,
+    T: Copy
+        + std::fmt::Debug
+        + std::ops::Mul<Output = T>
+        + std::ops::Add<Output = T>
+        + std::ops::Sub<Output = T>
+        + std::ops::Div<Output = T>
+        + std::cmp::PartialEq
+        + std::str::FromStr,
+    <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
-    println!("========================================================================================================================================================");
-    let mut output = vec![];
     if matrix1.len() == matrix2.len() && matrix1[0].len() == matrix2[0].len() {
-        for i in 0..matrix1.len() {
-            let mut row = vec![];
-            for j in 0..matrix1[0].len() {
-                row.push(matrix1[i][j] - matrix2[i][j]);
-            }
-            output.push(row);
-        }
-        output
+        matrix1
+            .iter()
+            .zip(matrix2.iter())
+            .map(|(x, y)| {
+                x.iter()
+                    .zip(y.iter())
+                    .map(|a| match operation {
+                        "Mul" => *a.0 * *a.1,
+                        "Add" => *a.0 + *a.1,
+                        "Sub" => *a.0 - *a.1,
+                        "Div" => *a.0 / *a.1,
+                        _ => panic!("Operation unsuccessful!\nEnter any of the following(case sensitive):\n> Add\n> Sub\n> Mul\n> Div"),
+                    })
+                    .collect()
+            })
+            .collect()
     } else {
-        panic!("The matrix are not of same dimensions");
-    }
-}
-
-pub fn matrix_addition<T>(matrix1: &Vec<Vec<T>>, matrix2: &Vec<Vec<T>>) -> Vec<Vec<T>>
-where
-    T: Copy + std::ops::Add<Output = T>,
-{
-    println!("========================================================================================================================================================");
-    let mut output = vec![];
-    if matrix1.len() == matrix2.len() && matrix1[0].len() == matrix2[0].len() {
-        for i in 0..matrix1.len() {
-            let mut row = vec![];
-            for j in 0..matrix1[0].len() {
-                row.push(matrix1[i][j] + matrix2[i][j]);
-            }
-            output.push(row);
-        }
-        output
-    } else {
-        panic!("The matrix are not of same dimensions");
-    }
-}
-
-pub fn element_wise_matrix_product<T>(matrix1: &Vec<Vec<T>>, matrix2: &Vec<Vec<T>>) -> Vec<Vec<T>>
-where
-    T: Copy + std::ops::Mul<Output = T>,
-{
-    println!("========================================================================================================================================================");
-    let mut output = vec![];
-    if matrix1.len() == matrix2.len() && matrix1[0].len() == matrix2[0].len() {
-        for i in 0..matrix1.len() {
-            let mut row = vec![];
-            for j in 0..matrix1[0].len() {
-                row.push(matrix1[i][j] * matrix2[i][j]);
-            }
-            output.push(row);
-        }
-        output
-    } else {
-        panic!("The matrix are not of same dimensions");
+        panic!("Dimension mismatch")
     }
 }
