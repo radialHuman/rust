@@ -9,65 +9,86 @@ FUNCTIONS
     > 1. A &Vec<T>
     > 2. A &Vec<T>
     = 1. T
+
 2. element_wise_operation : for vector
     > 1. A &mut Vec<T>
     > 2. A &mut Vec<T>
     > 3. operation &str ("Add","Sub","Mul","Div")
     = 1. Vec<T>
+
 3. matrix_multiplication :
     > 1. A &Vec<Vec<T>>
     > 2. A &Vec<Vec<T>>
     = 1. Vec<Vec<T>>
+
 4. pad_with_zero :
     > 1. A &mut Vec<T> to be modified
     > 2. usize of number of 0s to be added
     = 1. Vec<T>
+
 5. print_a_matrix :
     > 1. A &str as parameter to describe the matrix
     > 2. To print &Vec<Vec<T>> line by line for better visual
     = 1. ()
+
 6. shape_changer :
     > 1. A &Vec<T> to be converter into Vec<Vec<T>>
     > 2. number of columns to be converted to
     > 3. number of rows to be converted to
     = 1. Vec<Vec<T>>
+
 7. transpose :
     > 1. A &Vec<Vec<T>> to be transposed
     = 1. Vec<Vec<T>>
+
 8. vector_addition :
     > 1. A &Vec<T>
     > 2. A &Vec<T>
     = 1. Vec<T>
+
 9. make_matrix_float :
     > 1. input: A &Vec<Vec<T>>
     = Vec<Vec<f64>>
+
 10. make_vector_float :
     > 1. input: &Vec<T>
     = Vec<f64>
+
 11. round_off_f :
     > 1. value: f64
     > 2. decimals: i32
     = f64
+
 12. unique_values : of a Vector
     > 1. list : A &Vec<T>
     = 1. Vec<T>
+
 13. value_counts :
     > 1. list : A &Vec<T>
     = HashMap<T, u32>
+
 14. is_numerical :
     > 1. value: T
     = bool
+
 15. min_max_f :
     > 1. list: A &Vec<f64>
     = (f64, f64)
+
 16. type_of : To know the type of a variable
     > 1. _
     = &str
+
 17. element_wise_matrix_operation : for matrices
     > 1. matrix1 : A &Vec<Vec<T>>
     > 2. matrix2 : A &Vec<Vec<T>>
     > 3. fucntion : &str ("Add","Sub","Mul","Div")
     = A Vec<Vec<T>>
+
+18. matrix_vector_product_f
+    > 1. matrix: &Vec<Vec<f64>>
+    > 2. vector: &Vec<f64>
+    = Vec<f64>
 */
 
 pub fn print_a_matrix<T: std::fmt::Debug>(string: &str, matrix: &Vec<Vec<T>>) {
@@ -96,7 +117,7 @@ where
         }
         output
     } else {
-        panic!("!!! The shape transformation is not possible, check the vlaues entered !!!");
+        panic!("!!! The shape transformation is not possible, check the values entered !!!");
         // vec![]
     }
 }
@@ -150,14 +171,14 @@ where
     T: Copy + std::iter::Sum + std::ops::Mul<Output = T>,
 {
     // Matrix multiplcation
-    println!(
-        "Multiplication of {}x{} and {}x{}",
-        input.len(),
-        input[0].len(),
-        weights.len(),
-        weights[0].len()
-    );
-    println!("Output will be {}x{}", input.len(), weights[0].len());
+    // println!(
+    //     "Multiplication of {}x{} and {}x{}",
+    //     input.len(),
+    //     input[0].len(),
+    //     weights.len(),
+    //     weights[0].len()
+    // );
+    // println!("Output will be {}x{}", input.len(), weights[0].len());
     let weights_t = transpose(&weights);
     // print_a_matrix(&weights_t);
     let mut output: Vec<T> = vec![];
@@ -171,7 +192,7 @@ where
         // println!("{:?}", output);
         shape_changer(&output, input.len(), weights_t.len())
     } else {
-        panic!("These cant be multiplied due to the dimensions")
+        panic!("Dimension mismatch")
     }
 }
 
@@ -259,16 +280,14 @@ where
         })
         .collect()
 }
-
 pub fn round_off_f(value: f64, decimals: i32) -> f64 {
     println!("========================================================================================================================================================");
     ((value * 10.0f64.powi(decimals)).round()) / 10.0f64.powi(decimals)
 }
 
 pub fn min_max_f(list: &Vec<f64>) -> (f64, f64) {
-    // check if it is a numerical type
-    println!("========================================================================================================================================================");
-    if type_of(list[0]) == "f64" || type_of(list[0]) == "f32" {
+    // println!("========================================================================================================================================================");
+    if type_of(list[0]) == "f64" {
         let mut positive: Vec<f64> = list
             .clone()
             .iter()
@@ -283,8 +302,12 @@ pub fn min_max_f(list: &Vec<f64>) -> (f64, f64) {
             .collect();
         positive.sort_by(|a, b| a.partial_cmp(b).unwrap());
         negative.sort_by(|a, b| a.partial_cmp(b).unwrap());
-        println!("{:?}", list);
-        (negative[0], positive[positive.len() - 1])
+        // println!("{:?}", list);
+        if negative.len() > 0 {
+            (negative[0], positive[positive.len() - 1])
+        } else {
+            (positive[0], positive[positive.len() - 1])
+        }
     } else {
         panic!("Input should be a float type");
     }
@@ -380,4 +403,12 @@ where
     } else {
         panic!("Dimension mismatch")
     }
+}
+
+pub fn matrix_vector_product_f(matrix: &Vec<Vec<f64>>, vector: &Vec<f64>) -> Vec<f64> {
+    let mut output: Vec<_> = vec![];
+    for i in matrix.iter() {
+        output.push(dot_product(i, vector));
+    }
+    output
 }

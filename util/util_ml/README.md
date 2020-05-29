@@ -1,6 +1,5 @@
 ## Description
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
-
 ## List of Functions and Structs
 
 ### lib_matrix
@@ -21,6 +20,7 @@
     15. min_max_f
     16. type_of
     17. element_wise_matrix_operation
+    18. matrix_vector_product_f
 ### lib_ml
     1. coefficient
     2. convert_and_impute
@@ -30,12 +30,17 @@
     6. read_csv
     7. root_mean_square
     8. simple_linear_regression_prediction
-    9. turn_string_categorical
-    10. variance
+    9. variance
+    10. convert_string_categorical 
     11. normalize_vector_f
     12. logistic_function_f
-    13. log_gradient_f
-    14. cost_function_f
+    13. log_gradient_f 
+    14. cost_function_f (WIP)
+    15. gradient_descent 
+    16. logistic_predict 
+    17. randomize
+    18. train_test_split
+    19. binary_logistic_regression (WIP)
 ### lib_nn
     1. create_layer (Struct)
 
