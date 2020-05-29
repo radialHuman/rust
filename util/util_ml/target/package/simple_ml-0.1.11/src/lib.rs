@@ -716,7 +716,7 @@ pub fn binary_logistic_regression(
     test_percentage: f64,
     learning_rate: f64,
     coverage_rate: f64,
-) -> (Vec<Vec<f64>>, i32) {
+) -> (Vec<Vec<f64>>, i32, Vec<Vec<f64>>, Vec<f64>) {
     // use std::collections::HashMap;
     let (columns, values) = read_csv(path);
     // converting input to str and normalizing them
@@ -773,7 +773,7 @@ pub fn binary_logistic_regression(
     //     "{:?}\n{:?}\n{:?}\n{:?}\n{:?}",
     //     feature_vector, target_vector, &beta, &new_beta, iteration_count
     // );
-    (new_beta, iteration_count)
+    (new_beta, iteration_count, input, target_vector)
 }
 
 /*
