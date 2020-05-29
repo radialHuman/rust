@@ -339,7 +339,7 @@ pub fn impute_string<'a>(list: &'a mut Vec<String>, impute_with: &'a str) -> Vec
         .collect()
 }
 
-use std::collections::HashMap;
+// use std::collections::HashMap;
 pub fn convert_string_categorical<T>(list: &Vec<T>, extra_class: bool) -> Vec<f64>
 where
     T: std::cmp::PartialEq + std::cmp::Eq + std::hash::Hash + Copy,
@@ -577,7 +577,7 @@ pub fn binary_logistic_regression(
     learning_rate: f64,
     coverage_rate: f64,
 ) -> (Vec<Vec<f64>>, i32) {
-    use std::collections::HashMap;
+    // use std::collections::HashMap;
     let (columns, values) = read_csv(path);
     // converting input to str and normalizing them
     let mut df: HashMap<String, Vec<f64>> = HashMap::new();

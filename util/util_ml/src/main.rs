@@ -158,13 +158,13 @@ fn main() {
     );
 
     // reading in a file to have table
-    let df = lib_ml::read_csv("./data/dataset_iris.txt".to_string(), 5);
-    println!("{:?}", df.values());
+    let df = lib_ml::read_csv("./data/dataset_iris.txt".to_string());
+    println!("{:?}\n{:?}", df.0, df.1);
 
     // unique values
     println!(
         "Unique classes are {:?}",
-        lib_matrix::unique_values(&df["species"].iter().map(|a| &*a).collect()) // converting String to &str as copy is not implemented for String
+        lib_matrix::unique_values(vec![1, 6, 2, 6, 8, 2, 23, 3, 5, 2, 4, 2, 0]) // converting String to &str as copy is not implemented for String
     );
 
     // type conversion and missing value replacement
@@ -249,7 +249,7 @@ fn main() {
         vec![8., 2., 1., 2.],
         vec![1., 1., 1., 2.],
     ];
-    println!("{:?}", lib_ml::cost_function(&a_f, &b, &y));
+    println!("{:?}", lib_ml::cost_function_f(&a_f, &b, &y));
 
     // matrix addition
     println!(
