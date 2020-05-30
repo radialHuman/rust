@@ -7,3 +7,4 @@
 | eda_1 |  reading in a csv, df.head(), df.column.mean(), df.isnan().sum(), df.column.unique()|
 | scrapping |  extracting links from a website|
 | leetcode |  practice problem|
+| crates | checking out various crates |

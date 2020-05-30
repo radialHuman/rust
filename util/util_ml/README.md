@@ -3,6 +3,8 @@
 ## List of Functions and Structs
 
 ### lib_matrix
+    1. MatrixDeterminantF (Struct)
+
     1. dot_product
     2. element_wise_operation
     3. matrix_multiplication

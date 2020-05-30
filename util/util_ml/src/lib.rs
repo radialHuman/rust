@@ -781,6 +781,11 @@ DESCRIPTION
 -----------------------------------------
 STRUCTS
 -------
+1. MatrixDeterminantF : upto 100x100
+    > determinant_f
+    > is_square_matrix
+    > round_off_f
+
 FUNCTIONS
 ---------
 1. dot_product :
@@ -868,6 +873,80 @@ FUNCTIONS
     > 2. vector: &Vec<f64>
     = Vec<f64>
 */
+
+pub struct MatrixDeterminantF {
+    matrix: Vec<Vec<f64>>,
+}
+
+impl MatrixDeterminantF {
+    pub fn determinant_f(&self) -> f64 {
+        // https://integratedmlai.com/find-the-determinant-of-a-matrix-with-pure-python-without-numpy-or-scipy/
+        // check if it is a square matrix
+        if MatrixDeterminantF::is_square_matrix(&self.matrix) == true {
+            println!("Calculating Determinant...");
+
+            match self.matrix.len() {
+                1 => self.matrix[0][0],
+                2 => MatrixDeterminantF::determinant_2(&self),
+                3..=100 => MatrixDeterminantF::determinant_3plus(&self),
+                _ => {
+                    println!("Cant find determinant for size more than {}", 100);
+                    "0".parse().unwrap()
+                }
+            }
+        } else {
+            panic!("The input should be a square matrix");
+        }
+    }
+    fn determinant_2(&self) -> f64 {
+        (self.matrix[0][0] * self.matrix[1][1]) - (self.matrix[1][0] * self.matrix[1][0])
+    }
+
+    fn determinant_3plus(&self) -> f64 {
+        // converting to upper triangle and multiplying the diagonals
+        let length = self.matrix.len() - 1;
+        let mut new_matrix = self.matrix.clone();
+
+        // rounding off value
+        new_matrix = new_matrix
+            .iter()
+            .map(|a| {
+                a.iter()
+                    .map(|a| MatrixDeterminantF::round_off_f(*a, 3))
+                    .collect()
+            })
+            .collect();
+
+        for diagonal in 0..=length {
+            for i in diagonal + 1..=length {
+                if new_matrix[diagonal][diagonal] == 0.0 {
+                    new_matrix[diagonal][diagonal] = 0.001;
+                }
+                let scalar = new_matrix[i][diagonal] / new_matrix[diagonal][diagonal];
+                for j in 0..=length {
+                    new_matrix[i][j] = new_matrix[i][j] - (scalar * new_matrix[diagonal][j]);
+                }
+            }
+        }
+        let mut product = 1.;
+        for i in 0..=length {
+            product *= new_matrix[i][i]
+        }
+        product
+    }
+
+    pub fn is_square_matrix<T>(matrix: &Vec<Vec<T>>) -> bool {
+        if matrix.len() == matrix[0].len() {
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn round_off_f(value: f64, decimals: i32) -> f64 {
+        ((value * 10.0f64.powi(decimals)).round()) / 10.0f64.powi(decimals)
+    }
+}
 
 pub fn print_a_matrix<T: std::fmt::Debug>(string: &str, matrix: &Vec<Vec<T>>) {
     // To print a matrix in a manner that resembles a matrix
@@ -1113,7 +1192,7 @@ pub fn is_numerical<T>(value: T) -> bool {
     }
 }
 
-// use std::collections::HashMap;
+use std::collections::HashMap;
 pub fn value_counts<T>(list: &Vec<T>) -> HashMap<T, u32>
 where
     T: std::cmp::PartialEq + std::cmp::Eq + std::hash::Hash + Copy,

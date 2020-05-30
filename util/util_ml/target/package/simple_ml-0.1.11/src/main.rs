@@ -164,44 +164,47 @@ fn main() {
     // unique values
     println!(
         "Unique classes are {:?}",
-        lib_matrix::unique_values(vec![1, 6, 2, 6, 8, 2, 23, 3, 5, 2, 4, 2, 0]) // converting String to &str as copy is not implemented for String
+        lib_matrix::unique_values(&vec![1, 6, 2, 6, 8, 2, 23, 3, 5, 2, 4, 2, 0]) // converting String to &str as copy is not implemented for String
     );
 
-    // type conversion and missing value replacement
-    let conversion = lib_ml::convert_and_impute(&df["petal_length"], 0., 999.);
-    let floating_petal_length = conversion.0.unwrap();
-    let missing_value = conversion.1;
-    println!(
-        "{:?}\nis now\n{:?}\nwith missing values at\n{:?}",
-        df["petal_length"], floating_petal_length, missing_value
-    );
+    // // type conversion and missing value replacement
+    // let conversion =
+    //     lib_ml::convert_and_impute(&vec![1, 6, 2, 6, 8, 2, 23, 3, 5, 2, 4, 2, 0], 0., 999.);
+    // let floating_petal_length = conversion.0.unwrap();
+    // let missing_value = conversion.1;
+    // println!(
+    //     "{:?}\nis now\n{:?}\nwith missing values at\n{:?}",
+    //     &vec![1, 6, 2, 6, 8, 2, 23, 3, 5, 2, 4, 2, 0],
+    //     floating_petal_length,
+    //     missing_value
+    // );
 
-    // missing string imputation
-    let mut species = df["species"].clone();
-    println!(
-        "{:?}\nis now\n{:?}",
-        &df["species"],
-        lib_ml::impute_string(&mut species, "UNKNOWN")
-    );
+    // // missing string imputation
+    // let mut species = vec![1, 6, 2, 6, 8, 2, 23, 3, 5, 2, 4, 2, 0].clone();
+    // println!(
+    //     "{:?}\nis now\n{:?}",
+    //     &&vec![1, 6, 2, 6, 8, 2, 23, 3, 5, 2, 4, 2, 0],
+    //     lib_ml::impute_string(&mut species, "UNKNOWN")
+    // );
 
-    // unique values
-    println!(
-        "Now the unique classes are {:?}",
-        lib_matrix::unique_values(&lib_ml::impute_string(&mut species, "UNKNOWN")) // converting String to &str as copy is not implemented for String
-    );
+    // // unique values
+    // println!(
+    //     "Now the unique classes are {:?}",
+    //     lib_matrix::unique_values(&lib_ml::impute_string(&mut species, "UNKNOWN")) // converting String to &str as copy is not implemented for String
+    // );
 
-    // string to categories
-    println!(
-        "Categorized {:?} is now {:?}",
-        &df["species"],
-        lib_ml::convert_string_categorical(&df["species"].iter().map(|a| &*a).collect(), false)
-    );
+    // // string to categories
+    // println!(
+    //     "Categorized {:?} is now {:?}",
+    //     &df["species"],
+    //     lib_ml::convert_string_categorical(&df["species"].iter().map(|a| &*a).collect(), false)
+    // );
 
-    // unique value count (pivot)
-    println!(
-        "The value count of SPECIES is {:?}",
-        lib_matrix::value_counts(&df["species"].iter().map(|a| &*a).collect())
-    );
+    // // unique value count (pivot)
+    // println!(
+    //     "The value count of SPECIES is {:?}",
+    //     lib_matrix::value_counts(&df["species"].iter().map(|a| &*a).collect())
+    // );
 
     // maximum and minimum
     let arr = vec![1., 2., 3., -5., -7., 0.];
@@ -243,12 +246,7 @@ fn main() {
     // cost function
     let a_f = vec![vec![1., 2.], vec![2., 3.], vec![3., 7.], vec![4., 6.]];
     let mut b = vec![vec![0.2, 0.3], vec![0.4, 0.7], vec![1., 2.], vec![0.6, 1.]];
-    let y = vec![
-        vec![5., 6., 1., 2.],
-        vec![5., 87., 1., 2.],
-        vec![8., 2., 1., 2.],
-        vec![1., 1., 1., 2.],
-    ];
+    let y = vec![5., 6., 1., 2.];
     println!("{:?}", lib_ml::cost_function_f(&a_f, &b, &y));
 
     // matrix addition
