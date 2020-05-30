@@ -1192,7 +1192,7 @@ pub fn is_numerical<T>(value: T) -> bool {
     }
 }
 
-use std::collections::HashMap;
+// use std::collections::HashMap;
 pub fn value_counts<T>(list: &Vec<T>) -> HashMap<T, u32>
 where
     T: std::cmp::PartialEq + std::cmp::Eq + std::hash::Hash + Copy,
