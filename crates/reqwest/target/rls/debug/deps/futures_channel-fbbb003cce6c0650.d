@@ -1,9 +1,0 @@
-c:\Users\rahul.damani\Downloads\code\rust\crates\reqwest\target\rls\debug\deps\futures_channel-fbbb003cce6c0650.rmeta: C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\futures-channel-0.3.5\src\lib.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\futures-channel-0.3.5\src\lock.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\futures-channel-0.3.5\src\mpsc\mod.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\futures-channel-0.3.5\src\mpsc\queue.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\futures-channel-0.3.5\src\oneshot.rs
-
-c:\Users\rahul.damani\Downloads\code\rust\crates\reqwest\target\rls\debug\deps\futures_channel-fbbb003cce6c0650.d: C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\futures-channel-0.3.5\src\lib.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\futures-channel-0.3.5\src\lock.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\futures-channel-0.3.5\src\mpsc\mod.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\futures-channel-0.3.5\src\mpsc\queue.rs C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\futures-channel-0.3.5\src\oneshot.rs
-
-C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\futures-channel-0.3.5\src\lib.rs:
-C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\futures-channel-0.3.5\src\lock.rs:
-C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\futures-channel-0.3.5\src\mpsc\mod.rs:
-C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\futures-channel-0.3.5\src\mpsc\queue.rs:
-C:\Users\rahul.damani\.cargo\registry\src\github.com-1ecc6299db9ec823\futures-channel-0.3.5\src\oneshot.rs:
