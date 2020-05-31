@@ -3,8 +3,9 @@ DESCRIPTION
 -----------------------------------------
 STRUCTS
 -------
-1. MatrixDeterminantF : upto 100x100
+1. MatrixF : upto 100x100
     > determinant_f
+    > inverse_f
     > is_square_matrix
     > round_off_f
 
@@ -96,21 +97,22 @@ FUNCTIONS
     = Vec<f64>
 */
 
-pub struct MatrixDeterminantF {
+#[derive(Debug)] // to make it usable by print!
+pub struct MatrixF {
     matrix: Vec<Vec<f64>>,
 }
 
-impl MatrixDeterminantF {
+impl MatrixF {
     pub fn determinant_f(&self) -> f64 {
         // https://integratedmlai.com/find-the-determinant-of-a-matrix-with-pure-python-without-numpy-or-scipy/
         // check if it is a square matrix
-        if MatrixDeterminantF::is_square_matrix(&self.matrix) == true {
+        if MatrixF::is_square_matrix(&self.matrix) == true {
             println!("Calculating Determinant...");
 
             match self.matrix.len() {
                 1 => self.matrix[0][0],
-                2 => MatrixDeterminantF::determinant_2(&self),
-                3..=100 => MatrixDeterminantF::determinant_3plus(&self),
+                2 => MatrixF::determinant_2(&self),
+                3..=100 => MatrixF::determinant_3plus(&self),
                 _ => {
                     println!("Cant find determinant for size more than {}", 100);
                     "0".parse().unwrap()
@@ -132,11 +134,7 @@ impl MatrixDeterminantF {
         // rounding off value
         new_matrix = new_matrix
             .iter()
-            .map(|a| {
-                a.iter()
-                    .map(|a| MatrixDeterminantF::round_off_f(*a, 3))
-                    .collect()
-            })
+            .map(|a| a.iter().map(|a| MatrixF::round_off_f(*a, 3)).collect())
             .collect();
 
         for diagonal in 0..=length {
@@ -168,6 +166,66 @@ impl MatrixDeterminantF {
     pub fn round_off_f(value: f64, decimals: i32) -> f64 {
         // println!("========================================================================================================================================================");
         ((value * 10.0f64.powi(decimals)).round()) / 10.0f64.powi(decimals)
+    }
+    
+
+    pub fn inverse_f(&self) -> Vec<Vec<f64>> {
+        // https://integratedmlai.com/matrixinverse/
+        let mut input = self.matrix.clone();
+        let length = self.matrix.len();
+        let mut identity = MatrixF::identity_matrix(length);
+
+        let mut index: Vec<usize> = (0..length).collect();
+        let mut int_index: Vec<i32> = index.iter().map(|a| *a as i32).collect();
+
+        for diagonal in 0..length {
+            let diagonalScalar = 1. / (input[diagonal][diagonal]);
+            // first action
+            for columnLoop in 0..length {
+                input[diagonal][columnLoop] *= diagonalScalar;
+                identity[diagonal][columnLoop] *= diagonalScalar;
+            }
+
+            // second action
+            let mut exceptDiagonal: Vec<usize> = index[0..diagonal]
+                .iter()
+                .copied()
+                .chain(index[diagonal + 1..].iter().copied())
+                .collect();
+            println!("Here\n{:?}", exceptDiagonal);
+
+            for i in exceptDiagonal {
+                let rowScalar = input[i as usize][diagonal].clone();
+                for j in 0..length {
+                    input[i][j] = input[i][j] - (rowScalar * input[diagonal][j]);
+                    identity[i][j] = identity[i][j] - (rowScalar * identity[diagonal][j])
+                }
+            }
+        }
+
+        identity
+    }
+
+    fn identity_matrix(size: usize) -> Vec<Vec<f64>> {
+        let mut output: Vec<Vec<f64>> = MatrixF::zero_matrix(size);
+        for i in 0..=(size - 1) {
+            for j in 0..=(size - 1) {
+                if i == j {
+                    output[i][j] = 1.;
+                } else {
+                    output[i][j] = 0.;
+                }
+            }
+        }
+        output
+    }
+
+    fn zero_matrix(size: usize) -> Vec<Vec<f64>> {
+        let mut output: Vec<Vec<f64>> = vec![];
+        for _ in 0..=(size - 1) {
+            output.push(vec![0.; size]);
+        }
+        output
     }
 }
 

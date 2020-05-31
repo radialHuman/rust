@@ -3,7 +3,15 @@
 ## List of Functions and Structs
 
 ### lib_matrix
-    1. MatrixDeterminantF (Struct)
+    1. MatrixDeterminantF (Struct) : 
+        > determinant_f
+            x determinant_2
+            x determinant_3plus
+        > is_square_matrix
+        > round_off_f
+        > inverse_f
+            x identity_matrix
+            x zero_matrix
 
     1. dot_product
     2. element_wise_operation
@@ -44,7 +52,10 @@
     18. train_test_split
     19. binary_logistic_regression (WIP)
 ### lib_nn
-    1. create_layer (Struct)
+    1. create_layer (Struct) :
+        > create_weights
+        > create_bias
+        > output_of_layer
 
     1. activation_leaky_relu
     2. activation_relu
