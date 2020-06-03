@@ -210,7 +210,7 @@ fn main() {
         alpha_learning_rate: 0.005,
         iterations: 100,
     };
-    mlr.multivariant_linear_regression();
+    println!("{:?}", mlr.multivariant_linear_regression());
     // let (a, b) = MultivariantLinearRegression::batch_gradient_descent(
     //     &vec![vec![1., 2.], vec![2., 3.], vec![3., 7.], vec![4., 6.]],
     //     &vec![1., 5., 3., 7.],
@@ -235,15 +235,16 @@ fn main() {
     //     .collect();
     // let new_theta = element_wise_operation(&theta, &gradient, "Sub").clone();
     // println!("{:?}", new_theta)
+    // use std::collections::BTreeMap;
 
-    let mut d: HashMap<String, Vec<i32>> = HashMap::new();
-    d.entry("one".to_string()).or_insert(vec![1, 2, 3, 4]);
+    // let mut d: BTreeMap<String, Vec<i32>> = BTreeMap::new();
+    // d.entry("one".to_string()).or_insert(vec![1, 2, 3, 4]);
     // d.entry("two".to_string()).or_insert(vec![5, 6, 7, 8]);
     // d.entry("three".to_string()).or_insert(vec![8, 9, 10, 11]);
 
     // println!("{:?}", MultivariantLinearRegression::hash_to_table(&d));
-    let x: Vec<i32> = d.values().into_iter();
-    println!("{:?}", x);
+    // let x: Vec<_> = d.values().cloned().collect();
+    // println!("{:?}", x[0]);
 }
 
 struct MultivariantLinearRegression {
@@ -254,8 +255,9 @@ struct MultivariantLinearRegression {
     iterations: i32,
 }
 
+use std::collections::BTreeMap;
 impl MultivariantLinearRegression {
-    pub fn multivariant_linear_regression(&self) -> () {
+    pub fn multivariant_linear_regression(&self) -> (Vec<f64>, Vec<f64>) {
         // removing incomplete data
         println!(
             "Before removing missing values, number of rows : {:?}",
@@ -288,10 +290,10 @@ impl MultivariantLinearRegression {
         println!("Train size: {}\nTest size : {:?}", train.len(), test.len());
 
         // feature and target split
-        let mut train_feature = HashMap::new();
-        let mut test_feature = HashMap::new();
-        let mut train_target = HashMap::new();
-        let mut test_target = HashMap::new();
+        let mut train_feature = BTreeMap::new();
+        let mut test_feature = BTreeMap::new();
+        let mut train_target = BTreeMap::new();
+        let mut test_target = BTreeMap::new();
         let mut coefficients = vec![];
 
         // creating training dictionary
@@ -330,10 +332,10 @@ impl MultivariantLinearRegression {
         }
 
         // normalizing values
-        let mut norm_test_features = HashMap::new();
-        let mut norm_train_features = HashMap::new();
-        let mut norm_test_target = HashMap::new();
-        let mut norm_train_target = HashMap::new();
+        let mut norm_test_features = BTreeMap::new();
+        let mut norm_train_features = BTreeMap::new();
+        let mut norm_test_target = BTreeMap::new();
+        let mut norm_train_target = BTreeMap::new();
         for (k, _) in test_feature.iter() {
             norm_test_features
                 .entry(k.clone())
@@ -357,13 +359,15 @@ impl MultivariantLinearRegression {
         // println!("{:?}", norm_test_target);
 
         coefficients = vec![0.; train.len()];
-        // MultivariantLinearRegression::batch_gradient_descent(
-        //     &MultivariantLinearRegression::hash_to_table(&norm_train_features),
-        //     &norm_test_features.values().collect(),
-        //     &coefficients,
-        //     self.alpha_learning_rate,
-        //     self.iterations,
-        // );
+        let target: Vec<_> = norm_test_features.values().cloned().collect();
+
+        MultivariantLinearRegression::batch_gradient_descent(
+            &MultivariantLinearRegression::hash_to_table(&norm_train_features),
+            &target[0],
+            &coefficients,
+            self.alpha_learning_rate,
+            self.iterations,
+        )
     }
 
     fn mse_cost_function(features: &Vec<Vec<f64>>, target: &Vec<f64>, theta: &Vec<f64>) -> f64 {
@@ -415,7 +419,7 @@ impl MultivariantLinearRegression {
         (new_theta.clone(), cost_history)
     }
 
-    pub fn hash_to_table<T: Copy>(d: &HashMap<String, Vec<T>>) -> Vec<Vec<T>> {
+    pub fn hash_to_table<T: Copy>(d: &BTreeMap<String, Vec<T>>) -> Vec<Vec<T>> {
         // changes the order of table columns
         let mut vector = vec![];
         for (_, v) in d.iter() {

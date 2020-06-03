@@ -1,9 +1,12 @@
 ## Description
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
+
+## FEEDBACK : rd2575691@gmail.com
+
 ## List of Functions and Structs
 
 ### lib_matrix
-    1. MatrixDeterminantF (Struct) : 
+    1. MatrixDeterminantF : 
         > determinant_f
             x determinant_2
             x determinant_3plus
@@ -52,7 +55,7 @@
     18. train_test_split
     19. binary_logistic_regression (WIP)
 ### lib_nn
-    1. create_layer (Struct) :
+    1. LayerDetails :
         > create_weights
         > create_bias
         > output_of_layer

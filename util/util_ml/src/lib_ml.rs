@@ -266,7 +266,7 @@ pub fn read_csv<'a>(path: String) -> (Vec<String>, Vec<Vec<String>>) {
     println!("========================================================================================================================================================");
     println!("Reading the file ...");
     let file = fs::read_to_string(&path).unwrap();
-    let splitted: Vec<&str> = file.split("\r\n").collect();
+    let splitted: Vec<&str> = file.split("\n").collect();
     let rows: i32 = (splitted.len() - 1) as i32;
     println!("Number of rows = {}", rows - 1);
     let table: Vec<Vec<_>> = splitted.iter().map(|a| a.split(",").collect()).collect();
@@ -541,7 +541,7 @@ pub fn logistic_predict(matrix1: &Vec<Vec<f64>>, beta: &Vec<Vec<f64>>) -> Vec<Ve
     output
 }
 
-pub fn randomize(rows: &Vec<f64>) -> Vec<f64> {
+pub fn randomize(rows: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
     use rand::seq::SliceRandom;
     use rand::{thread_rng, Rng};
     let mut order: Vec<usize> = (0..rows.len() - 1 as usize).collect();
@@ -557,7 +557,7 @@ pub fn randomize(rows: &Vec<f64>) -> Vec<f64> {
     output
 }
 
-pub fn train_test_split(input: &Vec<f64>, percentage: f64) -> (Vec<f64>, Vec<f64>) {
+pub fn train_test_split(input: &Vec<Vec<f64>>, percentage: f64) -> (Vec<Vec<f64>>, Vec<Vec<f64>>) {
     // shuffle
     let data = randomize(input);
     // println!("{:?}", data);

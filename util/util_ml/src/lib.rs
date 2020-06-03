@@ -406,7 +406,7 @@ pub fn read_csv<'a>(path: String) -> (Vec<String>, Vec<Vec<String>>) {
     println!("========================================================================================================================================================");
     println!("Reading the file ...");
     let file = fs::read_to_string(&path).unwrap();
-    let splitted: Vec<&str> = file.split("\r\n").collect();
+    let splitted: Vec<&str> = file.split("\n").collect();
     let rows: i32 = (splitted.len() - 1) as i32;
     println!("Number of rows = {}", rows - 1);
     let table: Vec<Vec<_>> = splitted.iter().map(|a| a.split(",").collect()).collect();

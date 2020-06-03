@@ -167,7 +167,6 @@ impl MatrixF {
         // println!("========================================================================================================================================================");
         ((value * 10.0f64.powi(decimals)).round()) / 10.0f64.powi(decimals)
     }
-    
 
     pub fn inverse_f(&self) -> Vec<Vec<f64>> {
         // https://integratedmlai.com/matrixinverse/
@@ -207,7 +206,7 @@ impl MatrixF {
     }
 
     fn identity_matrix(size: usize) -> Vec<Vec<f64>> {
-        let mut output: Vec<Vec<f64>> = MatrixF::zero_matrix(size);
+        let mut output: Vec<Vec<f64>> = MatrixF::zero_matrix(size, size);
         for i in 0..=(size - 1) {
             for j in 0..=(size - 1) {
                 if i == j {
@@ -220,10 +219,10 @@ impl MatrixF {
         output
     }
 
-    fn zero_matrix(size: usize) -> Vec<Vec<f64>> {
+    fn zero_matrix(row: usize, columns: usize) -> Vec<Vec<f64>> {
         let mut output: Vec<Vec<f64>> = vec![];
-        for _ in 0..=(size - 1) {
-            output.push(vec![0.; size]);
+        for _ in 0..row {
+            output.push(vec![0.; columns]);
         }
         output
     }
