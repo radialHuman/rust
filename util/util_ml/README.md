@@ -1,7 +1,7 @@
 ## Description
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
-## FEEDBACK : rd2575691@gmail.com
+##### FEEDBACK : rd2575691@gmail.com
 
 ## List of Functions and Structs
 
@@ -35,6 +35,15 @@
     17. element_wise_matrix_operation
     18. matrix_vector_product_f
 ### lib_ml
+    1. MultivariantLinearRegression :
+        > multivariant_linear_regression
+            x generate_score
+        > batch_gradient_descent
+            x mse_cost_function
+        > hash_to_table
+            x train_test_split
+            x randomize
+            
     1. coefficient
     2. convert_and_impute
     3. covariance
