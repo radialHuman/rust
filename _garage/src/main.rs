@@ -186,9 +186,7 @@ fn main() {
     //         .map(|a| a.iter().map(|b| round_off_f(*b, 3)).collect())
     //         .collect(),
     // );
-    // https://medium.com/@pytholabs/multivariate-linear-regression-from-scratch-in-python-5c4f219be6a
-    // https://medium.com/we-are-orb/multivariate-linear-regression-in-python-without-scikit-learn-7091b1d45905
-    let (columns, values) = read_csv("ccpp.csv".to_string());
+
     // println!("{:?}", columns);
     // println!("{:?}", values);
 
@@ -202,15 +200,6 @@ fn main() {
     // );
 
     //
-
-    let mlr = MultivariantLinearRegression {
-        header: columns,
-        data: values,
-        split_ratio: 0.25,
-        alpha_learning_rate: 0.005,
-        iterations: 100,
-    };
-    println!("{:?}", mlr.multivariant_linear_regression());
     // let (a, b) = MultivariantLinearRegression::batch_gradient_descent(
     //     &vec![vec![1., 2.], vec![2., 3.], vec![3., 7.], vec![4., 6.]],
     //     &vec![1., 5., 3., 7.],
@@ -238,205 +227,27 @@ fn main() {
     // use std::collections::BTreeMap;
 
     // let mut d: BTreeMap<String, Vec<i32>> = BTreeMap::new();
-    // d.entry("one".to_string()).or_insert(vec![1, 2, 3, 4]);
-    // d.entry("two".to_string()).or_insert(vec![5, 6, 7, 8]);
-    // d.entry("three".to_string()).or_insert(vec![8, 9, 10, 11]);
+    // d.entry("one".to_string())
+    //     .or_insert(vec![1, 2, 3, 4, 5, 6, 7, 8]);
+    // d.entry("two".to_string())
+    //     .or_insert(vec![5, 6, 7, 8, 8, 9, 10, 11]);
+    // d.entry("three".to_string())
+    //     .or_insert(vec![8, 9, 10, 11, 1, 2, 3, 4]);
 
     // println!("{:?}", MultivariantLinearRegression::hash_to_table(&d));
     // let x: Vec<_> = d.values().cloned().collect();
     // println!("{:?}", x[0]);
+
+    // let (columns, values) = read_csv("ccpp.csv".to_string());
+    // let mlr = MultivariantLinearRegression {
+    //     header: columns,
+    //     data: values,
+    //     split_ratio: 0.25,
+    //     alpha_learning_rate: 0.005,
+    //     iterations: 1000,
+    // };
+    // mlr.multivariant_linear_regression();
 }
-
-struct MultivariantLinearRegression {
-    header: Vec<String>,
-    data: Vec<Vec<String>>,
-    split_ratio: f64,
-    alpha_learning_rate: f64,
-    iterations: i32,
-}
-
-use std::collections::BTreeMap;
-impl MultivariantLinearRegression {
-    pub fn multivariant_linear_regression(&self) -> (Vec<f64>, Vec<f64>) {
-        // removing incomplete data
-        println!(
-            "Before removing missing values, number of rows : {:?}",
-            self.data.len()
-        );
-        let df_na_removed: Vec<_> = self
-            .data
-            .iter()
-            .filter(|a| a.len() == self.header.len())
-            .collect();
-        println!(
-            "After removing missing values, number of rows : {:?}",
-            df_na_removed.len()
-        );
-        // assuming the last column has the value to be predicted
-        println!(
-            "The target here is header named: {:?}",
-            self.header[self.header.len() - 1]
-        );
-
-        // converting values to floats
-        let df_f: Vec<Vec<f64>> = df_na_removed
-            .iter()
-            .map(|a| a.iter().map(|b| b.parse::<f64>().unwrap()).collect())
-            .collect();
-        println!("Values are now converted to f64");
-
-        // shuffling splitting test and train
-        let (train, test) = train_test_split(&df_f, self.split_ratio);
-        println!("Train size: {}\nTest size : {:?}", train.len(), test.len());
-
-        // feature and target split
-        let mut train_feature = BTreeMap::new();
-        let mut test_feature = BTreeMap::new();
-        let mut train_target = BTreeMap::new();
-        let mut test_target = BTreeMap::new();
-        let mut coefficients = vec![];
-
-        // creating training dictionary
-        for (n, j) in self.header.iter().enumerate() {
-            if *j != self.header[self.header.len() - 1] {
-                let mut row = vec![];
-                for i in train.iter() {
-                    row.push(i[n]);
-                }
-                train_feature.entry(j.to_string()).or_insert(row);
-            } else {
-                let mut row = vec![];
-                for i in train.iter() {
-                    row.push(i[n]);
-                }
-                train_target.entry(j.to_string()).or_insert(row);
-            }
-        }
-        // creating training dictionary
-        for (n, j) in self.header.iter().enumerate() {
-            if *j != self.header[self.header.len() - 1] {
-                {
-                    let mut row = vec![];
-                    for i in test.iter() {
-                        row.push(i[n]);
-                    }
-                    test_feature.entry(j.to_string()).or_insert(row);
-                }
-            } else {
-                let mut row = vec![];
-                for i in test.iter() {
-                    row.push(i[n]);
-                }
-                test_target.entry(j.to_string()).or_insert(row);
-            }
-        }
-
-        // normalizing values
-        let mut norm_test_features = BTreeMap::new();
-        let mut norm_train_features = BTreeMap::new();
-        let mut norm_test_target = BTreeMap::new();
-        let mut norm_train_target = BTreeMap::new();
-        for (k, _) in test_feature.iter() {
-            norm_test_features
-                .entry(k.clone())
-                .or_insert(normalize_vector_f(&test_feature[k]));
-        }
-        for (k, _) in train_feature.iter() {
-            norm_train_features
-                .entry(k.clone())
-                .or_insert(normalize_vector_f(&train_feature[k]));
-        }
-        for (k, _) in test_target.iter() {
-            norm_test_target
-                .entry(k.clone())
-                .or_insert(normalize_vector_f(&test_target[k]));
-        }
-        for (k, _) in train_target.iter() {
-            norm_train_target
-                .entry(k.clone())
-                .or_insert(normalize_vector_f(&train_target[k]));
-        }
-        // println!("{:?}", norm_test_target);
-
-        coefficients = vec![0.; train.len()];
-        let target: Vec<_> = norm_test_features.values().cloned().collect();
-
-        MultivariantLinearRegression::batch_gradient_descent(
-            &MultivariantLinearRegression::hash_to_table(&norm_train_features),
-            &target[0],
-            &coefficients,
-            self.alpha_learning_rate,
-            self.iterations,
-        )
-    }
-
-    fn mse_cost_function(features: &Vec<Vec<f64>>, target: &Vec<f64>, theta: &Vec<f64>) -> f64 {
-        let rows = target.len();
-        let numerator: Vec<_> =
-            element_wise_operation(&matrix_vector_product_f(features, theta), target, "Sub")
-                .iter()
-                .map(|a| *a * *a)
-                .collect();
-        numerator.iter().fold(0., |a, b| a + b) / (2. * rows as f64)
-    }
-
-    pub fn batch_gradient_descent(
-        features: &Vec<Vec<f64>>,
-        target: &Vec<f64>,
-        theta: &Vec<f64>,
-        alpha_lr: f64,
-        max_iter: i32,
-    ) -> (Vec<f64>, Vec<f64>) {
-        let mut new_theta = theta.clone();
-        let mut hypothesis_value = vec![];
-        let mut cost_history = vec![];
-        let mut loss = vec![];
-        let mut gradient = vec![];
-        let rows = target.len();
-        for _ in 0..max_iter {
-            hypothesis_value = matrix_vector_product_f(features, &new_theta);
-            loss = hypothesis_value
-                .iter()
-                .zip(target)
-                .map(|(a, b)| a - b)
-                .collect();
-
-            gradient = matrix_vector_product_f(&transpose(features), &loss)
-                .iter()
-                .map(|a| a / rows as f64)
-                .collect();
-            new_theta = element_wise_operation(
-                &new_theta,
-                &gradient.iter().map(|a| alpha_lr * a).collect(),
-                "Sub",
-            )
-            .clone();
-            cost_history.push(MultivariantLinearRegression::mse_cost_function(
-                features, target, &new_theta,
-            ));
-            // println!("theta:  {:?}", new_theta);
-        }
-        (new_theta.clone(), cost_history)
-    }
-
-    pub fn hash_to_table<T: Copy>(d: &BTreeMap<String, Vec<T>>) -> Vec<Vec<T>> {
-        // changes the order of table columns
-        let mut vector = vec![];
-        for (_, v) in d.iter() {
-            vector.push(v.clone());
-        }
-        let mut original = vec![];
-        for i in 0..vector.len() + 1 {
-            let mut row = vec![];
-            for j in vector.iter() {
-                row.push(j[i]);
-            }
-            original.push(row);
-        }
-        original
-    }
-}
-
 // // ================================================================================================================================================
 // // ================================================================================================================================================
 // // ================================================================================================================================================

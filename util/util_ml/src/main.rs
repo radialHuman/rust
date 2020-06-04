@@ -273,6 +273,16 @@ fn main() {
         lib_ml::gradient_descent(&a_f, &mut b, &y, 0.01, 0.001)
     );
 
+    let (columns, values) = lib_ml::read_csv("ccpp.csv".to_string());
+    let mlr = lib_ml::MultivariantLinearRegression {
+        header: columns,
+        data: values,
+        split_ratio: 0.25,
+        alpha_learning_rate: 0.005,
+        iterations: 1000,
+    };
+    mlr.multivariant_linear_regression();
+
     //================================================================================================================
     section_break("ML OVER");
 }
@@ -436,6 +446,17 @@ Rounding of 3.14267864 by 4 = 3.1427
 ([[0.8730889653677842, 1.7031193796597321], [4.002650564798213, 6.2047416002724125], [1.0001472545942394, 2.0002878004552267], [0.8015902153859887, 1.3629584974450937]], 3)
 
 
+Reading the file ...
+Number of rows = ~9568
+Before removing missing values, number of rows : 9569
+After removing missing values, number of rows : 9568
+The target here is header named: "PE"
+Values are now converted to f64
+Train size: 7176
+Test size : 2391
+
+The weights of the inputs are [0.314932586684033, 0.037495703481620055, 0.35785467866344134, 0.02960445507944867]
+The r2 of this model is23.39456423212376
 ================================================================================================================================================================
                                                                                 "ML OVER"
 ================================================================================================================================================================
