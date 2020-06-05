@@ -1,8 +1,6 @@
 ## Description
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
-## FEEDBACK : rd2575691@gmail.com
-
 ## List of Functions and Structs
 
 ### lib_matrix
@@ -34,7 +32,18 @@
     16. type_of
     17. element_wise_matrix_operation
     18. matrix_vector_product_f
+    19. split_vector
+    20. split_vector_at
 ### lib_ml
+    1. MultivariantLinearRegression :
+        > multivariant_linear_regression
+            x generate_score
+        > batch_gradient_descent
+            x mse_cost_function
+        > hash_to_table
+            x train_test_split
+            x randomize
+            
     1. coefficient
     2. convert_and_impute
     3. covariance
@@ -64,3 +73,14 @@
     2. activation_relu
     3. activation_sigmoid
     4. activation_tanh
+    
+
+### About the author
+Used Python, learning Rust
+Not a CS student, feedback appreciated
+rd2575691@gmail.com
+
+### Inspiration
+> For lib_nn : https://www.youtube.com/playlist?list=PLQVvvaa0QuDcjD5BAw2DxE6OF2tius3V3
+> For Rust : https://www.youtube.com/playlist?list=PLVhhUNGAUIQScqB26DdUq4n1Y2n3auM7X
+> Other blogs mentioned inside

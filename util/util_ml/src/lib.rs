@@ -1148,6 +1148,16 @@ FUNCTIONS
     > 1. matrix: &Vec<Vec<f64>>
     > 2. vector: &Vec<f64>
     = Vec<f64>
+
+19. split_vector
+    > 1. vector: &Vec<T>
+    > 2. parts: i32
+     = Vec<Vec<T>>
+
+20. split_vector_at
+    > 1. vector: &Vec<T>
+    > 2. at: T
+     = Vec<Vec<T>>
 */
 
 #[derive(Debug)] // to make it usable by print!
@@ -1601,4 +1611,42 @@ pub fn matrix_vector_product_f(matrix: &Vec<Vec<f64>>, vector: &Vec<f64>) -> Vec
         output.push(dot_product(i, vector));
     }
     output
+}
+
+pub fn split_vector<T: std::clone::Clone>(vector: &Vec<T>, parts: i32) -> Vec<Vec<T>> {
+    if vector.len() % parts as usize == 0 {
+        let mut output = vec![];
+        let size = vector.len() / parts as usize;
+        let mut from = 0;
+        let mut to = from + size;
+        while to <= vector.len() {
+            output.push(vector[from..to].to_vec());
+            from = from + size;
+            to = from + size;
+        }
+        output
+    } else {
+        panic!("This partition is not possible, check the number of partiotions passed")
+    }
+}
+
+pub fn split_vector_at<T>(vector: &Vec<T>, at: T) -> Vec<Vec<T>>
+where
+    T: std::cmp::PartialEq + Copy + std::clone::Clone,
+{
+    if vector.contains(&at) {
+        let mut output = vec![];
+        let copy = vector.clone();
+        let mut from = 0;
+        for (n, i) in vector.iter().enumerate() {
+            if i == &at {
+                output.push(copy[from..n].to_vec());
+                from = n;
+            }
+        }
+        output.push(copy[from..].to_vec());
+        output
+    } else {
+        panic!("The value is not in the vector, please check");
+    }
 }
