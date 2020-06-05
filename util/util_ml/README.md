@@ -1,11 +1,6 @@
 ## Description
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
-<<<<<<< HEAD
-=======
-##### FEEDBACK : rd2575691@gmail.com
-
->>>>>>> edf45e5cae3151b4573a4f11d22a3b45cc456a29
 ## List of Functions and Structs
 
 ### lib_matrix
@@ -78,7 +73,6 @@
     2. activation_relu
     3. activation_sigmoid
     4. activation_tanh
-<<<<<<< HEAD
     
 
 ### About the author
@@ -90,5 +84,3 @@ rd2575691@gmail.com
 > For lib_nn : https://www.youtube.com/playlist?list=PLQVvvaa0QuDcjD5BAw2DxE6OF2tius3V3
 > For Rust : https://www.youtube.com/playlist?list=PLVhhUNGAUIQScqB26DdUq4n1Y2n3auM7X
 > Other blogs mentioned inside
-=======
->>>>>>> edf45e5cae3151b4573a4f11d22a3b45cc456a29
