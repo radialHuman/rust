@@ -80,7 +80,7 @@
 * Not a CS student, feedback appreciated
 * rd2575691@gmail.com
 
-### Inspiration
-> * For lib_nn : https://www.youtube.com/playlist?list=PLQVvvaa0QuDcjD5BAw2DxE6OF2tius3V3
-> * For Rust : https://www.youtube.com/playlist?list=PLVhhUNGAUIQScqB26DdUq4n1Y2n3auM7X
->*  Other blogs mentioned inside
+### Vibliography ?
+* For lib_nn : [nnfs.io](https://www.youtube.com/playlist?list=PLQVvvaa0QuDcjD5BAw2DxE6OF2tius3V3)
+* For Rust : [Crazcalm's Tech Stack](https://www.youtube.com/playlist?list=PLVhhUNGAUIQScqB26DdUq4n1Y2n3auM7X)
+*  Other blogs mentioned inside
