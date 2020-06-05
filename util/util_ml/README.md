@@ -76,11 +76,11 @@
     
 
 ### About the author
-Used Python, learning Rust
-Not a CS student, feedback appreciated
-rd2575691@gmail.com
+* Used Python, learning Rust
+* Not a CS student, feedback appreciated
+* rd2575691@gmail.com
 
 ### Inspiration
-> For lib_nn : https://www.youtube.com/playlist?list=PLQVvvaa0QuDcjD5BAw2DxE6OF2tius3V3
-> For Rust : https://www.youtube.com/playlist?list=PLVhhUNGAUIQScqB26DdUq4n1Y2n3auM7X
-> Other blogs mentioned inside
+> * For lib_nn : https://www.youtube.com/playlist?list=PLQVvvaa0QuDcjD5BAw2DxE6OF2tius3V3
+> * For Rust : https://www.youtube.com/playlist?list=PLVhhUNGAUIQScqB26DdUq4n1Y2n3auM7X
+>*  Other blogs mentioned inside
