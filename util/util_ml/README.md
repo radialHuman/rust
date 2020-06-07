@@ -34,6 +34,7 @@
     18. matrix_vector_product_f
     19. split_vector
     20. split_vector_at
+---
 ### lib_ml
     1. MultivariantLinearRegression :
         > multivariant_linear_regression
@@ -63,6 +64,7 @@
     17. randomize
     18. train_test_split
     19. binary_logistic_regression (WIP)
+---
 ### lib_nn
     1. LayerDetails :
         > create_weights
@@ -73,14 +75,23 @@
     2. activation_relu
     3. activation_sigmoid
     4. activation_tanh
+---
+### lib_string
+    1. StringToMatch :
+        > compare_percentage
+            x calculate
+        > clean_string
+            x char_vector
+        > compare_chars
+        > compare_position
     
-
+----
 ### About the author
 * Used Python, learning Rust
 * Not a CS student, feedback appreciated
 * rd2575691@gmail.com
-
+---
 ### Vibliography ?
 * For lib_nn : [nnfs.io](https://www.youtube.com/playlist?list=PLQVvvaa0QuDcjD5BAw2DxE6OF2tius3V3)
 * For Rust : [Crazcalm's Tech Stack](https://www.youtube.com/playlist?list=PLVhhUNGAUIQScqB26DdUq4n1Y2n3auM7X)
-*  Other blogs mentioned inside
+* Other blogs mentioned inside

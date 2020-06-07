@@ -92,4 +92,12 @@ m.insert(k, 200 + m[k]);
 
 // Or update a key, guarding against the key possibly not being set:
 *m.entry(k).or_insert(0) += 3000;
+
+//===============================================================================================================================================
+// maximum in a vector of f64
+let maxValue = v.iter().cloned().fold(0. / 0., f64::max);
+
+// count of that value
+let count = v.iter().filter(|&n| *n == maxValue).count();
+
 //===============================================================================================================================================
