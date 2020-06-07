@@ -1767,6 +1767,83 @@
 <span id="1767">1767</span>
 <span id="1768">1768</span>
 <span id="1769">1769</span>
+<span id="1770">1770</span>
+<span id="1771">1771</span>
+<span id="1772">1772</span>
+<span id="1773">1773</span>
+<span id="1774">1774</span>
+<span id="1775">1775</span>
+<span id="1776">1776</span>
+<span id="1777">1777</span>
+<span id="1778">1778</span>
+<span id="1779">1779</span>
+<span id="1780">1780</span>
+<span id="1781">1781</span>
+<span id="1782">1782</span>
+<span id="1783">1783</span>
+<span id="1784">1784</span>
+<span id="1785">1785</span>
+<span id="1786">1786</span>
+<span id="1787">1787</span>
+<span id="1788">1788</span>
+<span id="1789">1789</span>
+<span id="1790">1790</span>
+<span id="1791">1791</span>
+<span id="1792">1792</span>
+<span id="1793">1793</span>
+<span id="1794">1794</span>
+<span id="1795">1795</span>
+<span id="1796">1796</span>
+<span id="1797">1797</span>
+<span id="1798">1798</span>
+<span id="1799">1799</span>
+<span id="1800">1800</span>
+<span id="1801">1801</span>
+<span id="1802">1802</span>
+<span id="1803">1803</span>
+<span id="1804">1804</span>
+<span id="1805">1805</span>
+<span id="1806">1806</span>
+<span id="1807">1807</span>
+<span id="1808">1808</span>
+<span id="1809">1809</span>
+<span id="1810">1810</span>
+<span id="1811">1811</span>
+<span id="1812">1812</span>
+<span id="1813">1813</span>
+<span id="1814">1814</span>
+<span id="1815">1815</span>
+<span id="1816">1816</span>
+<span id="1817">1817</span>
+<span id="1818">1818</span>
+<span id="1819">1819</span>
+<span id="1820">1820</span>
+<span id="1821">1821</span>
+<span id="1822">1822</span>
+<span id="1823">1823</span>
+<span id="1824">1824</span>
+<span id="1825">1825</span>
+<span id="1826">1826</span>
+<span id="1827">1827</span>
+<span id="1828">1828</span>
+<span id="1829">1829</span>
+<span id="1830">1830</span>
+<span id="1831">1831</span>
+<span id="1832">1832</span>
+<span id="1833">1833</span>
+<span id="1834">1834</span>
+<span id="1835">1835</span>
+<span id="1836">1836</span>
+<span id="1837">1837</span>
+<span id="1838">1838</span>
+<span id="1839">1839</span>
+<span id="1840">1840</span>
+<span id="1841">1841</span>
+<span id="1842">1842</span>
+<span id="1843">1843</span>
+<span id="1844">1844</span>
+<span id="1845">1845</span>
+<span id="1846">1846</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">math</span>::<span class="ident">round</span>;
 <span class="kw">use</span> <span class="ident">rand</span>::<span class="kw-2">*</span>;
@@ -3427,12 +3504,15 @@ DESCRIPTION
 STRUCTS
 -------
 1. StringToMatch :
-    &gt; compare_percentage
-        x calculate
-    &gt; clean_string
-        x char_vector
-    &gt; compare_chars
-    &gt; compare_position
+        &gt; compare_percentage : comparision based on presence of characters and its position
+            x calculate
+        &gt; clean_string : lower it and keep alphaneumericals only
+            x char_vector
+        &gt; compare_chars
+        &gt; compare_position
+        &gt; fuzzy_subset : scores based on chuncks of string
+            x n_gram
+        &gt; split_alpha_numericals : seperates numbers from the rest
 
 FUNCTIONS
 ---------
@@ -3453,6 +3533,8 @@ FUNCTIONS
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
         <span class="comment">/*
             Scores by comparing characters and its position as per weightage passed
+            Weightage passed as ratio
+            ex: 2.,1. will give double weightage to position than presence
         */</span>
 
         ((<span class="ident">StringToMatch</span>::<span class="ident">compare_chars</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">*</span> <span class="ident">weightage_for_presence</span> <span class="op">*</span> <span class="number">100.</span>)
@@ -3535,6 +3617,78 @@ FUNCTIONS
             }
         }
         <span class="ident">StringToMatch</span>::<span class="ident">calculate</span>(<span class="ident">output</span>, <span class="kw-2">&amp;</span><span class="ident">vec1</span>, <span class="kw-2">&amp;</span><span class="ident">vec2</span>)
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fuzzy_subset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">n_gram</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+        <span class="comment">/*
+            break into chuncks and compare if not a subset
+        */</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">match_percentage</span> <span class="op">=</span> <span class="number">0.</span>;
+        <span class="kw">let</span> <span class="ident">vec1</span> <span class="op">=</span> <span class="ident">StringToMatch</span>::<span class="ident">clean_string</span>(<span class="self">self</span>.<span class="ident">string1</span>.<span class="ident">clone</span>());
+        <span class="kw">let</span> <span class="ident">vec2</span> <span class="op">=</span> <span class="ident">StringToMatch</span>::<span class="ident">clean_string</span>(<span class="self">self</span>.<span class="ident">string2</span>.<span class="ident">clone</span>());
+
+        <span class="comment">// finding the subset out of the two parameters</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subset</span> <span class="op">=</span> <span class="ident">vec2</span>.<span class="ident">clone</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">superset</span> <span class="op">=</span> <span class="ident">vec1</span>.<span class="ident">clone</span>();
+        <span class="kw">if</span> <span class="ident">vec1</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="ident">vec2</span>.<span class="ident">len</span>() {
+            <span class="ident">subset</span> <span class="op">=</span> <span class="ident">vec1</span>;
+            <span class="ident">superset</span> <span class="op">=</span> <span class="ident">vec2</span>;
+        }
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chunck_match_count</span> <span class="op">=</span> <span class="number">0.</span>;
+
+        <span class="comment">// whole string</span>
+        <span class="kw">if</span> <span class="ident">superset</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">subset</span>) {
+            <span class="ident">match_percentage</span> <span class="op">=</span> <span class="number">100.</span>
+        } <span class="kw">else</span> {
+            <span class="comment">// breaking them into continous chuncks</span>
+            <span class="kw">let</span> <span class="ident">superset_n</span> <span class="op">=</span> <span class="ident">StringToMatch</span>::<span class="ident">n_gram</span>(<span class="kw-2">&amp;</span><span class="ident">superset</span>, <span class="ident">n_gram</span>);
+            <span class="kw">let</span> <span class="ident">subset_n</span> <span class="op">=</span> <span class="ident">StringToMatch</span>::<span class="ident">n_gram</span>(<span class="kw-2">&amp;</span><span class="ident">subset</span>, <span class="ident">n_gram</span>);
+            <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">subset_n</span>.<span class="ident">iter</span>() {
+                <span class="kw">if</span> <span class="ident">superset_n</span>.<span class="ident">contains</span>(<span class="ident">i</span>) {
+                    <span class="ident">chunck_match_count</span> <span class="op">+</span><span class="op">=</span> <span class="number">1.</span>;
+                }
+            }
+            <span class="comment">// calculating match score</span>
+            <span class="kw">let</span> <span class="ident">smaller</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">superset_n</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="ident">subset_n</span>.<span class="ident">len</span>() {
+                <span class="ident">superset_n</span>.<span class="ident">len</span>()
+            } <span class="kw">else</span> {
+                <span class="ident">subset_n</span>.<span class="ident">len</span>()
+            };
+            <span class="ident">match_percentage</span> <span class="op">=</span> (<span class="ident">chunck_match_count</span> <span class="op">/</span> <span class="ident">smaller</span> <span class="kw">as</span> <span class="ident">f64</span>) <span class="op">*</span> <span class="number">100.</span>
+        }
+
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:?} in {:?}&quot;</span>, <span class="ident">subset</span>, <span class="ident">superset</span>);
+        <span class="ident">match_percentage</span>
+    }
+
+    <span class="kw">fn</span> <span class="ident">n_gram</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">string</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="ident">window_size</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">vector</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">string</span>.<span class="ident">chars</span>().<span class="ident">collect</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+        <span class="kw">for</span> (<span class="kw-2">mut</span> <span class="ident">n</span>, <span class="kw">_</span>) <span class="kw">in</span> <span class="ident">vector</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+            <span class="kw">while</span> <span class="ident">n</span> <span class="op">+</span> <span class="ident">window_size</span> <span class="op">&lt;</span> <span class="ident">string</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span> {
+                <span class="comment">// println!(&quot;Working&quot;);</span>
+                <span class="ident">output</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">string</span>[<span class="ident">n</span>..<span class="ident">n</span> <span class="op">+</span> <span class="ident">window_size</span>]);
+                <span class="ident">n</span> <span class="op">=</span> <span class="ident">n</span> <span class="op">+</span> <span class="ident">window_size</span>;
+            }
+        }
+        <span class="ident">unique_values</span>(<span class="kw-2">&amp;</span><span class="ident">output</span>)
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">split_alpha_numericals</span>(<span class="ident">string</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">String</span>, <span class="ident">String</span>) {
+        <span class="kw">let</span> <span class="ident">bytes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">string</span>.<span class="ident">as_bytes</span>().<span class="ident">to_vec</span>();
+        <span class="kw">let</span> <span class="ident">numbers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">bytes</span>.<span class="ident">iter</span>().<span class="ident">filter</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span> <span class="op">&lt;</span> <span class="number">58</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span> <span class="op">&gt;</span> <span class="number">47</span>).<span class="ident">collect</span>();
+        <span class="kw">let</span> <span class="ident">aplhabets</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">bytes</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> {
+                (<span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span> <span class="op">&gt;</span> <span class="number">64</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span> <span class="op">&lt;</span> <span class="number">91</span>) <span class="op">|</span><span class="op">|</span> (<span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span> <span class="op">&gt;</span> <span class="number">96</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span> <span class="op">&lt;</span> <span class="number">123</span>) <span class="op">|</span><span class="op">|</span> (<span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span> <span class="op">&gt;</span> <span class="number">127</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span> <span class="op">&lt;</span> <span class="number">201</span>)
+            })
+            .<span class="ident">collect</span>();
+
+        (
+            <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="ident">numbers</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span>).<span class="ident">collect</span>()).<span class="ident">unwrap</span>(),
+            <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="ident">aplhabets</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span>).<span class="ident">collect</span>()).<span class="ident">unwrap</span>(),
+        )
     }
 }
 </pre></div>

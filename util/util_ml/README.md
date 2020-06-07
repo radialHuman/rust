@@ -84,6 +84,9 @@
             x char_vector
         > compare_chars
         > compare_position
+        > fuzzy_subset
+            x n_gram
+        > split_alpha_numericals
     
 ----
 ### About the author

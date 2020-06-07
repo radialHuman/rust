@@ -4,12 +4,15 @@ DESCRIPTION
 STRUCTS
 -------
 1. StringToMatch :
-    > compare_percentage
-        x calculate
-    > clean_string
-        x char_vector
-    > compare_chars
-    > compare_position
+        > compare_percentage : comparision based on presence of characters and its position
+            x calculate
+        > clean_string : lower it and keep alphaneumericals only
+            x char_vector
+        > compare_chars
+        > compare_position
+        > fuzzy_subset : scores based on chuncks of string
+            x n_gram
+        > split_alpha_numericals : seperates numbers from the rest
 
 FUNCTIONS
 ---------
@@ -30,6 +33,8 @@ impl StringToMatch {
     ) -> f64 {
         /*
             Scores by comparing characters and its position as per weightage passed
+            Weightage passed as ratio
+            ex: 2.,1. will give double weightage to position than presence
         */
 
         ((StringToMatch::compare_chars(&self) * weightage_for_presence * 100.)
@@ -112,5 +117,77 @@ impl StringToMatch {
             }
         }
         StringToMatch::calculate(output, &vec1, &vec2)
+    }
+
+    pub fn fuzzy_subset(&self, n_gram: usize) -> f64 {
+        /*
+            break into chuncks and compare if not a subset
+        */
+        let mut match_percentage = 0.;
+        let vec1 = StringToMatch::clean_string(self.string1.clone());
+        let vec2 = StringToMatch::clean_string(self.string2.clone());
+
+        // finding the subset out of the two parameters
+        let mut subset = vec2.clone();
+        let mut superset = vec1.clone();
+        if vec1.len() < vec2.len() {
+            subset = vec1;
+            superset = vec2;
+        }
+
+        let mut chunck_match_count = 0.;
+
+        // whole string
+        if superset.contains(&subset) {
+            match_percentage = 100.
+        } else {
+            // breaking them into continous chuncks
+            let superset_n = StringToMatch::n_gram(&superset, n_gram);
+            let subset_n = StringToMatch::n_gram(&subset, n_gram);
+            for i in subset_n.iter() {
+                if superset_n.contains(i) {
+                    chunck_match_count += 1.;
+                }
+            }
+            // calculating match score
+            let smaller = if superset_n.len() < subset_n.len() {
+                superset_n.len()
+            } else {
+                subset_n.len()
+            };
+            match_percentage = (chunck_match_count / smaller as f64) * 100.
+        }
+
+        println!("{:?} in {:?}", subset, superset);
+        match_percentage
+    }
+
+    fn n_gram<'a>(string: &'a str, window_size: usize) -> Vec<&'a str> {
+        let vector: Vec<_> = string.chars().collect();
+        let mut output = vec![];
+        for (mut n, _) in vector.iter().enumerate() {
+            while n + window_size < string.len() - 1 {
+                // println!("Working");
+                output.push(&string[n..n + window_size]);
+                n = n + window_size;
+            }
+        }
+        unique_values(&output)
+    }
+
+    pub fn split_alpha_numericals(string: String) -> (String, String) {
+        let bytes: Vec<_> = string.as_bytes().to_vec();
+        let numbers: Vec<_> = bytes.iter().filter(|a| **a < 58 && **a > 47).collect();
+        let aplhabets: Vec<_> = bytes
+            .iter()
+            .filter(|a| {
+                (**a > 64 && **a < 91) || (**a > 96 && **a < 123) || (**a > 127 && **a < 201)
+            })
+            .collect();
+
+        (
+            String::from_utf8(numbers.iter().map(|a| **a).collect()).unwrap(),
+            String::from_utf8(aplhabets.iter().map(|a| **a).collect()).unwrap(),
+        )
     }
 }
