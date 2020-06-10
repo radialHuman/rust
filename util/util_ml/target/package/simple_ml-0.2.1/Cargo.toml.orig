@@ -8,7 +8,7 @@ license = "MIT"
 documentation = "https://docs.rs/crate/simple_ml/"
 repository = "https://github.com/radialHuman/rust/tree/master/util/util_ml/"
 readme = "README.md"
-keywords = ["ml", "data analysis","eda", "machine learning","simple", "string"]
+keywords = ["ml", "analysis","eda","simple","manipulation","string"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
