@@ -13,6 +13,9 @@ STRUCTS
         > fuzzy_subset : scores based on chuncks of string
             x n_gram
         > split_alpha_numericals : seperates numbers from the rest
+        > char_count : Returns dictioanry of characters arranged in alphabetically increasing order with their frequency
+        > frequent_char : Returns the more frequently occuring character in the string passed
+        > char_replace : Finds a character, replaces it with a string at all positions or at just the first depending on operation argument
 
 FUNCTIONS
 ---------
@@ -176,18 +179,135 @@ impl StringToMatch {
     }
 
     pub fn split_alpha_numericals(string: String) -> (String, String) {
+        /*
+        "Something 123 else" => ("123","Something  else")
+        */
         let bytes: Vec<_> = string.as_bytes().to_vec();
         let numbers: Vec<_> = bytes.iter().filter(|a| **a < 58 && **a > 47).collect();
+        println!("{:?}", bytes);
         let aplhabets: Vec<_> = bytes
             .iter()
             .filter(|a| {
-                (**a > 64 && **a < 91) || (**a > 96 && **a < 123) || (**a > 127 && **a < 201)
+                (**a > 64 && **a < 91) // A-Z
+                    || (**a > 96 && **a < 123) // a-z
+                    || (**a > 127 && **a < 201) // letters with accents
+                    || (**a == 32) // spaces
             })
             .collect();
 
         (
+            // to have output as concatenated string
             String::from_utf8(numbers.iter().map(|a| **a).collect()).unwrap(),
             String::from_utf8(aplhabets.iter().map(|a| **a).collect()).unwrap(),
         )
+    }
+
+    pub fn char_count(string: String) -> BTreeMap<char, u32> {
+        /*
+        "SOmething Else" => {' ': 1, 'e': 3, 'g': 1, 'h': 1, 'i': 1, 'l': 1, 'm': 1, 'n': 1, 'o': 1, 's': 2, 't': 1}
+         */
+        let mut count: BTreeMap<char, Vec<i32>> = BTreeMap::new();
+        let vector: Vec<_> = string.to_lowercase().chars().collect();
+
+        // empty dictiornaty
+        for i in vector.iter() {
+            count.insert(*i, vec![]);
+        }
+        // dictionary with 1
+        let mut new_count: BTreeMap<char, Vec<i32>> = BTreeMap::new();
+        for (k, _) in count.iter() {
+            let mut values = vec![];
+            for i in vector.iter() {
+                if i == k {
+                    values.push(1);
+                }
+            }
+            new_count.insert(*k, values);
+        }
+
+        // dictionary with sum of 1s
+        let mut output = BTreeMap::new();
+        for (k, v) in new_count.iter() {
+            output.insert(*k, v.iter().fold(0, |a, b| a as u32 + *b as u32));
+        }
+
+        output
+    }
+
+    pub fn frequent_char(string: String) -> char {
+        /*
+            "SOmething Else" => 'e'
+        */
+        let dict = StringToMatch::char_count(string);
+        let mut value = 0;
+        let mut key = '-';
+        for (k, v) in dict.iter() {
+            key = match dict.get_key_value(k) {
+                Some((x, y)) => {
+                    if *y > value {
+                        value = *y;
+                        *x
+                    } else {
+                        key
+                    }
+                }
+                _ => panic!("Please check the input!!"),
+            };
+        }
+        key
+    }
+
+    pub fn char_replace(string: String, find: char, replace: String, operation: &str) -> String {
+        /*
+        ALL : SOmething Else is now "SOmZthing ElsZ"
+        First : SOmething Else is now "SOmZthing Else"
+        */
+
+        if string.contains(find) {
+            let string_utf8 = string.as_bytes().to_vec();
+            let find_utf8 = find.to_string().as_bytes().to_vec();
+            let replace_utf8 = replace.as_bytes().to_vec();
+            let split = split_vector_at(&string_utf8, find_utf8[0]);
+            let split_vec: Vec<_> = split
+                .iter()
+                .map(|a| String::from_utf8(a.to_vec()).unwrap())
+                .collect();
+            let mut new_string_vec = vec![];
+            if operation == "all" {
+                for (n, _) in split_vec.iter().enumerate() {
+                    if n > 0 {
+                        let x = split_vec[n][1..].to_string();
+                        new_string_vec.push(format!(
+                            "{}{}",
+                            String::from_utf8(replace_utf8.clone()).unwrap(),
+                            x.clone()
+                        ));
+                    } else {
+                        new_string_vec.push(split_vec[n].clone());
+                    }
+                }
+            } else {
+                if operation == "first" {
+                    for (n, _) in split_vec.iter().enumerate() {
+                        if n == 1 {
+                            let x = split_vec[n][1..].to_string();
+
+                            new_string_vec.push(format!(
+                                "{}{}",
+                                String::from_utf8(replace_utf8.clone()).unwrap(),
+                                x.clone()
+                            ));
+                        } else {
+                            new_string_vec.push(split_vec[n].clone());
+                        }
+                    }
+                } else {
+                    panic!("Either pass operation as `all` or `first`");
+                }
+            }
+            new_string_vec.concat()
+        } else {
+            panic!("The character to replace does not exist in the string passed, please check!")
+        }
     }
 }

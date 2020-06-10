@@ -86,7 +86,10 @@
         > compare_position
         > fuzzy_subset
             x n_gram
-        > split_alpha_numericals
+        > split_alpha_numericals (update: acknowledges spaces)
+        > char_count
+        > frequent_char
+        > char_replace
     
 ----
 ### About the author
