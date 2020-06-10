@@ -1,6 +1,14 @@
 ## Description
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
+## Changes
+* Removed logistic regression related fucntions -> To be made into a struct later
+* New correlation function
+
+## Planned
+1. Testing and better documentation for all the structs and functions so far
+
+
 ## List of Functions and Structs
 
 ### lib_matrix
@@ -58,12 +66,13 @@
     11. normalize_vector_f
     12. logistic_function_f
     13. log_gradient_f 
-    14. cost_function_f (WIP)
-    15. gradient_descent 
-    16. logistic_predict 
-    17. randomize
-    18. train_test_split
-    19. binary_logistic_regression (WIP)
+    14. logistic_predict 
+    15. randomize
+    16. train_test_split
+    17. correlation
+    18. std_dev
+    19. s_rank
+    20. how_many_and_where
 ---
 ### lib_nn
     1. LayerDetails :

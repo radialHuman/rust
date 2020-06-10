@@ -247,7 +247,7 @@ fn main() {
     let a_f = vec![vec![1., 2.], vec![2., 3.], vec![3., 7.], vec![4., 6.]];
     let mut b = vec![vec![0.2, 0.3], vec![0.4, 0.7], vec![1., 2.], vec![0.6, 1.]];
     let y = vec![5., 6., 1., 2.];
-    println!("{:?}", lib_ml::cost_function_f(&a_f, &b, &y));
+    // println!("{:?}", lib_ml::cost_function_f(&a_f, &b, &y));
 
     // matrix addition
     println!(
@@ -268,10 +268,10 @@ fn main() {
     );
 
     // gradient descent
-    println!(
-        "{:?}",
-        lib_ml::gradient_descent(&a_f, &mut b, &y, 0.01, 0.001)
-    );
+    // println!(
+    //     "{:?}",
+    //     lib_ml::gradient_descent(&a_f, &mut b, &y, 0.01, 0.001)
+    // );
 
     let (columns, values) = lib_ml::read_csv("ccpp.csv".to_string());
     let mlr = lib_ml::MultivariantLinearRegression {

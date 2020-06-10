@@ -331,12 +331,13 @@ where
     let mu1 = mean(list1);
     let mu2 = mean(list2);
     let zero: T = "0".parse().unwrap();
-    let _len_str: T = list1.len().to_string().parse().unwrap(); // is division is required
+    let _len_str: f64 = list1.len().to_string().parse().unwrap(); // if division is required
     let tupled: Vec<_> = list1.iter().zip(list2).collect();
     let output = tupled.iter().fold(zero, |a, b| {
         a + ((*b.0 - mu1.to_string().parse().unwrap()) * (*b.1 - mu2.to_string().parse().unwrap()))
     });
-    output.to_string().parse().unwrap() // / len_str
+    let numerator: f64 = output.to_string().parse().unwrap();
+    numerator / _len_str
 }
 
 pub fn coefficient<T>(list1: &Vec<T>, list2: &Vec<T>) -> (f64, f64)

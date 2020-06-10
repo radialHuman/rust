@@ -101,3 +101,9 @@ let maxValue = v.iter().cloned().fold(0. / 0., f64::max);
 let count = v.iter().filter(|&n| *n == maxValue).count();
 
 //===============================================================================================================================================
+
+// vector sorting
+sorted.sort_by(|a, b| a.partial_cmp(b).unwrap());
+
+// decreasing
+vector.sort_by(|a, b| b.partial_cmp(a).unwrap());
