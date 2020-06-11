@@ -15,7 +15,7 @@ STRUCTS
 -------
 1. LayerDetails : To create a layer of n_neurons and n_inputs
     > 1. create_weights : To randomly generate n_neurons weights between -1 and 1
-    > 2. create_bias : A constant 0 (can be modified if required) vector of n_neurons as bias
+    > 2. create_bias : A constant numer (can be modified if required) vector of n_neurons as bias
     > 3. output_of_layer : activation_function((inputs*weights)-bias)
 
 FUNCTIONS
@@ -35,11 +35,19 @@ FUNCTIONS
     = 1. Modified Vec<T>
 */
 pub struct LayerDetails {
+    /*
+    To create layers of a neural network
+    n_inputs : number of inputs to the layer
+    n_neurons : number of neurons in the layer
+    */
     pub n_inputs: usize,
     pub n_neurons: i32,
 }
 impl LayerDetails {
     pub fn create_weights(&self) -> Vec<Vec<f64>> {
+        /*
+        random weights between -1 and 1, for optimization, assinged to each neuron and input
+        */
         let mut rng = rand::thread_rng();
         let mut weight: Vec<Vec<f64>> = vec![];
         // this gives transposed weights
@@ -52,8 +60,12 @@ impl LayerDetails {
         }
         weight
     }
-    pub fn create_bias(&self) -> Vec<f64> {
-        let bias = vec![0.; self.n_neurons as usize];
+    pub fn create_bias(&self, value: f64) -> Vec<f64> {
+        /*
+        Initialize a constant value vector of value passed
+        Which acts as bias introduced to each neuron of the layer
+        */
+        let bias = vec![value; self.n_neurons as usize];
         bias
     }
     pub fn output_of_layer(
@@ -61,8 +73,19 @@ impl LayerDetails {
         input: &Vec<Vec<f64>>,
         weights: &Vec<Vec<f64>>,
         bias: &mut Vec<f64>,
-        f: fn(input: &Vec<f64>) -> Vec<f64>,
+        f: &str,
+        alpha: f64,
     ) -> Vec<Vec<f64>> {
+        /*
+        The inputs are :
+        INPUT : [NxM]
+        WEIGHTS : [MxN]
+        BIAS : [N]
+        F: "relu" or "leaky relu" or "sigmoid" or "tanh"
+        ALPHA : only if leaky relu is used, else it will be ignored
+
+        The output is [NxN] : F((INPUT*WEIGHTS)+BIAS)
+         */
         let mut mat_mul = transpose(&matrix_multiplication(&input, &weights));
         // println!("input * weights = {:?}", mat_mul);
         let mut output: Vec<Vec<f64>> = vec![];
@@ -73,8 +96,31 @@ impl LayerDetails {
         // println!("Before activation it was {:?}", &output[0]);
         // println!("After activation it was {:?}", activation_relu(&output[0]));
         let mut activated_output = vec![];
-        for i in output {
-            activated_output.push(f(&i));
+        match f {
+            "relu" => {
+                println!("Alpha is for 'leaky relu' only, it is not taken into account here");
+                for i in output.clone() {
+                    activated_output.push(activation_relu(&i));
+                }
+            }
+            "leaky relu" => {
+                for i in output.clone() {
+                    activated_output.push(activation_leaky_relu(&i, alpha));
+                }
+            }
+            "sigmoid" => {
+                println!("Alpha is for 'leaky relu' only, it is not taken into account here");
+                for i in output.clone() {
+                    activated_output.push(activation_sigmoid(&i));
+                }
+            }
+            "tanh" => {
+                println!("Alpha is for 'leaky relu' only, it is not taken into account here");
+                for i in output.clone() {
+                    activated_output.push(activation_tanh(&i));
+                }
+            }
+            _ => panic!("Select from either 'tanh','sigmoid','relu','leaky relu'"),
         }
         // transpose(&activated_output)
         activated_output
@@ -87,6 +133,10 @@ where
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
     // ReLU for neurons
+    /*
+    If greater than 0 then x passed else 0
+    where x is the values of (input*weights)+bias
+    */
     let zero = "0".parse::<T>().unwrap();
     input
         .iter()
@@ -101,6 +151,10 @@ where
 {
     // Leaky ReLU for neurons, where alpha is multiplied with x if x <= 0
     // to avoid making it completely 0 like in ReLU
+    /*
+    If greater than 0 then x passed else alpha*x
+    where x is the values of (input*weights)+bias
+    */
     let zero = "0".parse::<T>().unwrap();
     let a = format!("{}", alpha).parse::<T>().unwrap();
     input
@@ -115,6 +169,10 @@ where
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
     // Sigmoid for neurons
+    /*
+    1/(1+(e^x))
+    where x is the values of (input*weights)+bias
+    */
     input
         .iter()
         .map(|x| 1. / (1. + format!("{:?}", x).parse::<f64>().unwrap().exp()))
@@ -1372,14 +1430,14 @@ where
     T: Copy + std::iter::Sum + std::ops::Mul<Output = T>,
 {
     // Matrix multiplcation
-    // println!(
-    //     "Multiplication of {}x{} and {}x{}",
-    //     input.len(),
-    //     input[0].len(),
-    //     weights.len(),
-    //     weights[0].len()
-    // );
-    // println!("Output will be {}x{}", input.len(), weights[0].len());
+    println!(
+        "Multiplication of {}x{} and {}x{}",
+        input.len(),
+        input[0].len(),
+        weights.len(),
+        weights[0].len()
+    );
+    println!("Output will be {}x{}", input.len(), weights[0].len());
     let weights_t = transpose(&weights);
     // print_a_matrix(&weights_t);
     let mut output: Vec<T> = vec![];
@@ -1746,7 +1804,7 @@ impl StringToMatch {
             Scores as per occurance of characters
         */
         let mut output = 0.;
-        println!("{:?} vs {:?}", self.string1, self.string2);
+        // println!("{:?} vs {:?}", self.string1, self.string2);
         let vec1 = StringToMatch::char_vector(self.string1.clone());
         let vec2 = StringToMatch::char_vector(self.string2.clone());
 
@@ -1762,7 +1820,7 @@ impl StringToMatch {
             Scores as per similar positioning of characters
         */
         let mut output = 0.;
-        println!("{:?} vs {:?}", self.string1, self.string2);
+        // println!("{:?} vs {:?}", self.string1, self.string2);
         let vec1 = StringToMatch::char_vector(self.string1.clone());
         let vec2 = StringToMatch::char_vector(self.string2.clone());
 

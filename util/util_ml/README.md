@@ -2,11 +2,10 @@
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
 ## Changes
-* Removed logistic regression related fucntions -> To be made into a struct later
-* New correlation function
+* lib_nn the functions and Struct are tested, modified and documented
 
 ## Planned
-1. Testing and better documentation for all the structs and functions so far
+1. lib_string
 
 
 ## List of Functions and Structs
@@ -95,7 +94,7 @@
         > compare_position
         > fuzzy_subset
             x n_gram
-        > split_alpha_numericals (update: acknowledges spaces)
+        > split_alpha_numericals
         > char_count
         > frequent_char
         > char_replace
