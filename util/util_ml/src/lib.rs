@@ -1119,7 +1119,7 @@ STRUCTS
     > determinant_f
     > inverse_f
     > is_square_matrix
-    > round_off_f
+    x round_off_f
 
 FUNCTIONS
 ---------
@@ -1221,7 +1221,7 @@ FUNCTIONS
 
 #[derive(Debug)] // to make it usable by print!
 pub struct MatrixF {
-    matrix: Vec<Vec<f64>>,
+    pub matrix: Vec<Vec<f64>>,
 }
 
 impl MatrixF {
@@ -1237,7 +1237,7 @@ impl MatrixF {
                 3..=100 => MatrixF::determinant_3plus(&self),
                 _ => {
                     println!("Cant find determinant for size more than {}", 100);
-                    "0".parse().unwrap()
+                    "100".parse().unwrap()
                 }
             }
         } else {
@@ -1285,7 +1285,7 @@ impl MatrixF {
         }
     }
 
-    pub fn round_off_f(value: f64, decimals: i32) -> f64 {
+    fn round_off_f(value: f64, decimals: i32) -> f64 {
         // println!("========================================================================================================================================================");
         ((value * 10.0f64.powi(decimals)).round()) / 10.0f64.powi(decimals)
     }
@@ -1296,30 +1296,30 @@ impl MatrixF {
         let length = self.matrix.len();
         let mut identity = MatrixF::identity_matrix(length);
 
-        let mut index: Vec<usize> = (0..length).collect();
-        let mut int_index: Vec<i32> = index.iter().map(|a| *a as i32).collect();
+        let index: Vec<usize> = (0..length).collect();
+        // let int_index: Vec<i32> = index.iter().map(|a| *a as i32).collect();
 
         for diagonal in 0..length {
-            let diagonalScalar = 1. / (input[diagonal][diagonal]);
+            let diagonal_scalar = 1. / (input[diagonal][diagonal]);
             // first action
-            for columnLoop in 0..length {
-                input[diagonal][columnLoop] *= diagonalScalar;
-                identity[diagonal][columnLoop] *= diagonalScalar;
+            for column_loop in 0..length {
+                input[diagonal][column_loop] *= diagonal_scalar;
+                identity[diagonal][column_loop] *= diagonal_scalar;
             }
 
             // second action
-            let mut exceptDiagonal: Vec<usize> = index[0..diagonal]
+            let except_diagonal: Vec<usize> = index[0..diagonal]
                 .iter()
                 .copied()
                 .chain(index[diagonal + 1..].iter().copied())
                 .collect();
-            println!("Here\n{:?}", exceptDiagonal);
+            // println!("Here\n{:?}", exceptDiagonal);
 
-            for i in exceptDiagonal {
-                let rowScalar = input[i as usize][diagonal].clone();
+            for i in except_diagonal {
+                let row_scalar = input[i as usize][diagonal].clone();
                 for j in 0..length {
-                    input[i][j] = input[i][j] - (rowScalar * input[diagonal][j]);
-                    identity[i][j] = identity[i][j] - (rowScalar * identity[diagonal][j])
+                    input[i][j] = input[i][j] - (row_scalar * input[diagonal][j]);
+                    identity[i][j] = identity[i][j] - (row_scalar * identity[diagonal][j])
                 }
             }
         }
@@ -1408,14 +1408,14 @@ where
     } else {
         // padding with zeros
         if a.len() < b.len() {
-            let new_a = pad_with_zero(a, b.len() - a.len());
+            let new_a = pad_with_zero(a, b.len() - a.len(), "post");
             println!("The changed vector is {:?}", new_a);
             for i in 0..a.len() {
                 output.push(a[i] + b[i]);
             }
             output
         } else {
-            let new_b = pad_with_zero(b, a.len() - b.len());
+            let new_b = pad_with_zero(b, a.len() - b.len(), "post");
             println!("The changed vector is {:?}", new_b);
             for i in 0..a.len() {
                 output.push(a[i] + b[i]);
@@ -1475,12 +1475,15 @@ where
         + std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
+    /*
+    operations between two vectors, by passing paramters: "mul","sub","div","add"
+    */
     if a.len() == b.len() {
         a.iter().zip(b.iter()).map(|(x, y)| match operation {
-                        "Mul" => *x * *y,
-                        "Add" => *x + *y,
-                        "Sub" => *x - *y,
-                        "Div" => *x / *y,
+                        "mul" => *x * *y,
+                        "add" => *x + *y,
+                        "sub" => *x - *y,
+                        "div" => *x / *y,
                         _ => panic!("Operation unsuccessful!\nEnter any of the following(case sensitive):\n> Add\n> Sub\n> Mul\n> Div"),
                     })
                     .collect()
@@ -1489,16 +1492,29 @@ where
     }
 }
 
-pub fn pad_with_zero<T>(vector: &mut Vec<T>, count: usize) -> Vec<T>
+pub fn pad_with_zero<T>(vector: &mut Vec<T>, count: usize, position: &str) -> Vec<T>
 where
     T: Copy + std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
+    /*
+    Prefixing or postfixing 0s of a vector
+    position : `post` or `pre`
+    */
     let mut output = vector.clone();
     let zero = "0".parse::<T>().unwrap();
-    for _ in 0..count {
-        output.push(zero);
-    }
+    match position {
+        "post" => {
+            for _ in 0..count {
+                output.push(zero);
+            }
+        }
+        "pre" => {
+            let z = vec![zero; count];
+            output = [&z[..], &vector[..]].concat()
+        }
+        _ => panic!("Position can either be `post` or `pre`"),
+    };
     output
 }
 
@@ -1506,7 +1522,10 @@ pub fn make_matrix_float<T>(input: &Vec<Vec<T>>) -> Vec<Vec<f64>>
 where
     T: std::fmt::Display + Copy,
 {
-    println!("========================================================================================================================================================");
+    /*
+    Convert each element of matrix into f64
+    */
+    // println!("========================================================================================================================================================");
     input
         .iter()
         .map(|a| {
@@ -1527,7 +1546,10 @@ pub fn make_vector_float<T>(input: &Vec<T>) -> Vec<f64>
 where
     T: std::fmt::Display + Copy,
 {
-    println!("========================================================================================================================================================");
+    /*
+    Convert each element of vector into f64
+    */
+    // println!("========================================================================================================================================================");
     input
         .iter()
         .map(|b| {
@@ -1540,11 +1562,17 @@ where
         .collect()
 }
 pub fn round_off_f(value: f64, decimals: i32) -> f64 {
-    println!("========================================================================================================================================================");
+    /*
+    round off a f64 to the number decimals passed
+    */
+    // println!("========================================================================================================================================================");
     ((value * 10.0f64.powi(decimals)).round()) / 10.0f64.powi(decimals)
 }
 
 pub fn min_max_f(list: &Vec<f64>) -> (f64, f64) {
+    /*
+    Returns a tuple with mininmum and maximum value in a vector
+    */
     // println!("========================================================================================================================================================");
     if type_of(list[0]) == "f64" {
         let mut positive: Vec<f64> = list
@@ -1594,13 +1622,16 @@ pub fn is_numerical<T>(value: T) -> bool {
     }
 }
 
-// use std::collections::HashMap;
-pub fn value_counts<T>(list: &Vec<T>) -> HashMap<T, u32>
+// use std::collections::BTreeMap;
+pub fn value_counts<T: std::cmp::Ord>(list: &Vec<T>) -> BTreeMap<T, u32>
 where
     T: std::cmp::PartialEq + std::cmp::Eq + std::hash::Hash + Copy,
 {
-    println!("========================================================================================================================================================");
-    let mut count: HashMap<T, u32> = HashMap::new();
+    /*
+    Returns a dictioanry of every unique value with its frequency count
+    */
+    // println!("========================================================================================================================================================");
+    let mut count: BTreeMap<T, u32> = BTreeMap::new();
     for i in list {
         count.insert(*i, 1 + if count.contains_key(i) { count[i] } else { 0 });
     }
@@ -1609,6 +1640,9 @@ where
 
 use std::any::type_name;
 pub fn type_of<T>(_: T) -> &'static str {
+    /*
+    Returns the type of data passed
+    */
     type_name::<T>()
 }
 
@@ -1616,6 +1650,9 @@ pub fn unique_values<T>(list: &Vec<T>) -> Vec<T>
 where
     T: std::cmp::PartialEq + Copy,
 {
+    /*
+    Reruns a set of distinct values for the vector passed
+    */
     let mut output = vec![];
     for i in list.iter() {
         if output.contains(i) {
@@ -1642,6 +1679,9 @@ where
         + std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
+    /*
+    Similar to elemenet wise vector operations, by passing paramters: "mul","sub","div","add"
+    */
     if matrix1.len() == matrix2.len() && matrix1[0].len() == matrix2[0].len() {
         matrix1
             .iter()
@@ -1650,10 +1690,10 @@ where
                 x.iter()
                     .zip(y.iter())
                     .map(|a| match operation {
-                        "Mul" => *a.0 * *a.1,
-                        "Add" => *a.0 + *a.1,
-                        "Sub" => *a.0 - *a.1,
-                        "Div" => *a.0 / *a.1,
+                        "mul" => *a.0 * *a.1,
+                        "add" => *a.0 + *a.1,
+                        "sub" => *a.0 - *a.1,
+                        "div" => *a.0 / *a.1,
                         _ => panic!("Operation unsuccessful!\nEnter any of the following(case sensitive):\n> Add\n> Sub\n> Mul\n> Div"),
                     })
                     .collect()
@@ -1665,14 +1705,24 @@ where
 }
 
 pub fn matrix_vector_product_f(matrix: &Vec<Vec<f64>>, vector: &Vec<f64>) -> Vec<f64> {
+    /*
+    Dot product of each row of matrix with a vector
+    */
     let mut output: Vec<_> = vec![];
-    for i in matrix.iter() {
-        output.push(dot_product(i, vector));
+    if matrix[0].len() == vector.len() {
+        for i in matrix.iter() {
+            output.push(dot_product(i, vector));
+        }
+    } else {
+        panic!("The lengths do not match, please check");
     }
     output
 }
 
 pub fn split_vector<T: std::clone::Clone>(vector: &Vec<T>, parts: i32) -> Vec<Vec<T>> {
+    /*
+    Breaks vector into multiple parts if length is divisible by the # of parts
+    */
     if vector.len() % parts as usize == 0 {
         let mut output = vec![];
         let size = vector.len() / parts as usize;
@@ -1693,6 +1743,9 @@ pub fn split_vector_at<T>(vector: &Vec<T>, at: T) -> Vec<Vec<T>>
 where
     T: std::cmp::PartialEq + Copy + std::clone::Clone,
 {
+    /*
+    Splits a vector into 2 at if a particular value is found
+    */
     if vector.contains(&at) {
         let mut output = vec![];
         let copy = vector.clone();
@@ -1763,7 +1816,7 @@ impl StringToMatch {
         */
 
         // case uniformity
-        let mut this = s1.to_lowercase();
+        let this = s1.to_lowercase();
 
         // only alpha neurmericals accents - bytes between 48-57 ,97-122, 128-201
         // https://www.utf8-chartable.de/unicode-utf8-table.pl?number=1024&utf8=dec&unicodeinhtml=dec
@@ -1779,11 +1832,11 @@ impl StringToMatch {
         new_this.to_string()
     }
 
-    fn char_vector(String1: String) -> Vec<char> {
+    fn char_vector(string1: String) -> Vec<char> {
         /*
             String to vector of characters
         */
-        let string1 = StringToMatch::clean_string(String1.clone());
+        let string1 = StringToMatch::clean_string(string1.clone());
         string1.chars().collect()
     }
 
@@ -1838,7 +1891,7 @@ impl StringToMatch {
         /*
             break into chuncks and compare if not a subset
         */
-        let mut match_percentage = 0.;
+        let match_percentage;
         let vec1 = StringToMatch::clean_string(self.string1.clone());
         let vec2 = StringToMatch::clean_string(self.string2.clone());
 
@@ -1953,7 +2006,7 @@ impl StringToMatch {
         let dict = StringToMatch::char_count(string);
         let mut value = 0;
         let mut key = '-';
-        for (k, v) in dict.iter() {
+        for (k, _) in dict.iter() {
             key = match dict.get_key_value(k) {
                 Some((x, y)) => {
                     if *y > value {

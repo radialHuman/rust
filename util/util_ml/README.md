@@ -2,10 +2,10 @@
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
 ## Changes
-* lib_nn the functions and Struct are tested, modified and documented
+* lib_nn, lib_string, lib_matrix the functions and Struct are tested, modified and documented
 
 ## Planned
-1. lib_string
+1. lib_ml
 
 
 ## List of Functions and Structs
