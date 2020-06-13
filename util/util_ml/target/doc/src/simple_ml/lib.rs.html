@@ -2076,6 +2076,53 @@
 <span id="2076">2076</span>
 <span id="2077">2077</span>
 <span id="2078">2078</span>
+<span id="2079">2079</span>
+<span id="2080">2080</span>
+<span id="2081">2081</span>
+<span id="2082">2082</span>
+<span id="2083">2083</span>
+<span id="2084">2084</span>
+<span id="2085">2085</span>
+<span id="2086">2086</span>
+<span id="2087">2087</span>
+<span id="2088">2088</span>
+<span id="2089">2089</span>
+<span id="2090">2090</span>
+<span id="2091">2091</span>
+<span id="2092">2092</span>
+<span id="2093">2093</span>
+<span id="2094">2094</span>
+<span id="2095">2095</span>
+<span id="2096">2096</span>
+<span id="2097">2097</span>
+<span id="2098">2098</span>
+<span id="2099">2099</span>
+<span id="2100">2100</span>
+<span id="2101">2101</span>
+<span id="2102">2102</span>
+<span id="2103">2103</span>
+<span id="2104">2104</span>
+<span id="2105">2105</span>
+<span id="2106">2106</span>
+<span id="2107">2107</span>
+<span id="2108">2108</span>
+<span id="2109">2109</span>
+<span id="2110">2110</span>
+<span id="2111">2111</span>
+<span id="2112">2112</span>
+<span id="2113">2113</span>
+<span id="2114">2114</span>
+<span id="2115">2115</span>
+<span id="2116">2116</span>
+<span id="2117">2117</span>
+<span id="2118">2118</span>
+<span id="2119">2119</span>
+<span id="2120">2120</span>
+<span id="2121">2121</span>
+<span id="2122">2122</span>
+<span id="2123">2123</span>
+<span id="2124">2124</span>
+<span id="2125">2125</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">math</span>::<span class="ident">round</span>;
 <span class="kw">use</span> <span class="ident">rand</span>::<span class="kw-2">*</span>;
@@ -2281,13 +2328,13 @@ DESCRIPTION
 STRUCTS
 -------
 1. MultivariantLinearRegression : header: Vec&lt;String&gt;, data: Vec&lt;Vec&lt;String&gt;&gt;, split_ratio: f64, alpha_learning_rate: f64, iterations: i32,
-&gt; multivariant_linear_regression
-&gt; batch_gradient_descent
-&gt; hash_to_table
-x generate_score
-x mse_cost_function
-x train_test_split
-x randomize
+    &gt; multivariant_linear_regression
+    &gt; batch_gradient_descent
+    &gt; hash_to_table
+    x generate_score
+    x mse_cost_function
+    x train_test_split
+    x randomize
 
 
 FUNCTIONS
@@ -2358,571 +2405,53 @@ FUNCTIONS
     &gt; 3. matrix2: A &amp;Vec&lt;f64&gt; // target
     = Vec&lt;Vec&lt;f64&gt;&gt;
 
-14. cost_function_f :
-    &gt; 1. matrix1: A &amp;Vec&lt;Vec&lt;f64&gt;&gt; // input
-    &gt; 2. beta: A &amp;Vec&lt;Vec&lt;f64&gt;&gt; // same shape as matrix1
-    &gt; 3. matrix2: A &amp;Vec&lt;f64&gt; // target
-    = f64
-
-15. gradient_descent :
-    &gt; 1. matrix1: &amp;Vec&lt;Vec&lt;f64&gt;&gt;,
-    &gt; 2.beta: &amp;Vec&lt;Vec&lt;f64&gt;&gt;,
-    &gt; 3.matrix2: &amp;Vec&lt;Vec&lt;f64&gt;&gt;,
-    &gt; 4.learning_rate: f64,
-    &gt; 5.coverage_rate: f64,
-    = Vec&lt;Vec&lt;f64&gt;&gt;
-    = i32
-
-16. logistic_predict
+14. logistic_predict :
     1. &gt; matrix1: &amp;Vec&lt;Vec&lt;f64&gt;&gt;
     2. &gt; beta: &amp;Vec&lt;Vec&lt;f64&gt;&gt;
     = Vec&lt;Vec&lt;f64&gt;&gt;
 
-17. randomize
+15. randomize_vector_f :
     1. &gt; rows : &amp;Vec&lt;f64&gt;
     = Vec&lt;f64&gt;
 
-18. train_test_split
+16. randomize_f :
+    1. &gt; rows : &amp;Vec&lt;Vec&lt;f64&gt;&gt;
+    = Vec&lt;Vec&lt;f64&gt;&gt;
+
+17. train_test_split_vector_f :
     1. &gt; input: &amp;Vec&lt;f64&gt;
     2. &gt; percentage: f64
     = Vec&lt;f64&gt;
     = Vec&lt;f64&gt;
 
-19. binary_logistic_regression
-    1. path: String
-    2. target_name: String
-    3. test_percentage: f64
-    4. learning_rate : f64
-    5. coverage_rate : f64
-    = beta : Vec&lt;Vec&lt;f64&gt;&gt;
-    = # of iterations : i32
+18. train_test_split_f :
+    1. &gt; input: &amp;Vec&lt;Vec&lt;f64&gt;&gt;
+    2. &gt; percentage: f64
+    = Vec&lt;Vec&lt;f64&gt;&gt;
+    = Vec&lt;Vec&lt;f64&gt;&gt;
 
+19. correlation :
+    1. &gt; list1: &amp;Vec&lt;T&gt;
+    2. &gt; list2: &amp;Vec&lt;T&gt;
+    3. &gt; name: &amp;str // &#39;s&#39; spearman, &#39;p&#39;: pearson
+    = f64
+
+20. std_dev :
+    1. &gt; list1: &amp;Vec&lt;T&gt;
+    = f64
+
+21. spearman_rank : Spearman ranking
+    1. &gt; list1: &amp;Vec&lt;T&gt;
+    = Vec&lt;(T, f64)&gt;
+
+22. how_many_and_where_vector :
+    1. &gt; list: &amp;Vec&lt;T&gt;
+    2. &gt; number: T  // to be searched
+    = Vec&lt;usize&gt;
 */</span>
 
 <span class="comment">// use crate::lib_matrix;</span>
 <span class="comment">// use lib_matrix::*;</span>
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mean</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">Copy</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
-    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
-{
-    <span class="kw">let</span> <span class="ident">zero</span>: <span class="ident">T</span> <span class="op">=</span> <span class="string">&quot;0&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="ident">len_str</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">len</span>().<span class="ident">to_string</span>();
-    <span class="kw">let</span> <span class="ident">length</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">len_str</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
-    (<span class="ident">list</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="ident">zero</span>, <span class="op">|</span><span class="ident">acc</span>, <span class="ident">x</span><span class="op">|</span> <span class="ident">acc</span> <span class="op">+</span> <span class="kw-2">*</span><span class="ident">x</span>) <span class="op">/</span> <span class="ident">length</span>)
-        .<span class="ident">to_string</span>()
-        .<span class="ident">parse</span>()
-        .<span class="ident">unwrap</span>()
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">variance</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">Copy</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
-    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
-{
-    <span class="kw">let</span> <span class="ident">zero</span>: <span class="ident">T</span> <span class="op">=</span> <span class="string">&quot;0&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="ident">mu</span> <span class="op">=</span> <span class="ident">mean</span>(<span class="ident">list</span>);
-    <span class="kw">let</span> <span class="ident">_len_str</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">len</span>().<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>(); <span class="comment">// is division is required</span>
-    <span class="kw">let</span> <span class="ident">output</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">list</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> (<span class="kw-2">*</span><span class="ident">x</span> <span class="op">-</span> <span class="ident">mu</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>()) <span class="op">*</span> (<span class="kw-2">*</span><span class="ident">x</span> <span class="op">-</span> <span class="ident">mu</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>()))
-        .<span class="ident">collect</span>();
-    <span class="comment">// output</span>
-    <span class="kw">let</span> <span class="ident">variance</span> <span class="op">=</span> <span class="ident">output</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="ident">zero</span>, <span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span> <span class="op">+</span> <span class="kw-2">*</span><span class="ident">b</span>); <span class="comment">// / len_str;</span>
-    <span class="ident">variance</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>()
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">covariance</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">list2</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">Copy</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
-    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
-{
-    <span class="kw">let</span> <span class="ident">mu1</span> <span class="op">=</span> <span class="ident">mean</span>(<span class="ident">list1</span>);
-    <span class="kw">let</span> <span class="ident">mu2</span> <span class="op">=</span> <span class="ident">mean</span>(<span class="ident">list2</span>);
-    <span class="kw">let</span> <span class="ident">zero</span>: <span class="ident">T</span> <span class="op">=</span> <span class="string">&quot;0&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="ident">_len_str</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">list1</span>.<span class="ident">len</span>().<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>(); <span class="comment">// if division is required</span>
-    <span class="kw">let</span> <span class="ident">tupled</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">list1</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">list2</span>).<span class="ident">collect</span>();
-    <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">tupled</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="ident">zero</span>, <span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> {
-        <span class="ident">a</span> <span class="op">+</span> ((<span class="kw-2">*</span><span class="ident">b</span>.<span class="number">0</span> <span class="op">-</span> <span class="ident">mu1</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>()) <span class="op">*</span> (<span class="kw-2">*</span><span class="ident">b</span>.<span class="number">1</span> <span class="op">-</span> <span class="ident">mu2</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>()))
-    });
-    <span class="kw">let</span> <span class="ident">numerator</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">output</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>();
-    <span class="ident">numerator</span> <span class="op">/</span> <span class="ident">_len_str</span>
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">coefficient</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">list2</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">f64</span>, <span class="ident">f64</span>)
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">Copy</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
-    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
-{
-    <span class="kw">let</span> <span class="ident">b1</span> <span class="op">=</span> <span class="ident">covariance</span>(<span class="ident">list1</span>, <span class="ident">list2</span>) <span class="op">/</span> <span class="ident">variance</span>(<span class="ident">list1</span>);
-    <span class="kw">let</span> <span class="ident">b0</span> <span class="op">=</span> <span class="ident">mean</span>(<span class="ident">list2</span>) <span class="op">-</span> (<span class="ident">b1</span> <span class="op">*</span> <span class="ident">mean</span>(<span class="ident">list1</span>));
-    (<span class="ident">b0</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>(), <span class="ident">b1</span>)
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">simple_linear_regression_prediction</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">train</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">T</span>)<span class="op">&gt;</span>, <span class="ident">test</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">T</span>)<span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">Copy</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
-    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
-{
-    <span class="kw">let</span> <span class="ident">train_features</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">train</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="number">0</span>).<span class="ident">collect</span>();
-    <span class="kw">let</span> <span class="ident">test_features</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">test</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="number">1</span>).<span class="ident">collect</span>();
-    <span class="kw">let</span> (<span class="ident">offset</span>, <span class="ident">slope</span>) <span class="op">=</span> <span class="ident">coefficient</span>(<span class="ident">train_features</span>, <span class="ident">test_features</span>);
-    <span class="kw">let</span> <span class="ident">b0</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">offset</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="ident">b1</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">slope</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="ident">predicted_output</span> <span class="op">=</span> <span class="ident">test</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">b0</span> <span class="op">+</span> <span class="ident">b1</span> <span class="op">*</span> <span class="ident">a</span>.<span class="number">0</span>).<span class="ident">collect</span>();
-    <span class="kw">let</span> <span class="ident">original_output</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">test</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="number">0</span>).<span class="ident">collect</span>();
-    <span class="macro">println</span><span class="macro">!</span>(
-        <span class="string">&quot;RMSE: {:?}&quot;</span>,
-        <span class="ident">root_mean_square</span>(<span class="kw-2">&amp;</span><span class="ident">predicted_output</span>, <span class="kw-2">&amp;</span><span class="ident">original_output</span>)
-    );
-    <span class="ident">predicted_output</span>
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">root_mean_square</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">list2</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">Copy</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span>
-        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
-    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
-{
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
-    <span class="kw">let</span> <span class="ident">zero</span>: <span class="ident">T</span> <span class="op">=</span> <span class="string">&quot;0&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="ident">tupled</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">list1</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">list2</span>).<span class="ident">collect</span>();
-    <span class="kw">let</span> <span class="ident">length</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">list1</span>.<span class="ident">len</span>().<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="ident">mean_square_error</span> <span class="op">=</span> <span class="ident">tupled</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">fold</span>(<span class="ident">zero</span>, <span class="op">|</span><span class="ident">b</span>, <span class="ident">a</span><span class="op">|</span> <span class="ident">b</span> <span class="op">+</span> ((<span class="kw-2">*</span><span class="ident">a</span>.<span class="number">1</span> <span class="op">-</span> <span class="kw-2">*</span><span class="ident">a</span>.<span class="number">0</span>) <span class="op">*</span> (<span class="kw-2">*</span><span class="ident">a</span>.<span class="number">1</span> <span class="op">-</span> <span class="kw-2">*</span><span class="ident">a</span>.<span class="number">0</span>)))
-        <span class="op">/</span> <span class="ident">length</span>;
-    <span class="kw">let</span> <span class="ident">mse</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">mean_square_error</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>();
-    <span class="ident">mse</span>.<span class="ident">powf</span>(<span class="number">0.5</span>)
-}
-
-<span class="comment">// reading in files for multi column operations</span>
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_csv</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">path</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Reading the file ...&quot;</span>);
-    <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>).<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="ident">splitted</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">split</span>(<span class="string">&quot;\n&quot;</span>).<span class="ident">collect</span>();
-    <span class="kw">let</span> <span class="ident">rows</span>: <span class="ident">i32</span> <span class="op">=</span> (<span class="ident">splitted</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">i32</span>;
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Number of rows = {}&quot;</span>, <span class="ident">rows</span> <span class="op">-</span> <span class="number">1</span>);
-    <span class="kw">let</span> <span class="ident">table</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">splitted</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">split</span>(<span class="string">&quot;,&quot;</span>).<span class="ident">collect</span>()).<span class="ident">collect</span>();
-    <span class="kw">let</span> <span class="ident">values</span> <span class="op">=</span> <span class="ident">table</span>[<span class="number">1</span>..]
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">b</span>.<span class="ident">to_string</span>()).<span class="ident">collect</span>())
-        .<span class="ident">collect</span>();
-    <span class="kw">let</span> <span class="ident">columns</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">table</span>[<span class="number">0</span>].<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">to_string</span>()).<span class="ident">collect</span>();
-    (<span class="ident">columns</span>, <span class="ident">values</span>)
-}
-
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span>;
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">convert_and_impute</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>(
-    <span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="ident">to</span>: <span class="ident">U</span>,
-    <span class="ident">impute_with</span>: <span class="ident">U</span>,
-) <span class="op">-</span><span class="op">&gt;</span> (<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>)
-<span class="kw">where</span>
-    <span class="ident">U</span>: <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">Copy</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
-    <span class="op">&lt;</span><span class="ident">U</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
-{
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
-    <span class="comment">// takes string input and converts it to int or float</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">missing</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">match</span> <span class="ident">type_of</span>(<span class="ident">to</span>) {
-        <span class="string">&quot;f64&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">i</span>) <span class="kw">in</span> <span class="ident">list</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">i</span> <span class="op">!</span><span class="op">=</span> <span class="string">&quot;&quot;</span> {
-                    <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">i</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
-                    <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">x</span>);
-                } <span class="kw">else</span> {
-                    <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">impute_with</span>);
-                    <span class="ident">missing</span>.<span class="ident">push</span>(<span class="ident">n</span>);
-                    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Error found in {}th position of the vector&quot;</span>, <span class="ident">n</span>);
-                }
-            }
-        }
-        <span class="string">&quot;i32&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">i</span>) <span class="kw">in</span> <span class="ident">list</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">i</span> <span class="op">!</span><span class="op">=</span> <span class="string">&quot;&quot;</span> {
-                    <span class="kw">let</span> <span class="ident">string_splitted</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">i</span>.<span class="ident">split</span>(<span class="string">&quot;.&quot;</span>).<span class="ident">collect</span>();
-                    <span class="kw">let</span> <span class="ident">ones_digit</span> <span class="op">=</span> <span class="ident">string_splitted</span>[<span class="number">0</span>].<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
-                    <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">ones_digit</span>);
-                } <span class="kw">else</span> {
-                    <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">impute_with</span>);
-                    <span class="ident">missing</span>.<span class="ident">push</span>(<span class="ident">n</span>);
-                    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Error found in {}th position of the vector&quot;</span>, <span class="ident">n</span>);
-                }
-            }
-        }
-        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;This type conversion cant be done, choose either int or float type\n Incase of string conversion, use impute_string&quot;</span>),
-    }
-
-    (<span class="prelude-val">Ok</span>(<span class="ident">output</span>), <span class="ident">missing</span>)
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">impute_string</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">impute_with</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span> {
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
-    <span class="ident">list</span>.<span class="ident">iter</span>()
-        .<span class="ident">enumerate</span>()
-        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">n</span>, <span class="ident">a</span>)<span class="op">|</span> {
-            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">a</span> <span class="op">=</span><span class="op">=</span> <span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;&quot;</span>) {
-                <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Missing value found in {}th position of the vector&quot;</span>, <span class="ident">n</span>);
-                <span class="ident">impute_with</span>
-            } <span class="kw">else</span> {
-                <span class="kw-2">&amp;</span><span class="ident">a</span>[..]
-            }
-        })
-        .<span class="ident">collect</span>()
-}
-
-<span class="comment">// use std::collections::HashMap;</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">convert_string_categorical</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">extra_class</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">Eq</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">hash</span>::<span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Copy</span>,
-{
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
-    <span class="kw">let</span> <span class="ident">values</span> <span class="op">=</span> <span class="ident">unique_values</span>(<span class="kw-2">&amp;</span><span class="ident">list</span>);
-    <span class="kw">if</span> <span class="ident">extra_class</span> <span class="op">=</span><span class="op">=</span> <span class="bool-val">true</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">values</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">10</span> {
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;The number of classes will be more than 10&quot;</span>);
-    } <span class="kw">else</span> {
-        ();
-    }
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="ident">f64</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
-    <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">i</span>) <span class="kw">in</span> <span class="ident">values</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-        <span class="ident">map</span>.<span class="ident">insert</span>(<span class="ident">i</span>, <span class="ident">n</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">+</span> <span class="number">1.</span>);
-    }
-    <span class="ident">list</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">map</span>[<span class="ident">a</span>]).<span class="ident">collect</span>()
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normalize_vector_f</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
-    <span class="comment">// println!(&quot;========================================================================================================================================================&quot;);</span>
-    <span class="kw">let</span> (<span class="ident">minimum</span>, <span class="ident">maximum</span>) <span class="op">=</span> <span class="ident">min_max_f</span>(<span class="kw-2">&amp;</span><span class="ident">list</span>);
-    <span class="kw">let</span> <span class="ident">range</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">maximum</span> <span class="op">-</span> <span class="ident">minimum</span>;
-    <span class="ident">list</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="number">1.</span> <span class="op">-</span> ((<span class="ident">maximum</span> <span class="op">-</span> <span class="ident">a</span>) <span class="op">/</span> <span class="ident">range</span>)).<span class="ident">collect</span>()
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">logistic_function_f</span>(<span class="ident">matrix</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">beta</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
-    <span class="comment">//https://www.geeksforgeeks.org/understanding-logistic-regression/</span>
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;logistic function&quot;</span>);
-    <span class="macro">println</span><span class="macro">!</span>(
-        <span class="string">&quot;{:?}x{:?}\n{:?}x{:?}&quot;</span>,
-        <span class="ident">matrix</span>.<span class="ident">len</span>(),
-        <span class="ident">matrix</span>[<span class="number">0</span>].<span class="ident">len</span>(),
-        <span class="ident">beta</span>.<span class="ident">len</span>(),
-        <span class="ident">beta</span>[<span class="number">0</span>].<span class="ident">len</span>()
-    );
-    <span class="ident">matrix_multiplication</span>(<span class="ident">matrix</span>, <span class="ident">beta</span>)
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="number">1.</span> <span class="op">/</span> (<span class="number">1.</span> <span class="op">+</span> ((<span class="ident">b</span> <span class="op">*</span> <span class="op">-</span><span class="number">1.</span>).<span class="ident">exp</span>()))).<span class="ident">collect</span>())
-        .<span class="ident">collect</span>()
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">log_gradient_f</span>(
-    <span class="ident">matrix1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">beta</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">matrix2</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
-    <span class="comment">//https://www.geeksforgeeks.org/understanding-logistic-regression/</span>
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Log gradient_f&quot;</span>);
-    <span class="comment">// PYTHON : // first_calc = logistic_func(beta, X) - y.reshape(X.shape[0], -1)</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">first_calc</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">i</span>) <span class="kw">in</span> <span class="ident">logistic_function_f</span>(<span class="ident">matrix1</span>, <span class="ident">beta</span>).<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">row</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-        <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="ident">i</span>.<span class="ident">iter</span>() {
-            <span class="ident">row</span>.<span class="ident">push</span>(<span class="ident">j</span> <span class="op">-</span> <span class="ident">matrix2</span>[<span class="ident">n</span>]);
-        }
-        <span class="ident">first_calc</span>.<span class="ident">push</span>(<span class="ident">row</span>);
-    }
-
-    <span class="kw">let</span> <span class="ident">first_calc_T</span> <span class="op">=</span> <span class="ident">transpose</span>(<span class="kw-2">&amp;</span><span class="ident">first_calc</span>);
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">X</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">matrix1</span>[<span class="number">0</span>].<span class="ident">len</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">row</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">matrix1</span>.<span class="ident">iter</span>() {
-            <span class="ident">row</span>.<span class="ident">push</span>(<span class="ident">i</span>[<span class="ident">j</span>]);
-        }
-        <span class="ident">X</span>.<span class="ident">push</span>(<span class="ident">row</span>);
-    }
-
-    <span class="comment">// PYTHON : // final_calc = np.dot(first_calc.T, X)</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">final_calc</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">first_calc_T</span>.<span class="ident">iter</span>() {
-        <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="ident">X</span>.<span class="ident">iter</span>() {
-            <span class="ident">final_calc</span>.<span class="ident">push</span>(<span class="ident">dot_product</span>(<span class="kw-2">&amp;</span><span class="ident">i</span>, <span class="kw-2">&amp;</span><span class="ident">j</span>))
-        }
-    }
-
-    <span class="comment">// println!(&quot;{:?}\n{:?}&quot;, &amp;first_calc_T, &amp;X);</span>
-    <span class="comment">// println!(&quot;{:?}&quot;, &amp;final_calc);</span>
-    <span class="comment">// println!(</span>
-    <span class="comment">//     &quot;{:?}&quot;,</span>
-    <span class="comment">//     shape_changer(&amp;final_calc, matrix1[0].len(), matrix1.len())</span>
-    <span class="comment">// );</span>
-    <span class="ident">shape_changer</span>(<span class="kw-2">&amp;</span><span class="ident">final_calc</span>, <span class="ident">matrix1</span>[<span class="number">0</span>].<span class="ident">len</span>(), <span class="ident">matrix1</span>.<span class="ident">len</span>())
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cost_function_f</span>(<span class="ident">matrix1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">beta</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">matrix2</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
-    <span class="comment">//https://www.geeksforgeeks.org/understanding-logistic-regression/</span>
-    <span class="comment">// PYTHON: // log_func_v = logistic_func(beta, X)</span>
-    <span class="comment">// println!(&quot; matrix1 {:?}&quot;, matrix1);</span>
-    <span class="comment">// println!(&quot; beta {:?}&quot;, beta);</span>
-    <span class="comment">// println!(&quot; matrix2 {:?}&quot;, matrix2);</span>
-    <span class="macro">println</span><span class="macro">!</span>(
-        <span class="string">&quot;shape\ninput: {:?},{:?}\nbeta: {:?},{:?}\ntarget: {:?}&quot;</span>,
-        <span class="ident">matrix1</span>[<span class="number">0</span>].<span class="ident">len</span>(),
-        <span class="ident">matrix1</span>.<span class="ident">len</span>(),
-        <span class="ident">beta</span>[<span class="number">0</span>].<span class="ident">len</span>(),
-        <span class="ident">beta</span>.<span class="ident">len</span>(),
-        <span class="ident">matrix2</span>.<span class="ident">len</span>()
-    );
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Calculating cost function ...&quot;</span>);
-    <span class="kw">let</span> <span class="ident">logistic_func_v</span> <span class="op">=</span> <span class="ident">logistic_function_f</span>(<span class="kw-2">&amp;</span><span class="ident">transpose</span>(<span class="kw-2">&amp;</span><span class="ident">matrix1</span>), <span class="kw-2">&amp;</span><span class="ident">beta</span>);
-    <span class="kw">let</span> <span class="ident">log_logistic</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">logistic_func_v</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">ln</span>()).<span class="ident">collect</span>())
-        .<span class="ident">collect</span>();
-    <span class="comment">// println!(&quot; Log logistic {:?}&quot;, log_logistic);</span>
-    <span class="comment">// // PYTHON: // step1 = y * np.log(log_func_v)</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">step1</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">log_logistic</span>.<span class="ident">iter</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">row</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-        <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">j</span>) <span class="kw">in</span> <span class="ident">i</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-            <span class="kw">for</span> (<span class="ident">m</span>, <span class="ident">k</span>) <span class="kw">in</span> <span class="ident">matrix2</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                <span class="kw">if</span> <span class="ident">n</span> <span class="op">=</span><span class="op">=</span> <span class="ident">m</span> {
-                    <span class="ident">row</span>.<span class="ident">push</span>(<span class="ident">j</span> <span class="op">*</span> <span class="ident">k</span>);
-                } <span class="kw">else</span> {
-                    ()
-                }
-            }
-        }
-        <span class="ident">step1</span>.<span class="ident">push</span>(<span class="ident">row</span>);
-    }
-    <span class="kw">let</span> <span class="ident">one_minus_matrix2</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">matrix2</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="number">1.</span> <span class="op">-</span> <span class="ident">b</span>).<span class="ident">collect</span>();
-    <span class="comment">// println!(&quot; 1-y {:?}&quot;, one_minus_matrix2);</span>
-    <span class="kw">let</span> <span class="ident">one_minus_log_logistic</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">logistic_func_v</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> (<span class="number">1.</span> <span class="op">-</span> <span class="ident">b</span>).<span class="ident">ln</span>()).<span class="ident">collect</span>())
-        .<span class="ident">collect</span>();
-    <span class="comment">// println!(&quot;one_minus_log_logistic\n{:?}&quot;, one_minus_log_logistic);</span>
-
-    <span class="kw">let</span> <span class="ident">minus_step1</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">step1</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">b</span> <span class="op">*</span> <span class="op">-</span><span class="number">1.</span>).<span class="ident">collect</span>())
-        .<span class="ident">collect</span>();
-    <span class="comment">//PYTHON : // step2 = (1 - y) * np.log(1 - log_func_v)</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">step2</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">one_minus_log_logistic</span>.<span class="ident">iter</span>() {
-        <span class="comment">// println!(&quot;{:?}\n{:?}&quot;, i, one_minus_matrix2);</span>
-        <span class="comment">// println!(&quot;DONE 2 ISSUE HERE&quot;);</span>
-        <span class="ident">step2</span>.<span class="ident">push</span>(<span class="ident">element_wise_operation</span>(<span class="ident">i</span>, <span class="kw-2">&amp;</span><span class="ident">one_minus_matrix2</span>, <span class="string">&quot;Mul&quot;</span>));
-    }
-
-    <span class="kw">let</span> <span class="ident">minus_step2</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">step2</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">b</span> <span class="op">*</span> <span class="op">-</span><span class="number">1.</span>).<span class="ident">collect</span>())
-        .<span class="ident">collect</span>();
-    <span class="comment">// PYTHON : // -step1 -step2</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">element_wise_matrix_operation</span>(<span class="kw-2">&amp;</span><span class="ident">minus_step1</span>, <span class="kw-2">&amp;</span><span class="ident">step2</span>, <span class="string">&quot;Sub&quot;</span>);
-    <span class="kw">let</span> <span class="ident">sum</span> <span class="op">=</span> <span class="ident">output</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">fold</span>(<span class="number">0.</span>, <span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span> <span class="op">+</span> <span class="ident">b</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="number">0.</span>, <span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span> <span class="op">+</span> <span class="ident">b</span>));
-    <span class="ident">sum</span> <span class="op">/</span> (<span class="ident">beta</span>.<span class="ident">len</span>() <span class="op">*</span> <span class="ident">beta</span>.<span class="ident">len</span>()) <span class="kw">as</span> <span class="ident">f64</span>
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gradient_descent</span>(
-    <span class="ident">matrix1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">beta</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">matrix2</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>,
-    <span class="ident">learning_rate</span>: <span class="ident">f64</span>,
-    <span class="ident">coverage_rate</span>: <span class="ident">f64</span>,
-) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">i32</span>) {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cost</span> <span class="op">=</span> <span class="ident">cost_function_f</span>(<span class="ident">matrix1</span>, <span class="ident">beta</span>, <span class="ident">matrix2</span>);
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Gradient descent ...&quot;</span>);
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">iterations</span> <span class="op">=</span> <span class="number">1</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">change_cost</span> <span class="op">=</span> <span class="number">1.</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">log_beta</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">b</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">while</span> <span class="ident">change_cost</span> <span class="op">&gt;</span> <span class="ident">coverage_rate</span> {
-        <span class="kw">let</span> <span class="ident">old_cost</span> <span class="op">=</span> <span class="ident">cost</span>;
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:?}x{:?}&quot;</span>, <span class="ident">beta</span>.<span class="ident">len</span>(), <span class="ident">beta</span>[<span class="number">0</span>].<span class="ident">len</span>());
-        <span class="kw-2">*</span><span class="ident">beta</span> <span class="op">=</span> <span class="ident">element_wise_matrix_operation</span>(
-            <span class="ident">beta</span>,
-            <span class="kw-2">&amp;</span><span class="ident">log_gradient_f</span>(<span class="ident">matrix1</span>, <span class="ident">beta</span>, <span class="ident">matrix2</span>)
-                .<span class="ident">iter</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">b</span> <span class="op">*</span> <span class="ident">learning_rate</span>).<span class="ident">collect</span>())
-                .<span class="ident">collect</span>(),
-            <span class="string">&quot;Sub&quot;</span>,
-        );
-        <span class="comment">// println!(&quot;=\n{:?}&quot;, &amp;beta);</span>
-        <span class="ident">cost</span> <span class="op">=</span> <span class="ident">cost_function_f</span>(<span class="ident">matrix1</span>, <span class="kw-2">&amp;</span><span class="ident">beta</span>, <span class="ident">matrix2</span>);
-        <span class="comment">// println!(&quot;cost = {:?}&quot;, cost);</span>
-        <span class="ident">change_cost</span> <span class="op">=</span> <span class="ident">old_cost</span> <span class="op">-</span> <span class="ident">cost</span>;
-        <span class="comment">// println!(&quot;change cost = {:?}&quot;, old_cost - cost);</span>
-        <span class="ident">iterations</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
-    }
-    <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">beta</span>.<span class="ident">clone</span>();
-    (<span class="ident">output</span>, <span class="ident">iterations</span>)
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">logistic_predict</span>(<span class="ident">matrix1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">beta</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-    <span class="comment">// https://www.geeksforgeeks.org/understanding-logistic-regression/</span>
-    <span class="kw">let</span> <span class="ident">prediction_probability</span> <span class="op">=</span> <span class="ident">logistic_function_f</span>(<span class="ident">matrix1</span>, <span class="ident">beta</span>);
-    <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">prediction_probability</span>
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">b</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0.5</span> { <span class="number">1.</span> } <span class="kw">else</span> { <span class="number">0.</span> }).<span class="ident">collect</span>())
-        .<span class="ident">collect</span>();
-    <span class="ident">output</span>
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">randomize</span>(<span class="ident">rows</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
-    <span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">seq</span>::<span class="ident">SliceRandom</span>;
-    <span class="kw">use</span> <span class="ident">rand</span>::{<span class="ident">thread_rng</span>, <span class="ident">Rng</span>};
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">order</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="ident">rows</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">collect</span>();
-    <span class="kw">let</span> <span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">usize</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">order</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">thread_rng</span>();
-    <span class="ident">slice</span>.<span class="ident">shuffle</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>);
-    <span class="comment">// println!(&quot;{:?}&quot;, slice);</span>
-
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">order</span>.<span class="ident">iter</span>() {
-        <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">rows</span>[<span class="kw-2">*</span><span class="ident">i</span>].<span class="ident">clone</span>());
-    }
-    <span class="ident">output</span>
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">train_test_split</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">percentage</span>: <span class="ident">f64</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) {
-    <span class="comment">// shuffle</span>
-    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">randomize</span>(<span class="ident">input</span>);
-    <span class="comment">// println!(&quot;{:?}&quot;, data);</span>
-    <span class="comment">// split</span>
-    <span class="kw">let</span> <span class="ident">test_count</span> <span class="op">=</span> (<span class="ident">data</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span> <span class="op">*</span> <span class="ident">percentage</span>) <span class="kw">as</span> <span class="ident">usize</span>;
-    <span class="comment">// println!(&quot;Test size is {:?}&quot;, test_count);</span>
-
-    <span class="kw">let</span> <span class="ident">test</span> <span class="op">=</span> <span class="ident">data</span>[<span class="number">0</span>..<span class="ident">test_count</span>].<span class="ident">to_vec</span>();
-    <span class="kw">let</span> <span class="ident">train</span> <span class="op">=</span> <span class="ident">data</span>[<span class="ident">test_count</span>..].<span class="ident">to_vec</span>();
-    (<span class="ident">train</span>, <span class="ident">test</span>)
-}
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">binary_logistic_regression</span>(
-    <span class="ident">path</span>: <span class="ident">String</span>,
-    <span class="ident">target_name</span>: <span class="ident">String</span>,
-    <span class="ident">test_percentage</span>: <span class="ident">f64</span>,
-    <span class="ident">learning_rate</span>: <span class="ident">f64</span>,
-    <span class="ident">coverage_rate</span>: <span class="ident">f64</span>,
-) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">i32</span>) {
-    <span class="comment">// use std::collections::HashMap;</span>
-    <span class="kw">let</span> (<span class="ident">columns</span>, <span class="ident">values</span>) <span class="op">=</span> <span class="ident">read_csv</span>(<span class="ident">path</span>);
-    <span class="comment">// converting input to str and normalizing them</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">df</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
-    <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">i</span>) <span class="kw">in</span> <span class="ident">columns</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-        <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="ident">values</span>.<span class="ident">iter</span>() {
-            <span class="kw">for</span> (<span class="ident">m</span>, <span class="ident">k</span>) <span class="kw">in</span> <span class="ident">j</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                <span class="kw">if</span> <span class="ident">n</span> <span class="op">=</span><span class="op">=</span> <span class="ident">m</span> {
-                    <span class="ident">v</span>.<span class="ident">push</span>(<span class="ident">k</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>());
-                }
-            }
-        }
-        <span class="ident">v</span> <span class="op">=</span> <span class="ident">normalize_vector_f</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>);
-        <span class="ident">df</span>.<span class="ident">insert</span>(<span class="ident">i</span>.<span class="ident">to_string</span>(), <span class="ident">v</span>);
-    }
-    <span class="comment">// print!(&quot;{:?}&quot;, df);</span>
-    <span class="comment">// test and train split, target and features split</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">test_features</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">train_features</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">test_target</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">train_target</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
-
-    <span class="kw">for</span> (<span class="ident">k</span>, <span class="ident">v</span>) <span class="kw">in</span> <span class="ident">df</span>.<span class="ident">iter</span>() {
-        <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">k</span>.<span class="ident">to_string</span>() <span class="op">!</span><span class="op">=</span> <span class="ident">target_name</span> {
-            <span class="ident">test_features</span>.<span class="ident">insert</span>(<span class="ident">k</span>.<span class="ident">clone</span>(), <span class="ident">train_test_split</span>(<span class="ident">v</span>, <span class="ident">test_percentage</span>).<span class="number">1</span>);
-            <span class="ident">train_features</span>.<span class="ident">insert</span>(<span class="ident">k</span>.<span class="ident">clone</span>(), <span class="ident">train_test_split</span>(<span class="ident">v</span>, <span class="ident">test_percentage</span>).<span class="number">0</span>);
-        <span class="comment">// X</span>
-        } <span class="kw">else</span> {
-            <span class="ident">test_target</span>.<span class="ident">insert</span>(<span class="ident">k</span>.<span class="ident">clone</span>(), <span class="ident">train_test_split</span>(<span class="ident">v</span>, <span class="ident">test_percentage</span>).<span class="number">1</span>);
-            <span class="ident">train_target</span>.<span class="ident">insert</span>(<span class="ident">k</span>.<span class="ident">clone</span>(), <span class="ident">train_test_split</span>(<span class="ident">v</span>, <span class="ident">test_percentage</span>).<span class="number">0</span>);
-            <span class="comment">// y</span>
-        }
-    }
-    <span class="kw">let</span> <span class="ident">feature_vector</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">train_features</span>.<span class="ident">values</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>();
-    <span class="kw">let</span> <span class="ident">target_vector</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">train_target</span>.<span class="ident">values</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>();
-    <span class="kw">let</span> <span class="ident">feature_length</span> <span class="op">=</span> <span class="ident">feature_vector</span>[<span class="number">0</span>].<span class="ident">len</span>();
-    <span class="comment">// println!(&quot;{:?}&quot;, target_vector);</span>
-
-    <span class="comment">// initiating beta values</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">beta_df</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
-    <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">i</span>) <span class="kw">in</span> <span class="ident">columns</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0.</span>; <span class="ident">feature_length</span>];
-        <span class="ident">beta_df</span>.<span class="ident">insert</span>(<span class="ident">i</span>.<span class="ident">to_string</span>(), <span class="ident">v</span>);
-    }
-
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">beta</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="macro">vec</span><span class="macro">!</span>[<span class="number">0.</span>; <span class="ident">train_features</span>.<span class="ident">keys</span>().<span class="ident">len</span>()]];
-    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;BETA: {:?}&quot;</span>, <span class="ident">beta</span>);
-
-    <span class="comment">// gradient descent on beta</span>
-    <span class="kw">let</span> (<span class="ident">new_beta</span>, <span class="ident">iteration_count</span>) <span class="op">=</span>
-        <span class="ident">gradient_descent</span>(<span class="kw-2">&amp;</span><span class="ident">feature_vector</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">beta</span>, <span class="kw-2">&amp;</span><span class="ident">target_vector</span>[<span class="number">0</span>], <span class="number">0.01</span>, <span class="number">0.001</span>);
-    <span class="comment">// println!(</span>
-    <span class="comment">//     &quot;{:?}\n{:?}\n{:?}\n{:?}\n{:?}&quot;,</span>
-    <span class="comment">//     feature_vector, target_vector, &amp;beta, &amp;new_beta, iteration_count</span>
-    <span class="comment">// );</span>
-    (<span class="ident">new_beta</span>, <span class="ident">iteration_count</span>)
-}
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MultivariantLinearRegression</span> {
     <span class="kw">pub</span> <span class="ident">header</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
@@ -3052,7 +2581,7 @@ FUNCTIONS
         <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;The weights of the inputs are {:?}&quot;</span>, <span class="ident">coefficeints</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pv</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">MultivariantLinearRegression</span>::<span class="ident">hash_to_table</span>(<span class="kw-2">&amp;</span><span class="ident">norm_test_features</span>)
             .<span class="ident">iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">element_wise_operation</span>(<span class="ident">a</span>, <span class="kw-2">&amp;</span><span class="ident">coefficeints</span>, <span class="string">&quot;Mul&quot;</span>))
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">element_wise_operation</span>(<span class="ident">a</span>, <span class="kw-2">&amp;</span><span class="ident">coefficeints</span>, <span class="string">&quot;mul&quot;</span>))
             .<span class="ident">collect</span>();
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">predicted_values</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
@@ -3122,7 +2651,7 @@ FUNCTIONS
         <span class="kw">let</span> <span class="ident">rows</span> <span class="op">=</span> <span class="ident">target</span>.<span class="ident">len</span>();
         <span class="kw">let</span> <span class="ident">prod</span> <span class="op">=</span> <span class="ident">matrix_vector_product_f</span>(<span class="kw-2">&amp;</span><span class="ident">features</span>, <span class="ident">theta</span>);
         <span class="comment">// println!(&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;\n{:?}x{:?}&quot;, prod.len(), target.len(),);</span>
-        <span class="kw">let</span> <span class="ident">numerator</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">element_wise_operation</span>(<span class="kw-2">&amp;</span><span class="ident">prod</span>, <span class="ident">target</span>, <span class="string">&quot;Sub&quot;</span>)
+        <span class="kw">let</span> <span class="ident">numerator</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">element_wise_operation</span>(<span class="kw-2">&amp;</span><span class="ident">prod</span>, <span class="ident">target</span>, <span class="string">&quot;sub&quot;</span>)
             .<span class="ident">iter</span>()
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">a</span> <span class="op">*</span> <span class="kw-2">*</span><span class="ident">a</span>)
             .<span class="ident">collect</span>();
@@ -3159,7 +2688,7 @@ FUNCTIONS
             <span class="ident">new_theta</span> <span class="op">=</span> <span class="ident">element_wise_operation</span>(
                 <span class="kw-2">&amp;</span><span class="ident">new_theta</span>,
                 <span class="kw-2">&amp;</span><span class="ident">gradient</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">alpha_lr</span> <span class="op">*</span> <span class="ident">a</span>).<span class="ident">collect</span>(),
-                <span class="string">&quot;Sub&quot;</span>,
+                <span class="string">&quot;sub&quot;</span>,
             )
             .<span class="ident">clone</span>();
 
@@ -3189,6 +2718,571 @@ FUNCTIONS
     }
 }
 
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mean</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">Copy</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
+    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
+{
+    <span class="comment">// https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/</span>
+    <span class="kw">let</span> <span class="ident">zero</span>: <span class="ident">T</span> <span class="op">=</span> <span class="string">&quot;0&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">len_str</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">len</span>().<span class="ident">to_string</span>();
+    <span class="kw">let</span> <span class="ident">length</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">len_str</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+    (<span class="ident">list</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="ident">zero</span>, <span class="op">|</span><span class="ident">acc</span>, <span class="ident">x</span><span class="op">|</span> <span class="ident">acc</span> <span class="op">+</span> <span class="kw-2">*</span><span class="ident">x</span>) <span class="op">/</span> <span class="ident">length</span>)
+        .<span class="ident">to_string</span>()
+        .<span class="ident">parse</span>()
+        .<span class="ident">unwrap</span>()
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">variance</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">Copy</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
+    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
+{
+    <span class="comment">// https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/</span>
+    <span class="kw">let</span> <span class="ident">zero</span>: <span class="ident">T</span> <span class="op">=</span> <span class="string">&quot;0&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">mu</span> <span class="op">=</span> <span class="ident">mean</span>(<span class="ident">list</span>);
+    <span class="kw">let</span> <span class="ident">_len_str</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">len</span>().<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>(); <span class="comment">// is division is required</span>
+    <span class="kw">let</span> <span class="ident">output</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">list</span>
+        .<span class="ident">iter</span>()
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">x</span><span class="op">|</span> (<span class="kw-2">*</span><span class="ident">x</span> <span class="op">-</span> <span class="ident">mu</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>()) <span class="op">*</span> (<span class="kw-2">*</span><span class="ident">x</span> <span class="op">-</span> <span class="ident">mu</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>()))
+        .<span class="ident">collect</span>();
+    <span class="comment">// output</span>
+    <span class="kw">let</span> <span class="ident">variance</span> <span class="op">=</span> <span class="ident">output</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="ident">zero</span>, <span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span> <span class="op">+</span> <span class="kw-2">*</span><span class="ident">b</span>); <span class="comment">// / len_str;</span>
+    <span class="ident">variance</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>()
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">covariance</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">list2</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">Copy</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
+    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
+{
+    <span class="comment">// https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/</span>
+    <span class="kw">let</span> <span class="ident">mu1</span> <span class="op">=</span> <span class="ident">mean</span>(<span class="ident">list1</span>);
+    <span class="kw">let</span> <span class="ident">mu2</span> <span class="op">=</span> <span class="ident">mean</span>(<span class="ident">list2</span>);
+    <span class="kw">let</span> <span class="ident">zero</span>: <span class="ident">T</span> <span class="op">=</span> <span class="string">&quot;0&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">len_str</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">list1</span>.<span class="ident">len</span>().<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>(); <span class="comment">// if division is required</span>
+    <span class="kw">let</span> <span class="ident">tupled</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">list1</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">list2</span>).<span class="ident">collect</span>();
+    <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">tupled</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="ident">zero</span>, <span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> {
+        <span class="ident">a</span> <span class="op">+</span> ((<span class="kw-2">*</span><span class="ident">b</span>.<span class="number">0</span> <span class="op">-</span> <span class="ident">mu1</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>()) <span class="op">*</span> (<span class="kw-2">*</span><span class="ident">b</span>.<span class="number">1</span> <span class="op">-</span> <span class="ident">mu2</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>()))
+    });
+    <span class="kw">let</span> <span class="ident">numerator</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">output</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+    <span class="ident">numerator</span> <span class="comment">// / len_str  // (this is not being divided by populaiton size)</span>
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">coefficient</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">list2</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">f64</span>, <span class="ident">f64</span>)
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">Copy</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
+    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
+{
+    <span class="comment">/*
+    To find slope and intercept of a line
+    */</span>
+    <span class="comment">// https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/</span>
+    <span class="kw">let</span> <span class="ident">b1</span> <span class="op">=</span> <span class="ident">covariance</span>(<span class="ident">list1</span>, <span class="ident">list2</span>) <span class="op">/</span> <span class="ident">variance</span>(<span class="ident">list1</span>);
+    <span class="kw">let</span> <span class="ident">b0</span> <span class="op">=</span> <span class="ident">mean</span>(<span class="ident">list2</span>) <span class="op">-</span> (<span class="ident">b1</span> <span class="op">*</span> <span class="ident">mean</span>(<span class="ident">list1</span>));
+    (<span class="ident">b0</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>(), <span class="ident">b1</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">simple_linear_regression_prediction</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">train</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">T</span>)<span class="op">&gt;</span>, <span class="ident">test</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">T</span>)<span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">Copy</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
+    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
+{
+    <span class="comment">// https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/</span>
+    <span class="kw">let</span> <span class="ident">train_features</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">train</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="number">0</span>).<span class="ident">collect</span>();
+    <span class="kw">let</span> <span class="ident">test_features</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">test</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="number">1</span>).<span class="ident">collect</span>();
+    <span class="kw">let</span> (<span class="ident">offset</span>, <span class="ident">slope</span>) <span class="op">=</span> <span class="ident">coefficient</span>(<span class="ident">train_features</span>, <span class="ident">test_features</span>);
+    <span class="kw">let</span> <span class="ident">b0</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">offset</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">b1</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">slope</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">predicted_output</span> <span class="op">=</span> <span class="ident">test</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">b0</span> <span class="op">+</span> <span class="ident">b1</span> <span class="op">*</span> <span class="ident">a</span>.<span class="number">0</span>).<span class="ident">collect</span>();
+    <span class="kw">let</span> <span class="ident">original_output</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">test</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="number">0</span>).<span class="ident">collect</span>();
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;b0 = {:?} and b1= {:?}&quot;</span>, <span class="ident">b0</span>, <span class="ident">b1</span>);
+    <span class="macro">println</span><span class="macro">!</span>(
+        <span class="string">&quot;RMSE: {:?}&quot;</span>,
+        <span class="ident">root_mean_square</span>(<span class="kw-2">&amp;</span><span class="ident">predicted_output</span>, <span class="kw-2">&amp;</span><span class="ident">original_output</span>)
+    );
+    <span class="ident">predicted_output</span>
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">root_mean_square</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">list2</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">Copy</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
+    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
+{
+    <span class="comment">// https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/</span>
+    <span class="kw">let</span> <span class="ident">zero</span>: <span class="ident">T</span> <span class="op">=</span> <span class="string">&quot;0&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">tupled</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">list1</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">list2</span>).<span class="ident">collect</span>();
+    <span class="kw">let</span> <span class="ident">length</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">list1</span>.<span class="ident">len</span>().<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">mean_square_error</span> <span class="op">=</span> <span class="ident">tupled</span>
+        .<span class="ident">iter</span>()
+        .<span class="ident">fold</span>(<span class="ident">zero</span>, <span class="op">|</span><span class="ident">b</span>, <span class="ident">a</span><span class="op">|</span> <span class="ident">b</span> <span class="op">+</span> ((<span class="kw-2">*</span><span class="ident">a</span>.<span class="number">1</span> <span class="op">-</span> <span class="kw-2">*</span><span class="ident">a</span>.<span class="number">0</span>) <span class="op">*</span> (<span class="kw-2">*</span><span class="ident">a</span>.<span class="number">1</span> <span class="op">-</span> <span class="kw-2">*</span><span class="ident">a</span>.<span class="number">0</span>)))
+        <span class="op">/</span> <span class="ident">length</span>;
+    <span class="kw">let</span> <span class="ident">mse</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">mean_square_error</span>.<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+    <span class="ident">mse</span>.<span class="ident">powf</span>(<span class="number">0.5</span>)
+}
+
+<span class="comment">// reading in files for multi column operations</span>
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_csv</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">path</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
+    <span class="comment">/*
+    Returns headers and row wise values as strings
+    */</span>
+    <span class="comment">// println!(&quot;========================================================================================================================================================&quot;);</span>
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Reading the file ...&quot;</span>);
+    <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">fs</span>::<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>).<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">splitted</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">file</span>.<span class="ident">split</span>(<span class="string">&quot;\n&quot;</span>).<span class="ident">collect</span>();
+    <span class="kw">let</span> <span class="ident">rows</span>: <span class="ident">i32</span> <span class="op">=</span> (<span class="ident">splitted</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">i32</span>;
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Number of rows = {}&quot;</span>, <span class="ident">rows</span> <span class="op">-</span> <span class="number">1</span>);
+    <span class="kw">let</span> <span class="ident">table</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">splitted</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">split</span>(<span class="string">&quot;,&quot;</span>).<span class="ident">collect</span>()).<span class="ident">collect</span>();
+    <span class="kw">let</span> <span class="ident">values</span> <span class="op">=</span> <span class="ident">table</span>[<span class="number">1</span>..]
+        .<span class="ident">iter</span>()
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="ident">b</span>.<span class="ident">to_string</span>()).<span class="ident">collect</span>())
+        .<span class="ident">collect</span>();
+    <span class="kw">let</span> <span class="ident">columns</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">table</span>[<span class="number">0</span>].<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">to_string</span>()).<span class="ident">collect</span>();
+    (<span class="ident">columns</span>, <span class="ident">values</span>)
+}
+
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span>;
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">convert_and_impute</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>(
+    <span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="ident">to</span>: <span class="ident">U</span>,
+    <span class="ident">impute_with</span>: <span class="ident">U</span>,
+) <span class="op">-</span><span class="op">&gt;</span> (<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>)
+<span class="kw">where</span>
+    <span class="ident">U</span>: <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">Copy</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
+    <span class="op">&lt;</span><span class="ident">U</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
+{
+    <span class="comment">/*
+    Convert a vector to a type by passing a value of that type and pass a value to replace missing values
+    */</span>
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
+    <span class="comment">// takes string input and converts it to int or float</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">missing</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+    <span class="kw">match</span> <span class="ident">type_of</span>(<span class="ident">to</span>) {
+        <span class="string">&quot;f64&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">i</span>) <span class="kw">in</span> <span class="ident">list</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+                <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">i</span> <span class="op">!</span><span class="op">=</span> <span class="string">&quot;&quot;</span> {
+                    <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">i</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
+                    <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">x</span>);
+                } <span class="kw">else</span> {
+                    <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">impute_with</span>);
+                    <span class="ident">missing</span>.<span class="ident">push</span>(<span class="ident">n</span>);
+                    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Error found in {}th position of the vector&quot;</span>, <span class="ident">n</span>);
+                }
+            }
+        }
+        <span class="string">&quot;i32&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">i</span>) <span class="kw">in</span> <span class="ident">list</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+                <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">i</span> <span class="op">!</span><span class="op">=</span> <span class="string">&quot;&quot;</span> {
+                    <span class="kw">let</span> <span class="ident">string_splitted</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">i</span>.<span class="ident">split</span>(<span class="string">&quot;.&quot;</span>).<span class="ident">collect</span>();
+                    <span class="kw">let</span> <span class="ident">ones_digit</span> <span class="op">=</span> <span class="ident">string_splitted</span>[<span class="number">0</span>].<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
+                    <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">ones_digit</span>);
+                } <span class="kw">else</span> {
+                    <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">impute_with</span>);
+                    <span class="ident">missing</span>.<span class="ident">push</span>(<span class="ident">n</span>);
+                    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Error found in {}th position of the vector&quot;</span>, <span class="ident">n</span>);
+                }
+            }
+        }
+        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;This type conversion cant be done, choose either int or float type\n Incase of string conversion, use impute_string&quot;</span>),
+    }
+
+    (<span class="prelude-val">Ok</span>(<span class="ident">output</span>), <span class="ident">missing</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">impute_string</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">impute_with</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span> {
+    <span class="comment">/*
+    Replace missing value with the string thats passed
+    */</span>
+    <span class="comment">// println!(&quot;========================================================================================================================================================&quot;);</span>
+    <span class="ident">list</span>.<span class="ident">iter</span>()
+        .<span class="ident">enumerate</span>()
+        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">n</span>, <span class="ident">a</span>)<span class="op">|</span> {
+            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">a</span> <span class="op">=</span><span class="op">=</span> <span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;&quot;</span>) {
+                <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Missing value found in {}th position of the vector&quot;</span>, <span class="ident">n</span>);
+                <span class="ident">impute_with</span>
+            } <span class="kw">else</span> {
+                <span class="kw-2">&amp;</span><span class="ident">a</span>[..]
+            }
+        })
+        .<span class="ident">collect</span>()
+}
+
+<span class="comment">// use std::collections::HashMap;</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">convert_string_categorical</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">extra_class</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">Eq</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">hash</span>::<span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Copy</span>,
+{
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
+    <span class="kw">let</span> <span class="ident">values</span> <span class="op">=</span> <span class="ident">unique_values</span>(<span class="kw-2">&amp;</span><span class="ident">list</span>);
+    <span class="kw">if</span> <span class="ident">extra_class</span> <span class="op">=</span><span class="op">=</span> <span class="bool-val">true</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">values</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">10</span> {
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;The number of classes will be more than 10&quot;</span>);
+    } <span class="kw">else</span> {
+        ();
+    }
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">T</span>, <span class="ident">f64</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
+    <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">i</span>) <span class="kw">in</span> <span class="ident">values</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+        <span class="ident">map</span>.<span class="ident">insert</span>(<span class="ident">i</span>, <span class="ident">n</span> <span class="kw">as</span> <span class="ident">f64</span> <span class="op">+</span> <span class="number">1.</span>);
+    }
+    <span class="ident">list</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">map</span>[<span class="ident">a</span>]).<span class="ident">collect</span>()
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normalize_vector_f</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
+    <span class="comment">// println!(&quot;========================================================================================================================================================&quot;);</span>
+    <span class="kw">let</span> (<span class="ident">minimum</span>, <span class="ident">maximum</span>) <span class="op">=</span> <span class="ident">min_max_f</span>(<span class="kw-2">&amp;</span><span class="ident">list</span>);
+    <span class="kw">let</span> <span class="ident">range</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">maximum</span> <span class="op">-</span> <span class="ident">minimum</span>;
+    <span class="ident">list</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="number">1.</span> <span class="op">-</span> ((<span class="ident">maximum</span> <span class="op">-</span> <span class="ident">a</span>) <span class="op">/</span> <span class="ident">range</span>)).<span class="ident">collect</span>()
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">logistic_function_f</span>(<span class="ident">matrix</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">beta</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
+    <span class="comment">//https://www.geeksforgeeks.org/understanding-logistic-regression/</span>
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;logistic function&quot;</span>);
+    <span class="macro">println</span><span class="macro">!</span>(
+        <span class="string">&quot;{:?}x{:?}\n{:?}x{:?}&quot;</span>,
+        <span class="ident">matrix</span>.<span class="ident">len</span>(),
+        <span class="ident">matrix</span>[<span class="number">0</span>].<span class="ident">len</span>(),
+        <span class="ident">beta</span>.<span class="ident">len</span>(),
+        <span class="ident">beta</span>[<span class="number">0</span>].<span class="ident">len</span>()
+    );
+    <span class="ident">matrix_multiplication</span>(<span class="ident">matrix</span>, <span class="ident">beta</span>)
+        .<span class="ident">iter</span>()
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="number">1.</span> <span class="op">/</span> (<span class="number">1.</span> <span class="op">+</span> ((<span class="ident">b</span> <span class="op">*</span> <span class="op">-</span><span class="number">1.</span>).<span class="ident">exp</span>()))).<span class="ident">collect</span>())
+        .<span class="ident">collect</span>()
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">log_gradient_f</span>(
+    <span class="ident">matrix1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">beta</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">matrix2</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>,
+) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;========================================================================================================================================================&quot;</span>);
+    <span class="comment">//https://www.geeksforgeeks.org/understanding-logistic-regression/</span>
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Log gradient_f&quot;</span>);
+    <span class="comment">// PYTHON : // first_calc = logistic_func(beta, X) - y.reshape(X.shape[0], -1)</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">first_calc</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+    <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">i</span>) <span class="kw">in</span> <span class="ident">logistic_function_f</span>(<span class="ident">matrix1</span>, <span class="ident">beta</span>).<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">row</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+        <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="ident">i</span>.<span class="ident">iter</span>() {
+            <span class="ident">row</span>.<span class="ident">push</span>(<span class="ident">j</span> <span class="op">-</span> <span class="ident">matrix2</span>[<span class="ident">n</span>]);
+        }
+        <span class="ident">first_calc</span>.<span class="ident">push</span>(<span class="ident">row</span>);
+    }
+
+    <span class="kw">let</span> <span class="ident">first_calc_T</span> <span class="op">=</span> <span class="ident">transpose</span>(<span class="kw-2">&amp;</span><span class="ident">first_calc</span>);
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">X</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+    <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">matrix1</span>[<span class="number">0</span>].<span class="ident">len</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">row</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">matrix1</span>.<span class="ident">iter</span>() {
+            <span class="ident">row</span>.<span class="ident">push</span>(<span class="ident">i</span>[<span class="ident">j</span>]);
+        }
+        <span class="ident">X</span>.<span class="ident">push</span>(<span class="ident">row</span>);
+    }
+
+    <span class="comment">// PYTHON : // final_calc = np.dot(first_calc.T, X)</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">final_calc</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">first_calc_T</span>.<span class="ident">iter</span>() {
+        <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="ident">X</span>.<span class="ident">iter</span>() {
+            <span class="ident">final_calc</span>.<span class="ident">push</span>(<span class="ident">dot_product</span>(<span class="kw-2">&amp;</span><span class="ident">i</span>, <span class="kw-2">&amp;</span><span class="ident">j</span>))
+        }
+    }
+
+    <span class="comment">// println!(&quot;{:?}\n{:?}&quot;, &amp;first_calc_T, &amp;X);</span>
+    <span class="comment">// println!(&quot;{:?}&quot;, &amp;final_calc);</span>
+    <span class="comment">// println!(</span>
+    <span class="comment">//     &quot;{:?}&quot;,</span>
+    <span class="comment">//     shape_changer(&amp;final_calc, matrix1[0].len(), matrix1.len())</span>
+    <span class="comment">// );</span>
+    <span class="ident">shape_changer</span>(<span class="kw-2">&amp;</span><span class="ident">final_calc</span>, <span class="ident">matrix1</span>[<span class="number">0</span>].<span class="ident">len</span>(), <span class="ident">matrix1</span>.<span class="ident">len</span>())
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">logistic_predict</span>(<span class="ident">matrix1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">beta</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="comment">// https://www.geeksforgeeks.org/understanding-logistic-regression/</span>
+    <span class="kw">let</span> <span class="ident">prediction_probability</span> <span class="op">=</span> <span class="ident">logistic_function_f</span>(<span class="ident">matrix1</span>, <span class="ident">beta</span>);
+    <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">prediction_probability</span>
+        .<span class="ident">iter</span>()
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">b</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0.5</span> { <span class="number">1.</span> } <span class="kw">else</span> { <span class="number">0.</span> }).<span class="ident">collect</span>())
+        .<span class="ident">collect</span>();
+    <span class="ident">output</span>
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">randomize_vector_f</span>(<span class="ident">rows</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
+    <span class="comment">/*
+    Shuffle values inside vector
+    */</span>
+    <span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">seq</span>::<span class="ident">SliceRandom</span>;
+    <span class="kw">use</span> <span class="ident">rand</span>::{<span class="ident">thread_rng</span>, <span class="ident">Rng</span>};
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">order</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="ident">rows</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">collect</span>();
+    <span class="kw">let</span> <span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">usize</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">order</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">thread_rng</span>();
+    <span class="ident">slice</span>.<span class="ident">shuffle</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>);
+    <span class="comment">// println!(&quot;{:?}&quot;, slice);</span>
+
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">order</span>.<span class="ident">iter</span>() {
+        <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">rows</span>[<span class="kw-2">*</span><span class="ident">i</span>].<span class="ident">clone</span>());
+    }
+    <span class="ident">output</span>
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">randomize_f</span>(<span class="ident">rows</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="comment">/*
+    Shuffle rows inside matrix
+    */</span>
+    <span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">seq</span>::<span class="ident">SliceRandom</span>;
+    <span class="kw">use</span> <span class="ident">rand</span>::{<span class="ident">thread_rng</span>, <span class="ident">Rng</span>};
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">order</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="ident">rows</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">collect</span>();
+    <span class="kw">let</span> <span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">usize</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">order</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">thread_rng</span>();
+    <span class="ident">slice</span>.<span class="ident">shuffle</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>);
+    <span class="comment">// println!(&quot;{:?}&quot;, slice);</span>
+
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">order</span>.<span class="ident">iter</span>() {
+        <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">rows</span>[<span class="kw-2">*</span><span class="ident">i</span>].<span class="ident">clone</span>());
+    }
+    <span class="ident">output</span>
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">train_test_split_vector_f</span>(<span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">percentage</span>: <span class="ident">f64</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) {
+    <span class="comment">/*
+    Shuffle and split percentage of test for vector
+    */</span>
+    <span class="comment">// shuffle</span>
+    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">randomize_vector_f</span>(<span class="ident">input</span>);
+    <span class="comment">// println!(&quot;{:?}&quot;, data);</span>
+    <span class="comment">// split</span>
+    <span class="kw">let</span> <span class="ident">test_count</span> <span class="op">=</span> (<span class="ident">data</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span> <span class="op">*</span> <span class="ident">percentage</span>) <span class="kw">as</span> <span class="ident">usize</span>;
+    <span class="comment">// println!(&quot;Test size is {:?}&quot;, test_count);</span>
+
+    <span class="kw">let</span> <span class="ident">test</span> <span class="op">=</span> <span class="ident">data</span>[<span class="number">0</span>..<span class="ident">test_count</span>].<span class="ident">to_vec</span>();
+    <span class="kw">let</span> <span class="ident">train</span> <span class="op">=</span> <span class="ident">data</span>[<span class="ident">test_count</span>..].<span class="ident">to_vec</span>();
+    (<span class="ident">train</span>, <span class="ident">test</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">train_test_split_f</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">percentage</span>: <span class="ident">f64</span>,
+) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
+    <span class="comment">/*
+    Shuffle and split percentage of test for matrix
+    */</span>
+    <span class="comment">// shuffle</span>
+    <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">randomize_f</span>(<span class="ident">input</span>);
+    <span class="comment">// println!(&quot;{:?}&quot;, data);</span>
+    <span class="comment">// split</span>
+    <span class="kw">let</span> <span class="ident">test_count</span> <span class="op">=</span> (<span class="ident">data</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span> <span class="op">*</span> <span class="ident">percentage</span>) <span class="kw">as</span> <span class="ident">usize</span>;
+    <span class="comment">// println!(&quot;Test size is {:?}&quot;, test_count);</span>
+
+    <span class="kw">let</span> <span class="ident">test</span> <span class="op">=</span> <span class="ident">data</span>[<span class="number">0</span>..<span class="ident">test_count</span>].<span class="ident">to_vec</span>();
+    <span class="kw">let</span> <span class="ident">train</span> <span class="op">=</span> <span class="ident">data</span>[<span class="ident">test_count</span>..].<span class="ident">to_vec</span>();
+    (<span class="ident">train</span>, <span class="ident">test</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">correlation</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">list2</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">PartialOrd</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">Copy</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
+    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
+{
+    <span class="comment">/*
+    Correlation
+    &quot;p&quot; =&gt; pearson
+    &quot;s&quot; =&gt; spearman&#39;s
+    */</span>
+    <span class="kw">let</span> <span class="ident">cov</span> <span class="op">=</span> <span class="ident">covariance</span>(<span class="ident">list1</span>, <span class="ident">list2</span>);
+    <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">name</span> {
+        <span class="string">&quot;p&quot;</span> <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">cov</span> <span class="op">/</span> (<span class="ident">std_dev</span>(<span class="ident">list1</span>) <span class="op">*</span> <span class="ident">std_dev</span>(<span class="ident">list2</span>))) <span class="op">/</span> <span class="ident">list1</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>,
+        <span class="string">&quot;s&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="comment">// https://statistics.laerd.com/statistical-guides/spearmans-rank-order-correlation-statistical-guide-2.php</span>
+            <span class="comment">//covariance(&amp;rank(list1), &amp;rank(list2))/(std_dev(&amp;rank(list1))*std_dev(&amp;rank(list2)))</span>
+            <span class="kw">let</span> <span class="ident">ranked_list1</span> <span class="op">=</span> <span class="ident">spearman_rank</span>(<span class="ident">list1</span>);
+            <span class="kw">let</span> <span class="ident">ranked_list2</span> <span class="op">=</span> <span class="ident">spearman_rank</span>(<span class="ident">list2</span>);
+            <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">list1</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>;
+            <span class="comment">// sorting rnaks back to original positions</span>
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rl1</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+            <span class="kw">for</span> <span class="ident">k</span> <span class="kw">in</span> <span class="ident">list1</span>.<span class="ident">iter</span>() {
+                <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">j</span>) <span class="kw">in</span> <span class="ident">ranked_list1</span>.<span class="ident">iter</span>() {
+                    <span class="kw">if</span> <span class="ident">k</span> <span class="op">=</span><span class="op">=</span> <span class="ident">i</span> {
+                        <span class="ident">rl1</span>.<span class="ident">push</span>(<span class="ident">j</span>);
+                    }
+                }
+            }
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rl2</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+            <span class="kw">for</span> <span class="ident">k</span> <span class="kw">in</span> <span class="ident">list2</span>.<span class="ident">iter</span>() {
+                <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">j</span>) <span class="kw">in</span> <span class="ident">ranked_list2</span>.<span class="ident">iter</span>() {
+                    <span class="kw">if</span> <span class="ident">k</span> <span class="op">=</span><span class="op">=</span> <span class="ident">i</span> {
+                        <span class="ident">rl2</span>.<span class="ident">push</span>(<span class="ident">j</span>);
+                    }
+                }
+            }
+
+            <span class="kw">let</span> <span class="ident">combined</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">rl1</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">rl2</span>.<span class="ident">iter</span>()).<span class="ident">collect</span>();
+            <span class="kw">let</span> <span class="ident">sum_of_square_of_difference</span> <span class="op">=</span> <span class="ident">combined</span>
+                .<span class="ident">iter</span>()
+                .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">a</span>, <span class="ident">b</span>)<span class="op">|</span> (<span class="kw-2">*</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span> <span class="op">-</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">b</span>) <span class="op">*</span> (<span class="kw-2">*</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span> <span class="op">-</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">b</span>))
+                .<span class="ident">fold</span>(<span class="number">0.</span>, <span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span> <span class="op">+</span> <span class="ident">b</span>);
+            <span class="number">1.</span> <span class="op">-</span> ((<span class="number">6.</span> <span class="op">*</span> <span class="ident">sum_of_square_of_difference</span>) <span class="op">/</span> (<span class="ident">len</span> <span class="op">*</span> ((<span class="ident">len</span> <span class="op">*</span> <span class="ident">len</span>) <span class="op">-</span> <span class="number">1.</span>)))
+            <span class="comment">// 0.</span>
+        }
+        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Either `p`: Pearson or `s`:Spearman has to be the name. Please retry!&quot;</span>),
+    };
+    <span class="kw">match</span> <span class="ident">output</span> {
+        <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">&lt;</span> <span class="number">0.2</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">x</span> <span class="op">&gt;</span> <span class="op">-</span><span class="number">0.2</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;There is a weak correlation between the two :&quot;</span>),
+        <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">&gt;</span> <span class="number">0.6</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;There is a strong positive correlation between the two :&quot;</span>),
+        <span class="ident">x</span> <span class="kw">if</span> <span class="ident">x</span> <span class="op">&lt;</span> <span class="op">-</span><span class="number">0.6</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;There is a strong negative correlation between the two :&quot;</span>),
+        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> (),
+    }
+    <span class="ident">output</span>
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">std_dev</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">Copy</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
+    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
+{
+    <span class="kw">let</span> <span class="ident">mu</span>: <span class="ident">T</span> <span class="op">=</span> <span class="ident">mean</span>(<span class="ident">list1</span>).<span class="ident">to_string</span>().<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+    <span class="kw">let</span> <span class="ident">square_of_difference</span> <span class="op">=</span> <span class="ident">list1</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> (<span class="kw-2">*</span><span class="ident">a</span> <span class="op">-</span> <span class="ident">mu</span>) <span class="op">*</span> (<span class="kw-2">*</span><span class="ident">a</span> <span class="op">-</span> <span class="ident">mu</span>)).<span class="ident">collect</span>();
+    <span class="kw">let</span> <span class="ident">var</span> <span class="op">=</span> <span class="ident">mean</span>(<span class="kw-2">&amp;</span><span class="ident">square_of_difference</span>);
+    <span class="ident">var</span>.<span class="ident">sqrt</span>()
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">spearman_rank</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list1</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">f64</span>)<span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">Sum</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Div</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">Copy</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">PartialOrd</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Add</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Mul</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span><span class="op">&gt;</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span>
+        <span class="op">+</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>,
+    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span><span class="op">&gt;</span>::<span class="prelude-val">Err</span>: <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>,
+{
+    <span class="comment">/*
+    Returns ranking of each value in ascending order with thier spearman rank in a vector of tuple
+    */</span>
+    <span class="comment">// https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sorted</span> <span class="op">=</span> <span class="ident">list1</span>.<span class="ident">clone</span>();
+    <span class="ident">sorted</span>.<span class="ident">sort_by</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">partial_cmp</span>(<span class="ident">b</span>).<span class="ident">unwrap</span>());
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="kw">_</span>, <span class="kw">_</span>)<span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+    <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">i</span>) <span class="kw">in</span> <span class="ident">sorted</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+        <span class="ident">map</span>.<span class="ident">push</span>(((<span class="ident">n</span> <span class="op">+</span> <span class="number">1</span>), <span class="kw-2">*</span><span class="ident">i</span>));
+    }
+    <span class="comment">// repeating values</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">repeats</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+    <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">i</span>) <span class="kw">in</span> <span class="ident">sorted</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+        <span class="kw">if</span> <span class="ident">how_many_and_where_vector</span>(<span class="kw-2">&amp;</span><span class="ident">sorted</span>, <span class="kw-2">*</span><span class="ident">i</span>).<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">1</span> {
+            <span class="ident">repeats</span>.<span class="ident">push</span>((<span class="kw-2">*</span><span class="ident">i</span>, <span class="ident">how_many_and_where_vector</span>(<span class="kw-2">&amp;</span><span class="ident">sorted</span>, <span class="kw-2">*</span><span class="ident">i</span>)));
+        } <span class="kw">else</span> {
+            <span class="ident">repeats</span>.<span class="ident">push</span>((<span class="kw-2">*</span><span class="ident">i</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">n</span>]));
+        }
+    }
+    <span class="comment">// calculating the rank</span>
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rank</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">repeats</span>
+        .<span class="ident">iter</span>()
+        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">a</span>, <span class="ident">b</span>)<span class="op">|</span> {
+            (<span class="ident">a</span>, <span class="ident">b</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="number">0.</span>, <span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span> <span class="op">+</span> <span class="kw-2">*</span><span class="ident">b</span> <span class="kw">as</span> <span class="ident">f64</span>) <span class="op">/</span> <span class="ident">b</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>) <span class="comment">// mean of each position vector</span>
+        })
+        .<span class="ident">collect</span>();
+    <span class="kw">let</span> <span class="ident">output</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">rank</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">a</span>, <span class="ident">b</span>)<span class="op">|</span> (<span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">a</span>, <span class="ident">b</span> <span class="op">+</span> <span class="number">1.</span>)).<span class="ident">collect</span>(); <span class="comment">// 1. is fro index offset</span>
+    <span class="ident">output</span>
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">how_many_and_where_vector</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">number</span>: <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">PartialEq</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Copy</span>,
+{
+    <span class="comment">/*
+    Returns
+    */</span>
+    <span class="kw">let</span> <span class="ident">tuple</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">list</span>
+        .<span class="ident">iter</span>()
+        .<span class="ident">enumerate</span>()
+        .<span class="ident">filter</span>(<span class="op">|</span><span class="kw-2">&amp;</span>(<span class="kw">_</span>, <span class="ident">a</span>)<span class="op">|</span> <span class="kw-2">*</span><span class="ident">a</span> <span class="op">=</span><span class="op">=</span> <span class="ident">number</span>)
+        .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">n</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">n</span>)
+        .<span class="ident">collect</span>();
+    <span class="ident">tuple</span>
+}
+
 <span class="comment">/*
 DESCRIPTION
 -----------------------------------------
@@ -3210,7 +3304,7 @@ FUNCTIONS
 2. element_wise_operation : for vector
     &gt; 1. A &amp;mut Vec&lt;T&gt;
     &gt; 2. A &amp;mut Vec&lt;T&gt;
-    &gt; 3. operation &amp;str (&quot;Add&quot;,&quot;Sub&quot;,&quot;Mul&quot;,&quot;Div&quot;)
+    &gt; 3. operation &amp;str (&quot;add&quot;,&quot;sub&quot;,&quot;mul&quot;,&quot;div&quot;)
     = 1. Vec&lt;T&gt;
 
 3. matrix_multiplication :
@@ -3279,7 +3373,7 @@ FUNCTIONS
 17. element_wise_matrix_operation : for matrices
     &gt; 1. matrix1 : A &amp;Vec&lt;Vec&lt;T&gt;&gt;
     &gt; 2. matrix2 : A &amp;Vec&lt;Vec&lt;T&gt;&gt;
-    &gt; 3. fucntion : &amp;str (&quot;Add&quot;,&quot;Sub&quot;,&quot;Mul&quot;,&quot;Div&quot;)
+    &gt; 3. fucntion : &amp;str (&quot;add&quot;,&quot;sub&quot;,&quot;mul&quot;,&quot;div&quot;)
     = A Vec&lt;Vec&lt;T&gt;&gt;
 
 18. matrix_vector_product_f

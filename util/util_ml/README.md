@@ -2,11 +2,11 @@
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
 ## Changes
-* lib_nn, lib_string, lib_matrix the functions and Struct are tested, modified and documented
+* All functions and Struct are tested, modified and documented
 
 ## Planned
-1. lib_ml
-
+1. Lib_string : String extract vowels and consonants
+2. lib_ml : TimeSeries stuff , z-score, how_many_and_where
 
 ## List of Functions and Structs
 
@@ -66,12 +66,14 @@
     12. logistic_function_f
     13. log_gradient_f 
     14. logistic_predict 
-    15. randomize
-    16. train_test_split
-    17. correlation
-    18. std_dev
-    19. s_rank
-    20. how_many_and_where
+    15. randomize_vector_f
+    16. randomize_f
+    17. train_test_split_vector_f
+    18. train_test_split_f
+    19. correlation
+    20. std_dev
+    21. spearman_rank
+    22. how_many_and_where_vector
 ---
 ### lib_nn
     1. LayerDetails :

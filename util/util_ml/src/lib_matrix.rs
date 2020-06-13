@@ -19,7 +19,7 @@ FUNCTIONS
 2. element_wise_operation : for vector
     > 1. A &mut Vec<T>
     > 2. A &mut Vec<T>
-    > 3. operation &str ("Add","Sub","Mul","Div")
+    > 3. operation &str ("add","sub","mul","div")
     = 1. Vec<T>
 
 3. matrix_multiplication :
@@ -88,7 +88,7 @@ FUNCTIONS
 17. element_wise_matrix_operation : for matrices
     > 1. matrix1 : A &Vec<Vec<T>>
     > 2. matrix2 : A &Vec<Vec<T>>
-    > 3. fucntion : &str ("Add","Sub","Mul","Div")
+    > 3. fucntion : &str ("add","sub","mul","div")
     = A Vec<Vec<T>>
 
 18. matrix_vector_product_f

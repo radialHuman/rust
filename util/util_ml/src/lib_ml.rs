@@ -85,35 +85,44 @@ FUNCTIONS
     2. > beta: &Vec<Vec<f64>>
     = Vec<Vec<f64>>
 
-15. randomize :
+15. randomize_vector_f :
     1. > rows : &Vec<f64>
     = Vec<f64>
 
-16. train_test_split :
+16. randomize_f :
+    1. > rows : &Vec<Vec<f64>>
+    = Vec<Vec<f64>>
+
+17. train_test_split_vector_f :
     1. > input: &Vec<f64>
     2. > percentage: f64
     = Vec<f64>
     = Vec<f64>
 
-17. correlation :
+18. train_test_split_f :
+    1. > input: &Vec<Vec<f64>>
+    2. > percentage: f64
+    = Vec<Vec<f64>>
+    = Vec<Vec<f64>>
+
+19. correlation :
     1. > list1: &Vec<T>
     2. > list2: &Vec<T>
     3. > name: &str // 's' spearman, 'p': pearson
     = f64
 
-18. std_dev :
+20. std_dev :
     1. > list1: &Vec<T>
     = f64
 
-19. s_rank : Spearman ranking
+21. spearman_rank : Spearman ranking
     1. > list1: &Vec<T>
     = Vec<(T, f64)>
 
-20. how_many_and_where :
+22. how_many_and_where_vector :
     1. > list: &Vec<T>
     2. > number: T  // to be searched
     = Vec<usize>
-
 */
 
 use crate::lib_matrix;
@@ -247,7 +256,7 @@ impl MultivariantLinearRegression {
         println!("The weights of the inputs are {:?}", coefficeints);
         let mut pv: Vec<_> = MultivariantLinearRegression::hash_to_table(&norm_test_features)
             .iter()
-            .map(|a| element_wise_operation(a, &coefficeints, "Mul"))
+            .map(|a| element_wise_operation(a, &coefficeints, "mul"))
             .collect();
 
         let mut predicted_values = vec![];
@@ -288,7 +297,7 @@ impl MultivariantLinearRegression {
         let rows = target.len();
         let prod = matrix_vector_product_f(&features, theta);
         // println!(">>>>>>>>\n{:?}x{:?}", prod.len(), target.len(),);
-        let numerator: Vec<_> = element_wise_operation(&prod, target, "Sub")
+        let numerator: Vec<_> = element_wise_operation(&prod, target, "sub")
             .iter()
             .map(|a| *a * *a)
             .collect();
@@ -325,7 +334,7 @@ impl MultivariantLinearRegression {
             new_theta = element_wise_operation(
                 &new_theta,
                 &gradient.iter().map(|a| alpha_lr * a).collect(),
-                "Sub",
+                "sub",
             )
             .clone();
 
@@ -707,10 +716,13 @@ pub fn logistic_predict(matrix1: &Vec<Vec<f64>>, beta: &Vec<Vec<f64>>) -> Vec<Ve
     output
 }
 
-pub fn randomize(rows: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
+pub fn randomize_vector_f(rows: &Vec<f64>) -> Vec<f64> {
+    /*
+    Shuffle values inside vector
+    */
     use rand::seq::SliceRandom;
     use rand::{thread_rng, Rng};
-    let mut order: Vec<usize> = (0..rows.len() - 1 as usize).collect();
+    let mut order: Vec<usize> = (0..rows.len() as usize).collect();
     let slice: &mut [usize] = &mut order;
     let mut rng = thread_rng();
     slice.shuffle(&mut rng);
@@ -723,9 +735,31 @@ pub fn randomize(rows: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
     output
 }
 
-pub fn train_test_split(input: &Vec<Vec<f64>>, percentage: f64) -> (Vec<Vec<f64>>, Vec<Vec<f64>>) {
+pub fn randomize_f(rows: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
+    /*
+    Shuffle rows inside matrix
+    */
+    use rand::seq::SliceRandom;
+    use rand::{thread_rng, Rng};
+    let mut order: Vec<usize> = (0..rows.len() as usize).collect();
+    let slice: &mut [usize] = &mut order;
+    let mut rng = thread_rng();
+    slice.shuffle(&mut rng);
+    // println!("{:?}", slice);
+
+    let mut output = vec![];
+    for i in order.iter() {
+        output.push(rows[*i].clone());
+    }
+    output
+}
+
+pub fn train_test_split_vector_f(input: &Vec<f64>, percentage: f64) -> (Vec<f64>, Vec<f64>) {
+    /*
+    Shuffle and split percentage of test for vector
+    */
     // shuffle
-    let data = randomize(input);
+    let data = randomize_vector_f(input);
     // println!("{:?}", data);
     // split
     let test_count = (data.len() as f64 * percentage) as usize;
@@ -736,6 +770,24 @@ pub fn train_test_split(input: &Vec<Vec<f64>>, percentage: f64) -> (Vec<Vec<f64>
     (train, test)
 }
 
+pub fn train_test_split_f(
+    input: &Vec<Vec<f64>>,
+    percentage: f64,
+) -> (Vec<Vec<f64>>, Vec<Vec<f64>>) {
+    /*
+    Shuffle and split percentage of test for matrix
+    */
+    // shuffle
+    let data = randomize_f(input);
+    // println!("{:?}", data);
+    // split
+    let test_count = (data.len() as f64 * percentage) as usize;
+    // println!("Test size is {:?}", test_count);
+
+    let test = data[0..test_count].to_vec();
+    let train = data[test_count..].to_vec();
+    (train, test)
+}
 pub fn correlation<T>(list1: &Vec<T>, list2: &Vec<T>, name: &str) -> f64
 where
     T: std::iter::Sum<T>
@@ -839,8 +891,8 @@ where
     // repeating values
     let mut repeats: Vec<_> = vec![];
     for (n, i) in sorted.iter().enumerate() {
-        if how_many_and_where(&sorted, *i).len() > 1 {
-            repeats.push((*i, how_many_and_where(&sorted, *i)));
+        if how_many_and_where_vector(&sorted, *i).len() > 1 {
+            repeats.push((*i, how_many_and_where_vector(&sorted, *i)));
         } else {
             repeats.push((*i, vec![n]));
         }
@@ -856,7 +908,7 @@ where
     output
 }
 
-pub fn how_many_and_where<T>(list: &Vec<T>, number: T) -> Vec<usize>
+pub fn how_many_and_where_vector<T>(list: &Vec<T>, number: T) -> Vec<usize>
 where
     T: std::cmp::PartialEq + std::fmt::Debug + Copy,
 {
