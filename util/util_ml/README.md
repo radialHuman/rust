@@ -2,11 +2,12 @@
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
 ## Changes
-* All functions and Struct are tested, modified and documented
+* lib_string : extract_vowels_consonants, sentence_case, remove_stop_words
+* lib_ml :  z_score, how_many_and_where
 
 ## Planned
-1. Lib_string : String extract vowels and consonants
-2. lib_ml : TimeSeries stuff , z-score, how_many_and_where
+1. Lib_string : NLP stuff
+2. lib_ml : TimeSeries stuff
 
 ## List of Functions and Structs
 
@@ -16,7 +17,7 @@
             x determinant_2
             x determinant_3plus
         > is_square_matrix
-        > round_off_f
+            x round_off_f
         > inverse_f
             x identity_matrix
             x zero_matrix
@@ -74,6 +75,8 @@
     20. std_dev
     21. spearman_rank
     22. how_many_and_where_vector
+    23. how_many_and_where
+    24. z_score
 ---
 ### lib_nn
     1. LayerDetails :
@@ -100,6 +103,10 @@
         > char_count
         > frequent_char
         > char_replace
+    
+    1. extract_vowels_consonants
+    2. sentence_case
+    3. remove_stop_words
     
 ----
 ### About the author

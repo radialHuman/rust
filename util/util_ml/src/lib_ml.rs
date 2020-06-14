@@ -123,6 +123,16 @@ FUNCTIONS
     1. > list: &Vec<T>
     2. > number: T  // to be searched
     = Vec<usize>
+
+23. how_many_and_where :
+    1. > list: &Vec<Vec<T>>
+    2. > number: T  // to be searched
+    = Vec<(usize,usize)>
+
+24. z_score :
+    1. > list: &Vec<T>
+    2. > number: T
+    = f64
 */
 
 use crate::lib_matrix;
@@ -254,7 +264,7 @@ impl MultivariantLinearRegression {
             self.iterations,
         );
         println!("The weights of the inputs are {:?}", coefficeints);
-        let mut pv: Vec<_> = MultivariantLinearRegression::hash_to_table(&norm_test_features)
+        let pv: Vec<_> = MultivariantLinearRegression::hash_to_table(&norm_test_features)
             .iter()
             .map(|a| element_wise_operation(a, &coefficeints, "mul"))
             .collect();
@@ -912,9 +922,9 @@ pub fn how_many_and_where_vector<T>(list: &Vec<T>, number: T) -> Vec<usize>
 where
     T: std::cmp::PartialEq + std::fmt::Debug + Copy,
 {
-    // for (n,i) in list.iter().enumerate(){
-    //     if
-    // }
+    /*
+    Returns the positions of the number to be found in a matrix
+    */
     let tuple: Vec<_> = list
         .iter()
         .enumerate()
@@ -922,4 +932,48 @@ where
         .map(|(n, _)| n)
         .collect();
     tuple
+}
+
+pub fn how_many_and_where<T>(matrix: &Vec<Vec<T>>, number: T) -> Vec<(usize,usize)>
+where
+    T: std::cmp::PartialEq + std::fmt::Debug + Copy,
+{
+    /*
+    Returns the positions of the number to be found in a matrix
+    */
+    let mut output = vec![];
+    for (n,i) in matrix.iter().enumerate(){
+        for j in how_many_and_where_vector(&i, number)
+            {
+            output.push((n,j));
+            }
+    }
+    output
+}
+
+pub fn z_score<T>(list: &Vec<T>, number: T) -> f64
+where
+    T: std::iter::Sum<T>
+        + std::ops::Div<Output = T>
+        + Copy
+        + std::str::FromStr
+        + std::string::ToString
+        + std::ops::Add<T, Output = T>
+        + std::ops::Sub<T, Output = T>
+        + std::ops::Mul<T, Output = T>
+        + std::fmt::Debug
+        + std::cmp::PartialEq
+        + std::fmt::Display
+        + std::str::FromStr,
+    <T as std::str::FromStr>::Err: std::fmt::Debug,
+{
+    /*
+    Returns z_score
+    */
+    let n: f64 = number.to_string().parse().unwrap();
+    if list.contains(&number) {
+        (n - mean(list)) / std_dev(list)
+    } else {
+        panic!("The number not found in vector passed, please check");
+    }
 }

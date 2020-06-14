@@ -19,7 +19,18 @@ STRUCTS
 
 FUNCTIONS
 ---------
-1. ...
+1. extract_vowels_consonants : Returns a tuple of vectors containing chars (after converting to lowercase)
+    > 1. string : String
+    = Vec<chars> 
+    = Vec<chars>
+
+2. sentence_case
+    > 1. string : String
+     = String
+
+3. remove_stop_words : Based on NLTK removing words that dont convey much from a string
+    > 1. string : String
+     = String
 
 */
 
@@ -310,4 +321,453 @@ impl StringToMatch {
             panic!("The character to replace does not exist in the string passed, please check!")
         }
     }
+}
+
+
+pub fn extract_vowels_consonants(string: String) -> (Vec<char>, Vec<char>) {
+    /*
+    Returns a tuple of vectors containing chars (after converting to lowercase)
+    .0 : list of vowels
+    .1 : list fo consonants
+    */
+    let bytes: Vec<_> = string.as_bytes().to_vec();
+    let vowels: Vec<_> = bytes
+        .iter()
+        .filter(|a| {
+            **a == 97
+                || **a == 101
+                || **a == 105
+                || **a == 111
+                || **a == 117
+                || **a == 65
+                || **a == 69
+                || **a == 73
+                || **a == 79
+                || **a == 85
+        })
+        .collect();
+    let consonants: Vec<_> = bytes
+        .iter()
+        .filter(|a| {
+            **a != 97
+                && **a != 101
+                && **a != 105
+                && **a != 111
+                && **a != 117
+                && **a != 65
+                && **a != 69
+                && **a != 73
+                && **a != 79
+                && **a != 85
+                && ((**a > 96 && **a < 123) || (**a > 64 && **a < 91))
+        })
+        .collect();
+    let output: (Vec<_>, Vec<_>) = (
+        String::from_utf8(vowels.iter().map(|a| **a).collect())
+            .unwrap()
+            .chars()
+            .collect(),
+        String::from_utf8(consonants.iter().map(|a| **a).collect())
+            .unwrap()
+            .chars()
+            .collect(),
+    );
+    output
+}
+
+pub fn sentence_case(string: String) -> String {
+    /*
+    "The quick brown dog jumps Over the lazy fox" => "The Quick Brown Dog Jumps Over The Lazy Fox"
+    */
+    let lower = string.to_lowercase();
+    let split: Vec<_> = lower.split(' ').collect();
+    let mut output = vec![];
+    for i in split.iter() {
+        let char_vec: Vec<_> = i.chars().collect();
+        let mut b = [0; 2];
+        char_vec[0].encode_utf8(&mut b);
+        output.push(format!(
+            "{}{}",
+            &String::from_utf8(vec![b[0] - 32 as u8]).unwrap()[..],
+            &i[1..]
+        ));
+    }
+    output.join(" ")
+}
+
+pub fn remove_stop_words(string: String) -> String {
+    /*
+    "Rust is a multi-paradigm programming language focused on performance and safety, especially safe concurrency.[15][16] Rust is syntactically similar to C++,[17] but provides memory safety without using garbage collection.\nRust was originally designed by Graydon Hoare at Mozilla Research, with contributions from Dave Herman, Brendan Eich, and others.[18][19] The designers refined the language while writing the Servo layout or browser engine,[20] and the Rust compiler. The compiler is free and open-source software dual-licensed under the MIT License and Apache License 2.0."
+                                                                                                    |
+                                                                                                    V
+    "Rust multi-paradigm programming language focused performance safety, especially safe concurrency.[15][16] Rust syntactically similar C++,[17] provides memory safety without using garbage collection.\nRust originally designed Graydon Hoare Mozilla Research, contributions Dave Herman, Brendan Eich, others.[18][19] designers refined language writing Servo layout browser engine,[20] Rust compiler. compiler free open-source software dual-licensed MIT License Apache License 2.0."
+         */
+    // https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/corpora/stopwords.zip (14/06/2020)
+    let mut split: Vec<_> = string.split(' ').collect();
+    let stop_words = vec![
+        "i",
+        "me",
+        "my",
+        "myself",
+        "we",
+        "our",
+        "ours",
+        "ourselves",
+        "you",
+        "you're",
+        "you've",
+        "you'll",
+        "you'd",
+        "your",
+        "yours",
+        "yourself",
+        "yourselves",
+        "he",
+        "him",
+        "his",
+        "himself",
+        "she",
+        "she's",
+        "her",
+        "hers",
+        "herself",
+        "it",
+        "it's",
+        "its",
+        "itself",
+        "they",
+        "them",
+        "their",
+        "theirs",
+        "themselves",
+        "what",
+        "which",
+        "who",
+        "whom",
+        "this",
+        "that",
+        "that'll",
+        "these",
+        "those",
+        "am",
+        "is",
+        "are",
+        "was",
+        "were",
+        "be",
+        "been",
+        "being",
+        "have",
+        "has",
+        "had",
+        "having",
+        "do",
+        "does",
+        "did",
+        "doing",
+        "a",
+        "an",
+        "the",
+        "and",
+        "but",
+        "if",
+        "or",
+        "because",
+        "as",
+        "until",
+        "while",
+        "of",
+        "at",
+        "by",
+        "for",
+        "with",
+        "about",
+        "against",
+        "between",
+        "into",
+        "through",
+        "during",
+        "before",
+        "after",
+        "above",
+        "below",
+        "to",
+        "from",
+        "up",
+        "down",
+        "in",
+        "out",
+        "on",
+        "off",
+        "over",
+        "under",
+        "again",
+        "further",
+        "then",
+        "once",
+        "here",
+        "there",
+        "when",
+        "where",
+        "why",
+        "how",
+        "all",
+        "any",
+        "both",
+        "each",
+        "few",
+        "more",
+        "most",
+        "other",
+        "some",
+        "such",
+        "no",
+        "nor",
+        "not",
+        "only",
+        "own",
+        "same",
+        "so",
+        "than",
+        "too",
+        "very",
+        "s",
+        "t",
+        "can",
+        "will",
+        "just",
+        "don",
+        "don't",
+        "should",
+        "should've",
+        "now",
+        "d",
+        "ll",
+        "m",
+        "o",
+        "re",
+        "ve",
+        "y",
+        "ain",
+        "aren",
+        "aren't",
+        "couldn",
+        "couldn't",
+        "didn",
+        "didn't",
+        "doesn",
+        "doesn't",
+        "hadn",
+        "hadn't",
+        "hasn",
+        "hasn't",
+        "haven",
+        "haven't",
+        "isn",
+        "isn't",
+        "ma",
+        "mightn",
+        "mightn't",
+        "mustn",
+        "mustn't",
+        "needn",
+        "needn't",
+        "shan",
+        "shan't",
+        "shouldn",
+        "shouldn't",
+        "wasn",
+        "wasn't",
+        "weren",
+        "weren't",
+        "won",
+        "won't",
+        "wouldn",
+        "wouldn't",
+        "I",
+        "Me",
+        "My",
+        "Myself",
+        "We",
+        "Our",
+        "Ours",
+        "Ourselves",
+        "You",
+        "You're",
+        "You've",
+        "You'll",
+        "You'd",
+        "Your",
+        "Yours",
+        "Yourself",
+        "Yourselves",
+        "He",
+        "Him",
+        "His",
+        "Himself",
+        "She",
+        "She's",
+        "Her",
+        "Hers",
+        "Herself",
+        "It",
+        "It's",
+        "Its",
+        "Itself",
+        "They",
+        "Them",
+        "Their",
+        "Theirs",
+        "Themselves",
+        "What",
+        "Which",
+        "Who",
+        "Whom",
+        "This",
+        "That",
+        "That'll",
+        "These",
+        "Those",
+        "Am",
+        "Is",
+        "Are",
+        "Was",
+        "Were",
+        "Be",
+        "Been",
+        "Being",
+        "Have",
+        "Has",
+        "Had",
+        "Having",
+        "Do",
+        "Does",
+        "Did",
+        "Doing",
+        "A",
+        "An",
+        "The",
+        "And",
+        "But",
+        "If",
+        "Or",
+        "Because",
+        "As",
+        "Until",
+        "While",
+        "Of",
+        "At",
+        "By",
+        "For",
+        "With",
+        "About",
+        "Against",
+        "Between",
+        "Into",
+        "Through",
+        "During",
+        "Before",
+        "After",
+        "Above",
+        "Below",
+        "To",
+        "From",
+        "Up",
+        "Down",
+        "In",
+        "Out",
+        "On",
+        "Off",
+        "Over",
+        "Under",
+        "Again",
+        "Further",
+        "Then",
+        "Once",
+        "Here",
+        "There",
+        "When",
+        "Where",
+        "Why",
+        "How",
+        "All",
+        "Any",
+        "Both",
+        "Each",
+        "Few",
+        "More",
+        "Most",
+        "Other",
+        "Some",
+        "Such",
+        "No",
+        "Nor",
+        "Not",
+        "Only",
+        "Own",
+        "Same",
+        "So",
+        "Than",
+        "Too",
+        "Very",
+        "S",
+        "T",
+        "Can",
+        "Will",
+        "Just",
+        "Don",
+        "Don't",
+        "Should",
+        "Should've",
+        "Now",
+        "D",
+        "Ll",
+        "M",
+        "O",
+        "Re",
+        "Ve",
+        "Y",
+        "Ain",
+        "Aren",
+        "Aren't",
+        "Couldn",
+        "Couldn't",
+        "Didn",
+        "Didn't",
+        "Doesn",
+        "Doesn't",
+        "Hadn",
+        "Hadn't",
+        "Hasn",
+        "Hasn't",
+        "Haven",
+        "Haven't",
+        "Isn",
+        "Isn't",
+        "Ma",
+        "Mightn",
+        "Mightn't",
+        "Mustn",
+        "Mustn't",
+        "Needn",
+        "Needn't",
+        "Shan",
+        "Shan't",
+        "Shouldn",
+        "Shouldn't",
+        "Wasn",
+        "Wasn't",
+        "Weren",
+        "Weren't",
+        "Won",
+        "Won't",
+        "Wouldn",
+        "Wouldn't",
+    ];
+    split.retain(|a| stop_words.contains(a) == false);
+    split
+        .iter()
+        .map(|a| String::from(*a))
+        .collect::<Vec<String>>()
+        .join(" ")
 }

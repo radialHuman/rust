@@ -366,195 +366,33 @@ fn main() {
     //         "first"
     //     )
     // );
+    //     let string = String::from("The quick brown dog jumps Over the lazy fox");
+    //     println!(
+    //         "{:?}\nhas these vowels\n{:?}\nand these consonants\n{:?}",
+    //         string,
+    //         extract_vowels_consonants(string.clone()).0,
+    //         extract_vowels_consonants(string.clone()).1
+    //     );
+    //     println!(
+    //         "Sentence case of {:?} is\n {:?}",
+    //         string.clone(),
+    //         sentence_case(string.clone())
+    //     );
+    //     let string2 = String::from("Rust is a multi-paradigm programming language focused on performance and safety, especially safe concurrency.[15][16] Rust is syntactically similar to C++,[17] but provides memory safety without using garbage collection.
+    // Rust was originally designed by Graydon Hoare at Mozilla Research, with contributions from Dave Herman, Brendan Eich, and others.[18][19] The designers refined the language while writing the Servo layout or browser engine,[20] and the Rust compiler. The compiler is free and open-source software dual-licensed under the MIT License and Apache License 2.0.");
 
-    let list1 = vec![1.0, 4.0, 2.0, 4.0, 6.0, 8.0, 2.0, 4.0, 5.0, 6.0];
-    let list2 = vec![0.1, 0.4, 0.2, 0.4, 0.6, 0.8, 0.2, 0.4, 0.5, 0.6];
-    let list3 = vec![86., 97., 99., 100., 101., 103., 106., 110., 112., 113.];
-    let list4 = vec![2., 20., 28., 27., 50., 29., 7., 17., 6., 12.];
-    println!("Covariance : {:?}", covariance(&list1, &list2));
-    println!("Std Deviation {:?}", std_dev(&list1));
-    println!(
-        "61 repeats at {:?} in {:?}",
-        how_many_and_where(&list3, 99.),
-        list3
-    );
-    println!("Rank {:?}", s_rank(&list3));
-    println!(
-        "Pearson Corrleation : {:?}",
-        correlation(&list3, &list4, "p")
-    );
-    println!(
-        "Spearman Corrleation : {:?}",
-        correlation(&list3, &list4, "s")
-    );
+    //     println!(
+    //         "Removing stop words from\n{:?}\ngives\n{:?}",
+    //         string2.clone(),
+    //         remove_stop_words(string2.clone())
+    //     );
+
+    // let sample = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    // println!(
+    //     "Z-score of {:?} in {:?} is {:?}",
+    //     4,
+    //     sample,
+    //     z_score(&sample, 4)
+    // );
 }
 
-// // ================================================================================================================================================
-// // ================================================================================================================================================
-// // ================================================================================================================================================
-
-pub fn correlation<T>(list1: &Vec<T>, list2: &Vec<T>, name: &str) -> f64
-where
-    T: std::iter::Sum<T>
-        + std::ops::Div<Output = T>
-        + std::fmt::Debug
-        + std::fmt::Display
-        + std::ops::Add
-        + std::cmp::PartialOrd
-        + std::marker::Copy
-        + std::ops::Add<T, Output = T>
-        + std::ops::Sub<T, Output = T>
-        + std::ops::Mul<T, Output = T>
-        + std::string::ToString
-        + std::str::FromStr,
-    <T as std::str::FromStr>::Err: std::fmt::Debug,
-{
-    let cov = covariance(list1, list2);
-    let output = match name {
-        "p" => cov / (std_dev(list1) * std_dev(list2)),
-        "s" => {
-            // https://statistics.laerd.com/statistical-guides/spearmans-rank-order-correlation-statistical-guide-2.php
-            //covariance(&rank(list1), &rank(list2))/(std_dev(&rank(list1))*std_dev(&rank(list2)))
-            let ranked_list1 = s_rank(list1);
-            let ranked_list2 = s_rank(list2);
-            let len = list1.len() as f64;
-            // sorting rnaks back to original positions
-            let mut rl1 = vec![];
-            for k in list1.iter() {
-                for (i, j) in ranked_list1.iter() {
-                    if k == i {
-                        rl1.push(j);
-                    }
-                }
-            }
-            let mut rl2 = vec![];
-            for k in list2.iter() {
-                for (i, j) in ranked_list2.iter() {
-                    if k == i {
-                        rl2.push(j);
-                    }
-                }
-            }
-
-            let combined: Vec<_> = rl1.iter().zip(rl2.iter()).collect();
-            let sum_of_square_of_difference = combined
-                .iter()
-                .map(|(a, b)| (***a - ***b) * (***a - ***b))
-                .fold(0., |a, b| a + b);
-            1. - ((6. * sum_of_square_of_difference) / (len * ((len * len) - 1.)))
-            // 0.
-        }
-        _ => panic!("Either `p`: Pearson or `s`:Spearman has to be the name. Please retry!"),
-    };
-    output
-}
-
-pub fn std_dev<T>(list1: &Vec<T>) -> f64
-where
-    T: std::iter::Sum<T>
-        + std::ops::Div<Output = T>
-        + std::fmt::Debug
-        + std::fmt::Display
-        + std::ops::Add
-        + std::marker::Copy
-        + std::ops::Add<T, Output = T>
-        + std::ops::Sub<T, Output = T>
-        + std::ops::Mul<T, Output = T>
-        + std::string::ToString
-        + std::str::FromStr,
-    <T as std::str::FromStr>::Err: std::fmt::Debug,
-{
-    let mu: T = mean(list1).to_string().parse().unwrap();
-    let square_of_difference = list1.iter().map(|a| (*a - mu) * (*a - mu)).collect();
-    let var = mean(&square_of_difference);
-    var.sqrt()
-}
-
-pub fn s_rank<T>(list1: &Vec<T>) -> Vec<(T, f64)>
-where
-    T: std::iter::Sum<T>
-        + std::ops::Div<Output = T>
-        + std::fmt::Debug
-        + std::fmt::Display
-        + std::ops::Add
-        + std::marker::Copy
-        + std::cmp::PartialOrd
-        + std::ops::Add<T, Output = T>
-        + std::ops::Sub<T, Output = T>
-        + std::ops::Mul<T, Output = T>
-        + std::string::ToString
-        + std::str::FromStr,
-    <T as std::str::FromStr>::Err: std::fmt::Debug,
-{
-    // https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient
-    let mut sorted = list1.clone();
-    sorted.sort_by(|a, b| a.partial_cmp(b).unwrap());
-    let mut map: Vec<(_, _)> = vec![];
-    for (n, i) in sorted.iter().enumerate() {
-        map.push(((n + 1), *i));
-    }
-    // repeating values
-    let mut repeats: Vec<_> = vec![];
-    for (n, i) in sorted.iter().enumerate() {
-        if how_many_and_where(&sorted, *i).len() > 1 {
-            repeats.push((*i, how_many_and_where(&sorted, *i)));
-        } else {
-            repeats.push((*i, vec![n]));
-        }
-    }
-    // calculating the rank
-    let mut rank: Vec<_> = repeats
-        .iter()
-        .map(|(a, b)| {
-            (a, b.iter().fold(0., |a, b| a + *b as f64) / b.len() as f64) // mean of each position vector
-        })
-        .collect();
-    let output: Vec<_> = rank.iter().map(|(a, b)| (**a, b + 1.)).collect(); // 1. is fro index offset
-    output
-}
-
-pub fn how_many_and_where<T>(list: &Vec<T>, number: T) -> Vec<usize>
-where
-    T: std::cmp::PartialEq + std::fmt::Debug + Copy,
-{
-    // for (n,i) in list.iter().enumerate(){
-    //     if
-    // }
-    let tuple: Vec<_> = list
-        .iter()
-        .enumerate()
-        .filter(|&(_, a)| *a == number)
-        .map(|(n, _)| n)
-        .collect();
-    tuple
-}
-
-// // ================================================================================================================================================
-// // ================================================================================================================================================
-// // ================================================================================================================================================
-pub fn covariance<T>(list1: &Vec<T>, list2: &Vec<T>) -> f64
-where
-    T: std::iter::Sum<T>
-        + std::ops::Div<Output = T>
-        + std::fmt::Debug
-        + std::fmt::Display
-        + std::ops::Add
-        + std::marker::Copy
-        + std::ops::Add<T, Output = T>
-        + std::ops::Sub<T, Output = T>
-        + std::ops::Mul<T, Output = T>
-        + std::string::ToString
-        + std::str::FromStr,
-    <T as std::str::FromStr>::Err: std::fmt::Debug,
-{
-    let mu1 = mean(list1);
-    let mu2 = mean(list2);
-    let zero: T = "0".parse().unwrap();
-    let _len_str: f64 = list1.len().to_string().parse().unwrap(); // if division is required
-    let tupled: Vec<_> = list1.iter().zip(list2).collect();
-    let output = tupled.iter().fold(zero, |a, b| {
-        a + ((*b.0 - mu1.to_string().parse().unwrap()) * (*b.1 - mu2.to_string().parse().unwrap()))
-    });
-    let numerator: f64 = output.to_string().parse().unwrap();
-    numerator / _len_str
-}
