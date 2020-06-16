@@ -2,12 +2,7 @@
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
 ## Changes
-* lib_string : extract_vowels_consonants, sentence_case, remove_stop_words
-* lib_ml :  z_score, how_many_and_where
-
-## Planned
-1. Lib_string : NLP stuff
-2. lib_ml : TimeSeries stuff
+* lib_ml :  BinaryLogisticRegression_f, randomize generalized
 
 ## List of Functions and Structs
 
@@ -52,7 +47,17 @@
         > hash_to_table
             x train_test_split
             x randomize
-            
+    2. BinaryLogisticRegression_f:
+        > train_test_split
+        > read_n_split_n_shuffle
+            x randomize
+            x weightInitialization
+        > sigmoid_activation
+            x model_optimize
+        > model_predict
+        > pred_test
+        > confusion_me
+
     1. coefficient
     2. convert_and_impute
     3. covariance
@@ -68,7 +73,7 @@
     13. log_gradient_f 
     14. logistic_predict 
     15. randomize_vector_f
-    16. randomize_f
+    16. randomize
     17. train_test_split_vector_f
     18. train_test_split_f
     19. correlation
@@ -111,10 +116,10 @@
 ----
 ### About the author
 * Used Python, learning Rust
-* Not a CS student, feedback appreciated
+* Feedback appreciated
 * rd2575691@gmail.com
 ---
 ### Vibliography ?
-* For lib_nn : [nnfs.io](https://www.youtube.com/playlist?list=PLQVvvaa0QuDcjD5BAw2DxE6OF2tius3V3)
 * For Rust : [Crazcalm's Tech Stack](https://www.youtube.com/playlist?list=PLVhhUNGAUIQScqB26DdUq4n1Y2n3auM7X)
+* For lib_nn : [nnfs.io](https://www.youtube.com/playlist?list=PLQVvvaa0QuDcjD5BAw2DxE6OF2tius3V3)
 * Other blogs mentioned inside
