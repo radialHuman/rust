@@ -49,7 +49,7 @@
         > hash_to_table
             x train_test_split
             x randomize
-    2. BinaryLogisticRegression_f:
+    2. BinaryLogisticRegressionF:
         > train_test_split
         > read_n_split_n_shuffle
             x randomize
@@ -74,7 +74,7 @@
     12. logistic_function_f
     13. log_gradient_f 
     14. logistic_predict 
-    15. randomize_vector_f
+    15. randomize_vector
     16. randomize
     17. train_test_split_vector_f
     18. train_test_split_f
@@ -84,6 +84,7 @@
     22. how_many_and_where_vector
     23. how_many_and_where
     24. z_score
+    25. one_hot_encoding
 ---
 ### lib_nn
     1. LayerDetails :
