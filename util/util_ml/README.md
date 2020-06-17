@@ -2,7 +2,9 @@
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
 ## Changes
-* lib_ml :  BinaryLogisticRegression_f, randomize generalized
+* Reduced warnings
+* lib_ml :  MultivariantLinearRegression got adjusted R2, randomize vector_f generalized
+* 
 
 ## List of Functions and Structs
 
@@ -56,7 +58,7 @@
             x model_optimize
         > model_predict
         > pred_test
-        > confusion_me
+        > confuse_me
 
     1. coefficient
     2. convert_and_impute

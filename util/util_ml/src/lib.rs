@@ -210,16 +210,16 @@ STRUCTS
     x train_test_split
     x randomize
 
-2. BinaryLogisticRegression_f : features: Vec<Vec<f64>>,target: Vec<f64>,learning_rate: f64,iterations: u32,
+2. BinaryLogisticRegressionF : features: Vec<Vec<f64>>,target: Vec<f64>,learning_rate: f64,iterations: u32,
     > train_test_split
     > read_n_split_n_shuffle
     x randomize
-    x weightInitialization
+    x weight_initialization
     > sigmoid_activation
     x model_optimize
     > model_predict
     > pred_test
-    > confusion_me
+    > confuse_me
 
 
 FUNCTIONS
@@ -295,9 +295,9 @@ FUNCTIONS
     2. > beta: &Vec<Vec<f64>>
     = Vec<Vec<f64>>
 
-15. randomize_vector_f :
-    1. > rows : &Vec<f64>
-    = Vec<f64>
+15. randomize_vector :
+    1. > rows : &Vec<T>
+    = Vec<T>
 
 16. randomize :
     1. > rows : &Vec<Vec<T>>
@@ -343,6 +343,10 @@ FUNCTIONS
     1. > list: &Vec<T>
     2. > number: T
     = f64
+
+25. one_hot_encoding :
+    1. > column: &Vec<&str>
+     = Vec<Vec<u8>>
 
 */
 
@@ -400,7 +404,7 @@ impl MultivariantLinearRegression {
         let mut test_feature = BTreeMap::new();
         let mut train_target = BTreeMap::new();
         let mut test_target = BTreeMap::new();
-        let mut coefficients = vec![];
+        // let mut coefficients = vec![];
 
         // creating training dictionary
         for (n, j) in self.header.iter().enumerate() {
@@ -464,7 +468,7 @@ impl MultivariantLinearRegression {
         }
         // println!("{:?}", norm_test_target);
 
-        coefficients = vec![0.; train[0].len() - 1];
+        let coefficients = vec![0.; train[0].len() - 1];
         let target: Vec<_> = norm_train_target.values().cloned().collect();
         // println!("TARGET\n{:?}", target[0].len());
         let (coefficeints, _) = MultivariantLinearRegression::batch_gradient_descent(
@@ -493,7 +497,21 @@ impl MultivariantLinearRegression {
 
         println!(
             "The r2 of this model is : {:?}",
-            MultivariantLinearRegression::generate_score(&predicted_values, &actual)
+            MultivariantLinearRegression::generate_score(
+                &predicted_values,
+                &actual,
+                self.header.len()
+            )
+            .0
+        );
+        println!(
+            "The adjusted r2 of this model is : {:?}",
+            MultivariantLinearRegression::generate_score(
+                &predicted_values,
+                &actual,
+                self.header.len()
+            )
+            .1
         );
     }
 
@@ -512,7 +530,7 @@ impl MultivariantLinearRegression {
 
     fn randomize(rows: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
         use rand::seq::SliceRandom;
-        use rand::{thread_rng, Rng};
+        // use rand::thread_rng;
         let mut order: Vec<usize> = (0..rows.len() - 1 as usize).collect();
         let slice: &mut [usize] = &mut order;
         let mut rng = thread_rng();
@@ -526,7 +544,7 @@ impl MultivariantLinearRegression {
         output
     }
 
-    fn generate_score(predicted: &Vec<f64>, actual: &Vec<f64>) -> f64 {
+    fn generate_score(predicted: &Vec<f64>, actual: &Vec<f64>, features: usize) -> (f64, f64) {
         let sst: Vec<_> = actual
             .iter()
             .map(|a| {
@@ -540,7 +558,9 @@ impl MultivariantLinearRegression {
             .fold(0., |a, b| a + (b.0 - b.1));
         let r2 = 1. - (ssr / (sst.iter().fold(0., |a, b| a + b)));
         // println!("{:?}\n{:?}", predicted, actual);
-        r2
+        let degree_of_freedom = predicted.len() as f64 - 1. - features as f64;
+        let ar2 = 1. - ((1. - r2) * ((predicted.len() as f64 - 1.) / degree_of_freedom));
+        (r2, ar2)
     }
 
     fn mse_cost_function(features: &Vec<Vec<f64>>, target: &Vec<f64>, theta: &Vec<f64>) -> f64 {
@@ -563,9 +583,9 @@ impl MultivariantLinearRegression {
         max_iter: i32,
     ) -> (Vec<f64>, Vec<f64>) {
         let mut new_theta = theta.clone();
-        let mut hypothesis_value = vec![];
+        let mut hypothesis_value;
         let mut cost_history = vec![];
-        let mut loss = vec![];
+        let mut loss;
         let mut gradient = vec![];
         let rows = target.len();
         for _ in 0..max_iter {
@@ -615,7 +635,7 @@ impl MultivariantLinearRegression {
 }
 
 #[derive(Debug)]
-pub struct BinaryLogisticRegression_f {
+pub struct BinaryLogisticRegressionF {
     // https://towardsdatascience.com/logistic-regression-detailed-overview-46c4da4303bc
     pub features: Vec<Vec<f64>>,
     pub target: Vec<f64>,
@@ -623,17 +643,17 @@ pub struct BinaryLogisticRegression_f {
     pub iterations: u32,
 }
 
-impl BinaryLogisticRegression_f {
+impl BinaryLogisticRegressionF {
     pub fn train_test_split(
         &self,
         test_percentage: f64,
-    ) -> (BinaryLogisticRegression_f, BinaryLogisticRegression_f) {
+    ) -> (BinaryLogisticRegressionF, BinaryLogisticRegressionF) {
         let training_rows =
             round_off_f(self.features[0].len() as f64 * (1. - test_percentage), 0) as usize;
 
         (
             // train
-            BinaryLogisticRegression_f {
+            BinaryLogisticRegressionF {
                 features: self
                     .features
                     .iter()
@@ -644,7 +664,7 @@ impl BinaryLogisticRegression_f {
                 iterations: self.iterations,
             },
             // test
-            BinaryLogisticRegression_f {
+            BinaryLogisticRegressionF {
                 features: self
                     .features
                     .iter()
@@ -668,7 +688,7 @@ impl BinaryLogisticRegression_f {
         */
         let (headers, mut values) = read_csv(path.to_string()); // reading csv as vector of string
                                                                 // shuffle data
-        values = BinaryLogisticRegression_f::randomize(&values);
+        values = BinaryLogisticRegressionF::randomize(&values);
         let mut target_position = values[0].len() - 1; // as default last column is the target
                                                        // updating the target column position
         if headers.contains(&target_header.to_string()) {
@@ -704,7 +724,7 @@ impl BinaryLogisticRegression_f {
 
     fn randomize<T: std::clone::Clone>(rows: &Vec<Vec<T>>) -> Vec<Vec<T>> {
         use rand::seq::SliceRandom;
-        use rand::thread_rng;
+        // use rand::thread_rng;
         let mut order: Vec<usize> = (0..rows.len() as usize).collect();
         let slice: &mut [usize] = &mut order;
         let mut rng = thread_rng();
@@ -717,7 +737,7 @@ impl BinaryLogisticRegression_f {
         }
         output
     }
-    fn weightInitialization(train: Vec<Vec<f64>>) -> (Vec<f64>, f64) {
+    fn weight_initialization(train: Vec<Vec<f64>>) -> (Vec<f64>, f64) {
         let w = vec![0.; train.len()];
         let b = 0.;
         (w, b)
@@ -736,14 +756,14 @@ impl BinaryLogisticRegression_f {
         */
         // m = X.shape[0]
         let m = self.features[0].len() as f64;
-        let (w, b) = BinaryLogisticRegression_f::weightInitialization(self.features.clone());
+        let (w, b) = BinaryLogisticRegressionF::weight_initialization(self.features.clone());
 
         // sigmoid_activation(np.dot(w,X.T)+b)
         let dot: Vec<_> = matrix_vector_product_f(&transpose(&self.features), &w)
             .iter()
             .map(|a| a + b)
             .collect();
-        let final_result = BinaryLogisticRegression_f::sigmoid_activation(&dot);
+        let final_result = BinaryLogisticRegressionF::sigmoid_activation(&dot);
         // cost = (-1/m)*(np.sum((Y_T*np.log(final_result)) + ((1-Y_T)*(np.log(1-final_result)))))
         let cost = vector_addition(
             &mut element_wise_operation(
@@ -790,8 +810,8 @@ impl BinaryLogisticRegression_f {
 
     pub fn model_predict(&self) -> (Vec<f64>, Vec<f64>, Vec<f64>, Vec<f64>, Vec<Vec<f64>>) {
         let mut costs = vec![];
-        let (mut w, mut b_value) =
-            BinaryLogisticRegression_f::weightInitialization(self.features.clone());
+        let (mut w,  b_value) =
+            BinaryLogisticRegressionF::weight_initialization(self.features.clone());
         let mut b = vec![b_value];
         let mut dw = vec![];
         let mut db = vec![];
@@ -799,9 +819,9 @@ impl BinaryLogisticRegression_f {
 
         print!("Calculating coefficients...");
         for i in 0..self.iterations {
-            dw = BinaryLogisticRegression_f::model_optimize(self).0;
-            db = BinaryLogisticRegression_f::model_optimize(self).1;
-            cost = BinaryLogisticRegression_f::model_optimize(self).2;
+            dw = BinaryLogisticRegressionF::model_optimize(self).0;
+            db = BinaryLogisticRegressionF::model_optimize(self).1;
+            cost = BinaryLogisticRegressionF::model_optimize(self).2;
 
             // w = w - (learning_rate * (dw.T))
             w = w
@@ -849,7 +869,7 @@ impl BinaryLogisticRegression_f {
             row_wise_addition.push(rows.iter().fold(0., |a, b| a + b))
         }
         // turning probabilty into class
-        BinaryLogisticRegression_f::sigmoid_activation(&row_wise_addition)
+        BinaryLogisticRegressionF::sigmoid_activation(&row_wise_addition)
             .iter()
             .map(|a| round_off_f(*a, 0))
             .collect()
@@ -869,7 +889,7 @@ impl BinaryLogisticRegression_f {
     //     let output = correct_prediction / length;
     //     // println!("Accuracy {:.3}", output);
     // }
-    pub fn confusion_me(&self, training_weights: &Vec<f64>) {
+    pub fn confuse_me(&self, training_weights: &Vec<f64>) {
         // https://medium.com/@MohammedS/performance-metrics-for-classification-problems-in-machine-learning-part-i-b085d432082b
         let prediction = self.pred_test(training_weights);
         let mut fp = 0.; // class_one_is_class_two(Type 1)
@@ -990,13 +1010,13 @@ where
     let mu1 = mean(list1);
     let mu2 = mean(list2);
     let zero: T = "0".parse().unwrap();
-    let len_str: f64 = list1.len().to_string().parse().unwrap(); // if division is required
+    let _len_str: f64 = list1.len().to_string().parse().unwrap(); // if division is required
     let tupled: Vec<_> = list1.iter().zip(list2).collect();
     let output = tupled.iter().fold(zero, |a, b| {
         a + ((*b.0 - mu1.to_string().parse().unwrap()) * (*b.1 - mu2.to_string().parse().unwrap()))
     });
     let numerator: f64 = output.to_string().parse().unwrap();
-    numerator // / len_str  // (this is not being divided by populaiton size)
+    numerator // / _len_str  // (this is not being divided by populaiton size)
 }
 
 pub fn coefficient<T>(list1: &Vec<T>, list2: &Vec<T>) -> (f64, f64)
@@ -1226,25 +1246,25 @@ pub fn log_gradient_f(
         first_calc.push(row);
     }
 
-    let first_calc_T = transpose(&first_calc);
-    let mut X = vec![];
+    let first_calc_t = transpose(&first_calc);
+    let mut x = vec![];
     for j in 0..matrix1[0].len() {
         let mut row = vec![];
         for i in matrix1.iter() {
             row.push(i[j]);
         }
-        X.push(row);
+        x.push(row);
     }
 
-    // PYTHON : // final_calc = np.dot(first_calc.T, X)
+    // PYTHON : // final_calc = np.dot(first_calc.T, x)
     let mut final_calc = vec![];
-    for i in first_calc_T.iter() {
-        for j in X.iter() {
+    for i in first_calc_t.iter() {
+        for j in x.iter() {
             final_calc.push(dot_product(&i, &j))
         }
     }
 
-    // println!("{:?}\n{:?}", &first_calc_T, &X);
+    // println!("{:?}\n{:?}", &first_calc_t, &x);
     // println!("{:?}", &final_calc);
     // println!(
     //     "{:?}",
@@ -1263,12 +1283,12 @@ pub fn logistic_predict(matrix1: &Vec<Vec<f64>>, beta: &Vec<Vec<f64>>) -> Vec<Ve
     output
 }
 
-pub fn randomize_vector_f(rows: &Vec<f64>) -> Vec<f64> {
+pub fn randomize_vector<T:std::clone::Clone>(rows: &Vec<T>) -> Vec<T> {
     /*
     Shuffle values inside vector
     */
     use rand::seq::SliceRandom;
-    use rand::{thread_rng, Rng};
+    // use rand::thread_rng;
     let mut order: Vec<usize> = (0..rows.len() as usize).collect();
     let slice: &mut [usize] = &mut order;
     let mut rng = thread_rng();
@@ -1287,7 +1307,7 @@ pub fn randomize<T:std::clone::Clone>(rows: &Vec<Vec<T>>) -> Vec<Vec<T>> {
     Shuffle rows inside matrix
     */
     use rand::seq::SliceRandom;
-    use rand::thread_rng;
+    // use rand::thread_rng;
     let mut order: Vec<usize> = (0..rows.len() as usize).collect();
     let slice: &mut [usize] = &mut order;
     let mut rng = thread_rng();
@@ -1306,7 +1326,7 @@ pub fn train_test_split_vector_f(input: &Vec<f64>, percentage: f64) -> (Vec<f64>
     Shuffle and split percentage of test for vector
     */
     // shuffle
-    let data = randomize_vector_f(input);
+    let data = randomize_vector(input);
     // println!("{:?}", data);
     // split
     let test_count = (data.len() as f64 * percentage) as usize;
@@ -1460,7 +1480,7 @@ where
         }
     }
     // calculating the rank
-    let mut rank: Vec<_> = repeats
+    let rank: Vec<_> = repeats
         .iter()
         .map(|(a, b)| {
             (a, b.iter().fold(0., |a, b| a + *b as f64) / b.len() as f64) // mean of each position vector
@@ -1528,6 +1548,22 @@ where
     } else {
         panic!("The number not found in vector passed, please check");
     }
+}
+
+pub fn one_hot_encoding(column: &Vec<&str>) -> Vec<Vec<u8>> {
+    /*
+    Counts unique values
+    creates those many new columns
+    each column will have 1 for every occurance of a particular unique value
+    Ex: ["A", "B", "C"] => [[1,0,0],[0,1,0],[0,0,1]]
+    */
+    let values = unique_values(&column.clone());
+    // println!("{:?}", values);
+    let mut output = vec![];
+    for i in values.iter() {
+        output.push(column.iter().map(|a| if a == i { 1 } else { 0 }).collect());
+    }
+    output
 }
 
 /*

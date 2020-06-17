@@ -21,7 +21,7 @@ STRUCTS
     x model_optimize
     > model_predict
     > pred_test
-    > confusion_me
+    > confuse_me
 
 FUNCTIONS
 ---------
@@ -144,6 +144,10 @@ FUNCTIONS
     1. > list: &Vec<T>
     2. > number: T
     = f64
+
+25. one_hot_encoding :
+    1. > column: &Vec<&str>
+     = Vec<Vec<u8>>
 
 */
 
@@ -294,11 +298,25 @@ impl MultivariantLinearRegression {
 
         println!(
             "The r2 of this model is : {:?}",
-            MultivariantLinearRegression::generate_score(&predicted_values, &actual)
+            MultivariantLinearRegression::generate_score(
+                &predicted_values,
+                &actual,
+                self.header.len()
+            )
+            .0
+        );
+        println!(
+            "The adjusted r2 of this model is : {:?}",
+            MultivariantLinearRegression::generate_score(
+                &predicted_values,
+                &actual,
+                self.header.len()
+            )
+            .1
         );
     }
 
-    fn generate_score(predicted: &Vec<f64>, actual: &Vec<f64>) -> f64 {
+    fn generate_score(predicted: &Vec<f64>, actual: &Vec<f64>, features: usize) -> (f64, f64) {
         let sst: Vec<_> = actual
             .iter()
             .map(|a| {
@@ -312,7 +330,9 @@ impl MultivariantLinearRegression {
             .fold(0., |a, b| a + (b.0 - b.1));
         let r2 = 1. - (ssr / (sst.iter().fold(0., |a, b| a + b)));
         // println!("{:?}\n{:?}", predicted, actual);
-        r2
+        let degree_of_freedom = predicted.len() as f64 - 1. - features as f64;
+        let ar2 = 1. - ((1. - r2) * ((predicted.len() as f64 - 1.) / degree_of_freedom));
+        (r2, ar2)
     }
 
     fn mse_cost_function(features: &Vec<Vec<f64>>, target: &Vec<f64>, theta: &Vec<f64>) -> f64 {
@@ -670,7 +690,7 @@ impl BinaryLogisticRegression_f {
     //     let output = correct_prediction / length;
     //     // println!("Accuracy {:.3}", output);
     // }
-    pub fn confusion_me(&self, training_weights: &Vec<f64>) {
+    pub fn confuse_me(&self, training_weights: &Vec<f64>) {
         // https://medium.com/@MohammedS/performance-metrics-for-classification-problems-in-machine-learning-part-i-b085d432082b
         let prediction = self.pred_test(training_weights);
         let mut tp = 0.; // class_one_is_class_one
@@ -1311,4 +1331,21 @@ where
     } else {
         panic!("The number not found in vector passed, please check");
     }
+}
+
+
+pub fn one_hot_encoding(column: &Vec<&str>) -> Vec<Vec<u8>> {
+    /*
+    Counts unique values
+    creates those many new columns
+    each column will have 1 for every occurance of a particular unique value
+    Ex: ["A", "B", "C"] => [[1,0,0],[0,1,0],[0,0,1]]
+    */
+    let values = unique_values(&column.clone());
+    // println!("{:?}", values);
+    let mut output = vec![];
+    for i in values.iter() {
+        output.push(column.iter().map(|a| if a == i { 1 } else { 0 }).collect());
+    }
+    output
 }
