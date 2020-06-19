@@ -617,10 +617,22 @@ fn main() {
     // ];
     // randomize_vector(&values);
     // print_a_matrix("encoded", &one_hot_encoding(&values));
+
+    // let (columns, values) = read_csv("data_banknote_authentication.txt".to_string());
+    // // let target_number = 3;
+
+    // let column_data = row_to_columns_conversion(&make_matrix_string_literal(&values));
+    // print_a_matrix("Head of column wise", &head(&column_data, 1));
+    // let row_data = columns_to_rows_conversion(&column_data);
+    // print_a_matrix("Head of row wise", &head(&row_data, 5));
+
+    // let a = vec![vec![1, 2], vec![3, 5]];
+    // let b = vec![vec![0, 1], vec![5, 7]];
+    // print_a_matrix("Wide", &join_matrix(&a, &b, "wide"));
+    // print_a_matrix("Long", &join_matrix(&a, &b, "long"));
 }
 
-
-
+// fn find_best_split<T>(X: Vec<Vec<T>>, Y: Vec<T>) {}
 
 // Classification tree
 // https://towardsdatascience.com/decision-tree-from-scratch-in-python-46e99dfea775

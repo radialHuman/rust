@@ -4,7 +4,7 @@
 ## Changes
 * Reduced warnings
 * lib_ml :  MultivariantLinearRegression got adjusted R2, randomize vector_f generalized
-* 
+* lib_matrix : join_matrix, make_matrix_string_literal, head, tail, row_to_columns_conversion, columns_to_rows_conversion
 
 ## List of Functions and Structs
 
@@ -39,6 +39,13 @@
     18. matrix_vector_product_f
     19. split_vector
     20. split_vector_at
+    21. join_matrix
+    22. make_matrix_string_literal
+    23. head
+    24. tail
+    25. row_to_columns_conversion
+    26. columns_to_rows_conversion
+
 ---
 ### lib_ml
     1. MultivariantLinearRegression :

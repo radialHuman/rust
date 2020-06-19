@@ -105,6 +105,34 @@ FUNCTIONS
     > 1. vector: &Vec<T>
     > 2. at: T
      = Vec<Vec<T>>
+
+21. join_matrix
+    > 1. matrix1: &Vec<Vec<T>>
+    > 2. matrix2: &Vec<Vec<T>>
+    > 3. how: &str : "long" or "wide"
+    = Vec<Vec<T>> 
+
+22. make_matrix_string_literal
+    > 1. data: &'a Vec<Vec<String>>
+    = Vec<Vec<&'a str>> 
+
+23. head
+    > 1. data: &Vec<Vec<T>>
+    > 2. rows: usize
+    = Vec<Vec<T>> 
+
+24. tail
+    > 1. data: &Vec<Vec<T>>
+    > 2. rows: usize
+    = Vec<Vec<T>> 
+
+25. row_to_columns_conversion
+    > 1. data: &Vec<Vec<T>>
+    = Vec<Vec<T>> 
+
+26. columns_to_rows_conversion
+    > 1. data: &Vec<Vec<T>>
+    = Vec<Vec<T>> 
 */
 
 #[derive(Debug)] // to make it usable by print!
@@ -596,4 +624,133 @@ where
     } else {
         panic!("The value is not in the vector, please check");
     }
+}
+
+
+pub fn join_matrix<T: Copy>(
+    matrix1: &Vec<Vec<T>>,
+    matrix2: &Vec<Vec<T>>,
+    how: &str,
+) -> Vec<Vec<T>> {
+    /*
+    "wide" : Places matrix next to each other to become one wide matrix
+    "long" : Places matrix one below other to become a longer matrix
+    */
+    let mut output = vec![];
+    let mut a = matrix1;
+    let mut b = matrix2;
+    match how {
+        "wide" => {
+            /*
+            [[1,2],[3,5]] join_matrix [[0,1],[5,7]] => [[1,2,0,1],[3,5,5,7]]
+            */
+            if a.len() == b.len() {
+                for (n, j) in a.iter().enumerate() {
+                    let mut new_j = j.clone();
+                    for (m, i) in b.iter().enumerate() {
+                        for k in i.iter() {
+                            if n == m {
+                                new_j.push(*k);
+                            }
+                        }
+                    }
+                    output.push(new_j)
+                }
+                output
+            } else {
+                panic!("Please check the dimensions, # of rows are different");
+            }
+        }
+        "long" => {
+            /*
+            [[1,2],[3,5]] join_matrix [[0,1],[5,7]] => [[1,2],[3,5],[0,1],[5,7]]
+            */
+            if a[0].len() == b[0].len() {
+                for (n, _) in b.iter().enumerate() {
+                    output.push(a[n].clone());
+                }
+                for (n, _) in b.iter().enumerate() {
+                    output.push(b[n].clone());
+                }
+                output
+            } else {
+                panic!("Please check the dimensions, # of columns are different");
+            }
+        }
+        _ => panic!("Select either long or wide"),
+    }
+}
+
+pub fn make_matrix_string_literal<'a>(data: &'a Vec<Vec<String>>) -> Vec<Vec<&'a str>> {
+    /*
+    Few Copy does not work on String so convert it to &str
+    */
+    let mut output = vec![];
+    for i in data.iter() {
+        output.push(i.iter().map(|a| &a[..]).collect())
+    }
+    println!("> String converted to &str");
+    output
+}
+
+pub fn head<T: std::clone::Clone>(data: &Vec<Vec<T>>, rows: usize) -> Vec<Vec<T>> {
+    /*
+    Works on row wise data
+    Shows first few rows of a matrix
+    */
+    if rows <= data.len() {
+        let output = data[..rows].to_vec();
+        output
+    } else {
+        panic!("Data is nt that big, please check the numbers");
+    }
+}
+
+pub fn tail<T: std::clone::Clone>(data: &Vec<Vec<T>>, rows: usize) -> Vec<Vec<T>> {
+    /*
+    Works on row wise data
+    Shows first few rows of a matrix
+    */
+    if rows <= data.len() {
+        let output = data[data.len()-rows..].to_vec();
+        output
+    } else {
+        panic!("Data is nt that big, please check the numbers");
+    }
+}
+
+pub fn row_to_columns_conversion<T: std::fmt::Debug + Copy>(data: &Vec<Vec<T>>) -> Vec<Vec<T>> {
+    /*
+    Since read_csv gives values row wise, it might be required to convert it into columns for some calulation like aggeration
+    converts [[1,6,11],[2,7,12],[3,8,13],[4,9,14],[5,10,15]] => [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]]
+    */
+    println!("{:?}x{:?} becomes", data.len(), data[0].len());
+    let mut output = vec![];
+    for j in 0..data[0].len() {
+        let mut columns = vec![];
+        for i in data.iter() {
+            columns.push(i[j]);
+        }
+        output.push(columns)
+    }
+    println!("{:?}x{:?}", output.len(), output[0].len());
+    output
+}
+
+pub fn columns_to_rows_conversion<T: std::fmt::Debug + Copy>(data: &Vec<Vec<T>>) -> Vec<Vec<T>> {
+    /*
+    Opposite of row_to_columns_conversion
+    converts  [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]] => [[1,6,11],[2,7,12],[3,8,13],[4,9,14],[5,10,15]]
+    */
+    println!("{:?}x{:?} becomes", data.len(), data[0].len());
+    let mut output = vec![];
+    for j in 0..data[0].len() {
+        let mut columns = vec![];
+        for i in data.iter() {
+            columns.push(i[j]);
+        }
+        output.push(columns)
+    }
+    println!("{:?}x{:?}", output.len(), output[0].len());
+    output
 }

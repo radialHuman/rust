@@ -304,7 +304,26 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
     println!("0 is a {:?}", type_of(0));
     println!("0.0 is a {:?}", type_of(0.));
     println!("\"0\" is a {:?}", type_of("0"));
-    println!("'0' is a {:?}", type_of('0'));
+    println!("'0' is a {:?}\n\n", type_of('0'));
+
+    let a = vec![vec![1, 2], vec![3, 5]];
+    let b = vec![vec![0, 1], vec![5, 7]];
+    println!("A: {:?}\nJOINED with\nB: {:?}",a,b);
+    print_a_matrix("Wide", &join_matrix(&a, &b, "wide"));
+    print_a_matrix("Long", &join_matrix(&a, &b, "long"));
+    print_a_matrix("First 2 rows of long is ",  &head(&join_matrix(&a, &b, "long"),2));
+    print_a_matrix("Last 2 rows of long is ",  &tail(&join_matrix(&a, &b, "long"),2));
+
+    println!("Row to column and vice versa conversion");
+    let c = vec![vec![1,6,11],vec![2,7,12],vec![3,8,13],vec![4,9,14],vec![5,10,15]];
+    print_a_matrix("This\n",&c);
+    print_a_matrix("becomes\n", &row_to_columns_conversion(&c));
+    print_a_matrix("Which was originally\n", &columns_to_rows_conversion(&row_to_columns_conversion(&c)));
+
+    let d = vec![vec!["A".to_string(),"B".to_string(),"C".to_string()],vec!["D".to_string(),"E".to_string(),"F".to_string()]];
+    print_a_matrix("String matrix to &str matrix\n", &make_matrix_string_literal(&d));
+
+
 
     println!();
     println!();
@@ -939,6 +958,69 @@ splits at 3
 0.0 is a "f64"
 "0" is a "&str"
 '0' is a "char"
+
+
+A: [[1, 2], [3, 5]]
+JOINED with
+B: [[0, 1], [5, 7]]
+Wide
+[1, 2, 0, 1]
+[3, 5, 5, 7]
+
+
+Long
+[1, 2]
+[3, 5]
+[0, 1]
+[5, 7]
+
+
+First 2 rows of long is
+[1, 2]
+[3, 5]
+
+
+Last 2 rows of long is
+[0, 1]
+[5, 7]
+
+
+Row to column and vice versa conversion
+This
+
+[1, 6, 11]
+[2, 7, 12]
+[3, 8, 13]
+[4, 9, 14]
+[5, 10, 15]
+
+
+5x3 becomes
+3x5
+becomes
+
+[1, 2, 3, 4, 5]
+[6, 7, 8, 9, 10]
+[11, 12, 13, 14, 15]
+
+
+5x3 becomes
+3x5
+3x5 becomes
+5x3
+Which was originally
+
+[1, 6, 11]
+[2, 7, 12]
+[3, 8, 13]
+[4, 9, 14]
+[5, 10, 15]
+
+> String converted to &str
+String matrix to &str matrix
+
+["A", "B", "C"]
+["D", "E", "F"]
 
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
