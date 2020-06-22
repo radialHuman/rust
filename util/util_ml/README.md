@@ -4,7 +4,7 @@
 ## Changes
 * lib_ml : 5 Linear regression metrics functions, shape, drop_column added
 * lib_matrix : row_to_columns_conversion, columns_to_rows_conversion added
-* MultivariantLinearRegression, which did not give similar result as established libraries [comparision]() replaced with OLS, which is based on matrix operations unlike the predecessor  
+* MultivariantLinearRegression, which did not give similar result as established libraries replaced with OLS, which is based on matrix operations unlike the predecessor  
 
 ## List of Functions and Structs
 
@@ -124,6 +124,9 @@
     2. sentence_case
     3. remove_stop_words
     
+---
+## Comparision
+* OLS : [scikit learn's LinearRegression](https://github.com/radialHuman/rust_ml/tree/master/from_scratch/src)
 ----
 ### About the author
 * Used Python, learning Rust
