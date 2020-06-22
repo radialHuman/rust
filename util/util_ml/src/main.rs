@@ -542,17 +542,14 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
     println!("{:?}", values);
     print_a_matrix("One Hot Encoded", &one_hot_encoding(&values));
 
-    println!("\n>>>>>>>>>>>>>>>>> Multivariant Linear Regression" );
-    println!("Multivariant Linear regression");
-    let (columns, values) = read_csv("./data/ccpp.csv".to_string());
-    let mlr = MultivariantLinearRegression {
-        header: columns,
-        data: values,
-        split_ratio: 0.25,
-        alpha_learning_rate: 0.005,
-        iterations: 1000,
+    println!("\n>>>>>>>>>>>>>>>>> ORDINARY LEAST SQUARE" );
+    let file = "./data/ccpp.csv".to_string();
+    let lr = OLS{
+        file_path: file.clone(),
+        target : 5,
+        test_size: 0.20,
     };
-    mlr.multivariant_linear_regression();
+    lr.fit();
     println!();
 
 
@@ -1145,20 +1142,36 @@ One Hot Encoded
 
 
 
->>>>>>>>>>>>>>>>> Multivariant Linear Regression
-Multivariant Linear regression
+>>>>>>>>>>>>>>>>> ORDINARY LEAST SQUARE
 Reading the file ...
-Number of rows = 9568
-Before removing missing values, number of rows : 9569
-After removing missing values, number of rows : 9568
+Number of rows = 9567
 The target here is header named: "PE"
-Values are now converted to f64
-Train size: 7176
-Test size : 2391
+"Training data" : 7655x5
+"Testing data" : 1913x5
+"Training data" : 7655x5
+7655x5 becomes
+5x7655
+Features
+[1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+[6.28, 11.3, 20.99, 26.5, 10.36, 17.41]
+[43.02, 43.14, 67.07, 66.05, 37.83, 40.55]
+[1013.72, 1019.56, 1005.17, 1017.03, 1005.87, 1003.91]
+[88.13, 99.83, 82.41, 61.34, 98.56, 76.87]
 
-The weights of the inputs are [0.3137839824896525, 0.0317471254981635, 0.3542151562425616, 0.023085943841875015]
-The r2 of this model is : 1.1030991264623486
-The adjusted r2 of this model is : 1.1033152671886848
+
+Multiplication of 5x7655 and 7655x5
+Output will be 5x5
+Multiplication of 5x5 and 5x1
+Output will be 5x1
+
+
+The coeficients of a columns as per simple linear regression on 20.0% of data is :
+[("AT", -1.9723823959287756), ("V", -0.23430529857449756), ("AP", 0.07332101598694862), ("RH", -0.15708961379255015)] and b0 is : 443.0622340977134
+RMSE : 4.676516060456772
+MSE : 21.869802463710133
+MAE : 3.693984317854811
+MAPE : 0.8135031489132296
+R2 and adjusted R2 : (0.9998950102848876, 0.999894735010333)
 
 >>>>>>>>>>>>>>>>> Simple Logistic Regression
 Reading the file ...

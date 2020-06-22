@@ -3,14 +3,8 @@ DESCRIPTION
 -----------------------------------------
 STRUCTS
 -------
-1. MultivariantLinearRegression : header: Vec<String>, data: Vec<Vec<String>>, split_ratio: f64, alpha_learning_rate: f64, iterations: i32,
-    > multivariant_linear_regression
-    > batch_gradient_descent
-    > hash_to_table
-    x generate_score
-    x mse_cost_function
-    x train_test_split
-    x randomize
+1. OLS : file_path: String, target: usize, // target column number , pub test_size: f64
+    > fit
 
 2. BinaryLogisticRegression_f : features: Vec<Vec<f64>>,target: Vec<f64>,learning_rate: f64,iterations: u32,
     > train_test_split
@@ -147,293 +141,173 @@ FUNCTIONS
 
 25. one_hot_encoding :
     1. > column: &Vec<&str>
-     = Vec<Vec<u8>>
+    = Vec<Vec<u8>>
+
+26. shape : shows #rowsx#columns
+    1. m: &Vec<Vec<f64>>
+    = ()
+
+27. rmse
+    1. test_data: &Vec<Vec<f64>>
+    2. predicted: &Vec<f64>)
+    = f64
+
+28. mse
+    1. test_data: &Vec<Vec<f64>>
+    2. predicted: &Vec<f64>
+    = f64
+
+29. mae
+    1. test_data: &Vec<Vec<f64>>
+    2. predicted: &Vec<f64>
+    = f64
+
+30. r_square
+    1. predicted: &Vec<f64>
+    2. actual: &Vec<f64>, features: usize
+    = (f64, f64)
+
+31. mape
+    1. test_data: &Vec<Vec<f64>>
+    2. predicted: &Vec<f64>
+    = f64
+
+32. drop_column
+    1. matrix: &Vec<Vec<f64>>
+    2. column_number
+    = Vec<Vec<f64>>
 
 */
 
 use crate::lib_matrix;
 use lib_matrix::*;
 
-pub struct MultivariantLinearRegression {
-    pub header: Vec<String>,
-    pub data: Vec<Vec<String>>,
-    pub split_ratio: f64,
-    pub alpha_learning_rate: f64,
-    pub iterations: i32,
+pub struct OLS {
+    pub file_path: String,
+    pub target : usize, // target column number
+    pub test_size: f64,
 }
 
-use std::collections::BTreeMap;
-impl MultivariantLinearRegression {
-    //
-    // https://medium.com/we-are-orb/multivariate-linear-regression-in-python-without-scikit-learn-7091b1d45905
-    pub fn multivariant_linear_regression(&self)
-    //-> (Vec<f64>, Vec<f64>)
-    {
-        // removing incomplete data
-        println!(
-            "Before removing missing values, number of rows : {:?}",
-            self.data.len()
-        );
-        let df_na_removed: Vec<_> = self
-            .data
-            .iter()
-            .filter(|a| a.len() == self.header.len())
-            .collect();
-        println!(
-            "After removing missing values, number of rows : {:?}",
-            df_na_removed.len()
-        );
+impl OLS {
+    pub fn fit(&self) {
+        /*
+        Source:
+        Video: https://www.youtube.com/watch?v=K_EH2abOp00
+        Book: Trevor Hastie,  Robert Tibshirani, Jerome Friedman - The Elements of  Statistical Learning_  Data Mining, Inference, and Pred
+        Article: https://towardsdatascience.com/regression-an-explanation-of-regression-metrics-and-what-can-go-wrong-a39a9793d914#:~:text=Root%20Mean%20Squared%20Error%3A%20RMSE,value%20predicted%20by%20the%20model.&text=Mean%20Absolute%20Error%3A%20MAE%20is,value%20predicted%20by%20the%20model.
+        Library:
+
+        TODO:
+        * Whats the role of gradient descent in this?
+        * rules of regression
+        * p-value
+        * Colinearity
+        */
+
+        // read a csv file
+        let (columns, values) = read_csv(self.file_path.clone()); // output is row wise
         // assuming the last column has the value to be predicted
         println!(
             "The target here is header named: {:?}",
-            self.header[self.header.len() - 1]
+            columns[self.target-1]
         );
 
-        // converting values to floats
-        let df_f: Vec<Vec<f64>> = df_na_removed
-            .iter()
-            .map(|a| a.iter().map(|b| b.parse::<f64>().unwrap()).collect())
-            .collect();
-        println!("Values are now converted to f64");
-
-        // shuffling splitting test and train
-        let (train, test) = train_test_split(&df_f, self.split_ratio);
-        println!("Train size: {}\nTest size : {:?}", train.len(), test.len());
-
-        // feature and target split
-        let mut train_feature = BTreeMap::new();
-        let mut test_feature = BTreeMap::new();
-        let mut train_target = BTreeMap::new();
-        let mut test_target = BTreeMap::new();
-        let mut coefficients = vec![];
-
-        // creating training dictionary
-        for (n, j) in self.header.iter().enumerate() {
-            if *j != self.header[self.header.len() - 1] {
-                let mut row = vec![];
-                for i in train.iter() {
-                    row.push(i[n]);
-                }
-                train_feature.entry(j.to_string()).or_insert(row);
-            } else {
-                let mut row = vec![];
-                for i in train.iter() {
-                    row.push(i[n]);
-                }
-                train_target.entry(j.to_string()).or_insert(row);
-            }
-        }
-        // creating training dictionary
-        for (n, j) in self.header.iter().enumerate() {
-            if *j != self.header[self.header.len() - 1] {
-                {
-                    let mut row = vec![];
-                    for i in test.iter() {
-                        row.push(i[n]);
-                    }
-                    test_feature.entry(j.to_string()).or_insert(row);
-                }
-            } else {
-                let mut row = vec![];
-                for i in test.iter() {
-                    row.push(i[n]);
-                }
-                test_target.entry(j.to_string()).or_insert(row);
-            }
-        }
-
-        // normalizing values
-        let mut norm_test_features = BTreeMap::new();
-        let mut norm_train_features = BTreeMap::new();
-        let mut norm_test_target = BTreeMap::new();
-        let mut norm_train_target = BTreeMap::new();
-        for (k, _) in test_feature.iter() {
-            norm_test_features
-                .entry(k.clone())
-                .or_insert(normalize_vector_f(&test_feature[k]));
-        }
-        for (k, _) in train_feature.iter() {
-            norm_train_features
-                .entry(k.clone())
-                .or_insert(normalize_vector_f(&train_feature[k]));
-        }
-        for (k, _) in test_target.iter() {
-            norm_test_target
-                .entry(k.clone())
-                .or_insert(normalize_vector_f(&test_target[k]));
-        }
-        for (k, _) in train_target.iter() {
-            norm_train_target
-                .entry(k.clone())
-                .or_insert(normalize_vector_f(&train_target[k]));
-        }
-        // println!("{:?}", norm_test_target);
-
-        coefficients = vec![0.; train[0].len() - 1];
-        let target: Vec<_> = norm_train_target.values().cloned().collect();
-        // println!("TARGET\n{:?}", target[0].len());
-        let (coefficeints, _) = MultivariantLinearRegression::batch_gradient_descent(
-            &MultivariantLinearRegression::hash_to_table(&norm_train_features),
-            &target[0],
-            &coefficients,
-            self.alpha_learning_rate,
-            self.iterations,
-        );
-        println!("The weights of the inputs are {:?}", coefficeints);
-        let pv: Vec<_> = MultivariantLinearRegression::hash_to_table(&norm_test_features)
-            .iter()
-            .map(|a| element_wise_operation(a, &coefficeints, "mul"))
-            .collect();
-
-        let mut predicted_values = vec![];
-        for i in pv.iter() {
-            predicted_values.push(i.iter().fold(0., |a, b| a + b))
-        }
-
-        let a = &MultivariantLinearRegression::hash_to_table(&norm_test_target);
-        let mut actual = vec![];
-        for i in a.iter() {
-            actual.push(i[0]);
-        }
-
-        println!(
-            "The r2 of this model is : {:?}",
-            MultivariantLinearRegression::generate_score(
-                &predicted_values,
-                &actual,
-                self.header.len()
-            )
-            .0
-        );
-        println!(
-            "The adjusted r2 of this model is : {:?}",
-            MultivariantLinearRegression::generate_score(
-                &predicted_values,
-                &actual,
-                self.header.len()
-            )
-            .1
-        );
-    }
-
-    fn generate_score(predicted: &Vec<f64>, actual: &Vec<f64>, features: usize) -> (f64, f64) {
-        let sst: Vec<_> = actual
+        // // converting vector of string to vector of f64s
+        let random_data = randomize(&values)
             .iter()
             .map(|a| {
-                (a - (actual.iter().fold(0., |a, b| a + b) / (actual.len() as f64))
-                    * (a - (actual.iter().fold(0., |a, b| a + b) / (actual.len() as f64))))
+                a.iter()
+                    .map(|b| b.parse::<f64>().unwrap())
+                    .collect::<Vec<f64>>()
             })
-            .collect();
-        let ssr = predicted
+            .collect::<Vec<Vec<f64>>>();
+        println!(">>>>>>>");
+        // splitting it into train and test as per test percentage passed as parameter to get scores
+        let (train_data, test_data) = train_test_split_f(&random_data, self.test_size);
+        // println!("Training size: {:?}", train_data.len());
+        // println!("Test size: {:?}", test_data.len());
+
+        // converting rows to vector of columns of f64s
+        let mut actual_train = row_to_columns_conversion(&train_data);
+        actual_train = drop_column(&actual_train,self.target);
+        // let actual_test = row_to_columns_conversion(&test_data);
+
+        // // the read columns are in transposed form already, so creating vector of features X and adding 1 in front of it for b0
+        let b0_vec: Vec<Vec<f64>> = vec![vec![1.; actual_train[0].len()]]; //[1,1,1...1,1,1]
+        let X = [&b0_vec[..], &actual_train[..]].concat(); // [1,1,1...,1,1,1]+X
+                                                           // shape(&X);
+        let xt = MatrixF {
+            matrix: X[..X.len() - 1].to_vec(),
+        };
+
+        // and vector of targets y
+        let y = vec![actual_train[self.target].to_vec()];
+        // println!(">>>>>\n{:?}", y);
+
+        /*
+        beta = np.linalg.inv(X.T@X)@(X.T@y)
+         */
+
+        // (X.T@X)
+        let xtx = MatrixF {
+            matrix: matrix_multiplication(&xt.matrix, &transpose(&xt.matrix)),
+        };
+        // println!("{:?}", MatrixF::inverse_f(&xtx));
+        let slopes = &matrix_multiplication(
+            &MatrixF::inverse_f(&xtx), // np.linalg.inv(X.T@X)
+            &transpose(&vec![matrix_vector_product_f(&xt.matrix, &y[0])]), //(X.T@y)
+        )[0];
+
+        // combining column names with coefficients
+        let output: Vec<_> = columns[..columns.len() - 1]
             .iter()
-            .zip(actual.iter())
-            .fold(0., |a, b| a + (b.0 - b.1));
-        let r2 = 1. - (ssr / (sst.iter().fold(0., |a, b| a + b)));
-        // println!("{:?}\n{:?}", predicted, actual);
-        let degree_of_freedom = predicted.len() as f64 - 1. - features as f64;
-        let ar2 = 1. - ((1. - r2) * ((predicted.len() as f64 - 1.) / degree_of_freedom));
-        (r2, ar2)
-    }
-
-    fn mse_cost_function(features: &Vec<Vec<f64>>, target: &Vec<f64>, theta: &Vec<f64>) -> f64 {
-        let rows = target.len();
-        let prod = matrix_vector_product_f(&features, theta);
-        // println!(">>>>>>>>\n{:?}x{:?}", prod.len(), target.len(),);
-        let numerator: Vec<_> = element_wise_operation(&prod, target, "sub")
-            .iter()
-            .map(|a| *a * *a)
+            .zip(slopes[1..].iter())
             .collect();
-        // print!(".");
-        numerator.iter().fold(0., |a, b| a + b) / (2. * rows as f64)
-    }
+        // println!("****************** Without Gradient Descent ******************");
+        println!(
+        "\n\nThe coeficients of a columns as per simple linear regression on {:?}% of data is : \n{:?} and b0 is : {:?}",
+        self.test_size * 100.,
+        output,
+        slopes[0]
+    );
 
-    pub fn batch_gradient_descent(
-        features: &Vec<Vec<f64>>,
-        target: &Vec<f64>,
-        theta: &Vec<f64>,
-        alpha_lr: f64,
-        max_iter: i32,
-    ) -> (Vec<f64>, Vec<f64>) {
-        let mut new_theta = theta.clone();
-        let mut hypothesis_value = vec![];
-        let mut cost_history = vec![];
-        let mut loss = vec![];
-        let mut gradient = vec![];
-        let rows = target.len();
-        for _ in 0..max_iter {
-            hypothesis_value = matrix_vector_product_f(features, &new_theta);
-            loss = hypothesis_value
-                .iter()
-                .zip(target)
-                .map(|(a, b)| a - b)
-                .collect();
+        // predicting the values for test features
+        // multiplying each test feture row with corresponding slopes to predict the dependent variable
+        let mut predicted_values = vec![];
+        for i in test_data.iter() {
+            predicted_values.push({
+                let value = i
+                    .iter()
+                    .zip(slopes[1..].iter())
+                    .map(|(a, b)| (a * b))
+                    .collect::<Vec<f64>>();
+                value.iter().fold(slopes[0], |a, b| a + b) // b0+b1x1+b2x2..+bnxn
+            });
+        }
 
-            gradient = matrix_vector_product_f(&transpose(features), &loss)
-                .iter()
-                .map(|a| a / rows as f64)
-                .collect();
-
-            new_theta = element_wise_operation(
-                &new_theta,
-                &gradient.iter().map(|a| alpha_lr * a).collect(),
-                "sub",
+        println!("RMSE : {:?}", rmse(&test_data, &predicted_values));
+        println!("MSE : {:?}", mse(&test_data, &predicted_values)); // cost function
+        println!("MAE : {:?}", mae(&test_data, &predicted_values));
+        println!("MAPE : {:?}", mape(&test_data, &predicted_values));
+        println!(
+            "R2 and adjusted R2 : {:?}",
+            r_square(
+                &test_data
+                    .iter()
+                    .map(|a| a[test_data[0].len() - 1])
+                    .collect(), // passing only the target values
+                &predicted_values,
+                columns.len(),
             )
-            .clone();
+        );
 
-            cost_history.push(MultivariantLinearRegression::mse_cost_function(
-                features, target, &new_theta,
-            ));
-        }
-        println!("");
-        (new_theta.clone(), cost_history)
-    }
+        println!();
+        println!();
 
-    fn train_test_split(input: &Vec<Vec<f64>>, percentage: f64) -> (Vec<Vec<f64>>, Vec<Vec<f64>>) {
-        // shuffle
-        let data = MultivariantLinearRegression::randomize(input);
-        // println!("{:?}", data);
-        // split
-        let test_count = (data.len() as f64 * percentage) as usize;
-        // println!("Test size is {:?}", test_count);
-
-        let test = data[0..test_count].to_vec();
-        let train = data[test_count..].to_vec();
-        (train, test)
-    }
-
-    fn randomize(rows: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
-        use rand::seq::SliceRandom;
-        use rand::{thread_rng, Rng};
-        let mut order: Vec<usize> = (0..rows.len() - 1 as usize).collect();
-        let slice: &mut [usize] = &mut order;
-        let mut rng = thread_rng();
-        slice.shuffle(&mut rng);
-        // println!("{:?}", slice);
-
-        let mut output = vec![];
-        for i in order.iter() {
-            output.push(rows[*i].clone());
-        }
-        output
-    }
-
-    pub fn hash_to_table<T: Copy + std::fmt::Debug>(d: &BTreeMap<String, Vec<T>>) -> Vec<Vec<T>> {
-        // changes the order of table columns
-        let mut vector = vec![];
-        for (_, v) in d.iter() {
-            vector.push(v.clone());
-        }
-        let mut original = vec![];
-        for i in 0..vector[0].len() {
-            let mut row = vec![];
-            for j in vector.iter() {
-                row.push(j[i]);
-            }
-            original.push(row);
-        }
-        original
     }
 }
+
+
 
 #[derive(Debug)]
 pub struct BinaryLogisticRegression_f {
@@ -1348,4 +1222,102 @@ pub fn one_hot_encoding(column: &Vec<&str>) -> Vec<Vec<u8>> {
         output.push(column.iter().map(|a| if a == i { 1 } else { 0 }).collect());
     }
     output
+}
+
+
+pub fn shape(m: &Vec<Vec<f64>>) {
+    // # of rows and columns of a matrix
+    println!("{:?}x{:?}", m.len(), m[0].len());
+}
+
+pub fn rmse(test_data: &Vec<Vec<f64>>, predicted: &Vec<f64>) -> f64 {
+    /*
+    square root of (square of difference of predicted and actual divided by number of predications)
+    */
+    (mse(test_data, predicted)).sqrt()
+}
+
+pub fn mse(test_data: &Vec<Vec<f64>>, predicted: &Vec<f64>) -> f64 {
+    /*
+    square of difference of predicted and actual divided by number of predications
+    */
+
+    let mut square_error: Vec<f64> = vec![];
+    for (n, i) in test_data.iter().enumerate() {
+        let j = match i.last() {
+            Some(x) => (predicted[n] - x) * (predicted[n] - x), // square difference
+            _ => panic!("Something wrong in passed test data"),
+        };
+        square_error.push(j)
+    }
+    // println!("{:?}", square_error);
+    square_error.iter().fold(0., |a, b| a + b) / (predicted.len() as f64)
+}
+
+pub fn mae(test_data: &Vec<Vec<f64>>, predicted: &Vec<f64>) -> f64 {
+    /*
+    average of absolute difference of predicted and actual
+    */
+
+    let mut absolute_error: Vec<f64> = vec![];
+    for (n, i) in test_data.iter().enumerate() {
+        let j = match i.last() {
+            Some(x) => (predicted[n] - x).abs(), // absolute difference
+            _ => panic!("Something wrong in passed test data"),
+        };
+        absolute_error.push(j)
+    }
+    // println!("{:?}", absolute_error);
+    absolute_error.iter().fold(0., |a, b| a + b) / (predicted.len() as f64)
+}
+
+pub fn r_square(predicted: &Vec<f64>, actual: &Vec<f64>, features: usize) -> (f64, f64) {
+    // https://github.com/radialHuman/rust/blob/master/util/util_ml/src/lib_ml.rs
+    /*
+
+    */
+    let sst: Vec<_> = actual
+        .iter()
+        .map(|a| {
+            (a - (actual.iter().fold(0., |a, b| a + b) / (actual.len() as f64))
+                * (a - (actual.iter().fold(0., |a, b| a + b) / (actual.len() as f64))))
+        })
+        .collect();
+    let ssr = predicted
+        .iter()
+        .zip(actual.iter())
+        .fold(0., |a, b| a + (b.0 - b.1));
+    let r2 = 1. - (ssr / (sst.iter().fold(0., |a, b| a + b)));
+    // println!("{:?}\n{:?}", predicted, actual);
+    let degree_of_freedom = predicted.len() as f64 - 1. - features as f64;
+    let ar2 = 1. - ((1. - r2) * ((predicted.len() as f64 - 1.) / degree_of_freedom));
+    (r2, ar2)
+}
+
+pub fn mape(test_data: &Vec<Vec<f64>>, predicted: &Vec<f64>) -> f64 {
+    /*
+    average of absolute difference of predicted and actual
+    */
+
+    let mut absolute_error: Vec<f64> = vec![];
+    for (n, i) in test_data.iter().enumerate() {
+        let j = match i.last() {
+            Some(x) => (((predicted[n] - x) / predicted[n]).abs()) * 100., // absolute difference
+            _ => panic!("Something wrong in passed test data"),
+        };
+        absolute_error.push(j)
+    }
+    // println!("{:?}", absolute_error);
+    absolute_error.iter().fold(0., |a, b| a + b) / (predicted.len() as f64)
+}
+
+pub fn drop_column(matrix: &Vec<Vec<f64>>, column_number: usize) -> Vec<Vec<f64>> {
+    // let part1 = matrix[..column_number - 1].to_vec();
+    // let part2 = matrix[column_number..].to_vec();
+    // shape("target", &part2);
+    [
+        &matrix[..column_number - 1].to_vec()[..],
+        &matrix[column_number..].to_vec()[..],
+    ]
+    .concat()
 }

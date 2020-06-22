@@ -2,9 +2,9 @@
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
 ## Changes
-* Reduced warnings
-* lib_ml :  MultivariantLinearRegression got adjusted R2, randomize vector_f generalized
-* lib_matrix : join_matrix, make_matrix_string_literal, head, tail, row_to_columns_conversion, columns_to_rows_conversion
+* lib_ml : 5 Linear regression metrics functions, shape, drop_column added
+* lib_matrix : row_to_columns_conversion, columns_to_rows_conversion added
+* MultivariantLinearRegression, which did not give similar result as established libraries [comparision]() replaced with OLS, which is based on matrix operations unlike the predecessor  
 
 ## List of Functions and Structs
 
@@ -48,14 +48,8 @@
 
 ---
 ### lib_ml
-    1. MultivariantLinearRegression :
-        > multivariant_linear_regression
-            x generate_score
-        > batch_gradient_descent
-            x mse_cost_function
-        > hash_to_table
-            x train_test_split
-            x randomize
+    1. OLS:
+        > fit
     2. BinaryLogisticRegressionF:
         > train_test_split
         > read_n_split_n_shuffle
@@ -92,6 +86,13 @@
     23. how_many_and_where
     24. z_score
     25. one_hot_encoding
+    26. shape
+    27. rmse
+    28. mse
+    29. mae
+    30. r_square
+    31. mape
+    32. drop_column
 ---
 ### lib_nn
     1. LayerDetails :
