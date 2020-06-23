@@ -397,7 +397,7 @@ fn main() {
 
     // println!(
     //     "{:?}",
-    //     BinaryLogisticRegression_f::sigmoid_activation(&vec![
+    //     BLR_f::sigmoid_activation(&vec![
     //         0.19849274, 0.21902214, 0.68417234, 0.13458896, 0.61311337, 0.08175402, 0.52679541,
     //         0.5219286, -1.4237689, 0.98864689, 0.79766791, 0.23862188
     //     ])
@@ -409,7 +409,7 @@ fn main() {
     // println!("{:?}", ts.lag_view(3));
 
     // reading in data and splitting it into features and target
-    // let (x, y) = BinaryLogisticRegression_f::read_n_split_n_shuffle(
+    // let (x, y) = BLR_f::read_n_split_n_shuffle(
     //     "data_banknote_authentication.txt",
     //     "class\r",
     // );
@@ -425,7 +425,7 @@ fn main() {
     //     .collect();
 
     // starting logistic regression
-    // let blr = BinaryLogisticRegression_f {
+    // let blr = BLR_f {
     //     features: X.to_vec(),
     //     target: Y[0].clone(),
     //     learning_rate: 0.001,
@@ -642,257 +642,494 @@ fn main() {
     // println!("{:?}", m[7..].to_vec());
     // // println!("{:?}",[&m[..4-1].to_vec()[..], &m[4..].to_vec()[..]].concat());
 
-    println!("\n>>>>>>>>>>>>>>>>> ORDINARY LEAST SQUARE");
-    let file = "./ccpp.csv".to_string();
-    let lr = OLS {
-        file_path: file.clone(),
-        target: 5,
-        test_size: 0.20,
-    };
-    lr.fit();
+    // println!("\n>>>>>>>>>>>>>>>>> ORDINARY LEAST SQUARE");
+    // let file = "./ccpp.csv".to_string();
+    // let lr = OLS {
+    //     file_path: file.clone(),
+    //     target: 5,
+    //     test_size: 0.20,
+    // };
+    // lr.fit();
 }
-
-pub struct OLS {
-    pub file_path: String,
-    pub target: usize, // target column number
-    pub test_size: f64,
+use simple_ml::*;
+pub struct BLR {
+    pub file_path: String,     // pointing to a csv or txt file
+    pub test_size: f64,        // ex: .30 => random 30% of data become test
+    pub target_column: usize,  // column index which has to be classified
+    pub learning_rate: f64,    // gradient descent step size ex: 0.1, 0.05 etc
+    pub iter_count: u32,       // how many epochs ex: 10000
+    pub binary_threshold: f64, // at what probability will the class be determined ex: 0.6 => anything above 0.6 is 1
 }
-
-impl OLS {
+impl BLR {
     pub fn fit(&self) {
         /*
-        Source:
-        Video: https://www.youtube.com/watch?v=K_EH2abOp00
-        Book: Trevor Hastie,  Robert Tibshirani, Jerome Friedman - The Elements of  Statistical Learning_  Data Mining, Inference, and Pred
-        Article: https://towardsdatascience.com/regression-an-explanation-of-regression-metrics-and-what-can-go-wrong-a39a9793d914#:~:text=Root%20Mean%20Squared%20Error%3A%20RMSE,value%20predicted%20by%20the%20model.&text=Mean%20Absolute%20Error%3A%20MAE%20is,value%20predicted%20by%20the%20model.
-        Library:
-
-        TODO:
-        * Whats the role of gradient descent in this?
-        * rules of regression
-        * p-value
-        * Colinearity
+            Source:
+            Video:
+            Book: Trevor Hastie,  Robert Tibshirani, Jerome Friedman - The Elements of  Statistical Learning_  Data Mining, Inference, and Pred
+            Article: https://towardsdatascience.com/scale-standardize-or-normalize-with-scikit-learn-6ccc7d176a02
+            Library:
         */
 
         // read a csv file
-        let (columns, values) = read_csv(self.file_path.clone()); // output is row wise
-                                                                  // assuming the last column has the value to be predicted
-        println!(
-            "The target here is header named: {:?}",
-            columns[self.target - 1]
-        );
+        let (columns, values) = read_csv(self.file_path); // output is row wise
 
-        // // converting vector of string to vector of f64s
-        let random_data = randomize(&values)
+        // converting vector of string to vector of f64s
+        let random_data = BLR::float_randomize(&values);
+
+        // splitting it into train and test as per test percentage passed as parameter to get scores
+        let (x_train, y_train, x_test, y_test) =
+            BLR::preprocess_train_test_split(&random_data, self.test_size, self.target_column, "");
+
+        shape("Training features", &x_train);
+        shape("Test features", &x_test);
+        println!("Training target: {:?}", &y_train.len());
+        println!("Test target: {:?}", &y_test.len());
+
+        // now to the main part
+        let length = x_train[0].len();
+        let feature_count = x_train.len();
+        // let class_count = (unique_values(&y_test).len() + unique_values(&y_test).len()) / 2;
+        let intercept = vec![vec![1.; length]];
+        let new_x_train = [&intercept[..], &x_train[..]].concat();
+        let mut coefficients = vec![0.; feature_count + 1];
+
+        let mut cost = vec![];
+        print!("Reducing loss ...");
+        for _ in 0..self.iter_count {
+            let s = BLR::sigmoid(&new_x_train, &coefficients);
+            cost.push(BLR::log_loss(&s, &y_train));
+            let gd = BLR::gradient_descent(&new_x_train, &s, &y_train);
+            coefficients = BLR::change_in_loss(&coefficients, self.learning_rate, &gd);
+        }
+        // println!("The intercept is : {:?}", coefficients[0]);
+        // println!(
+        //     "The coefficients are : {:?}",
+        //     columns
+        //         .iter()
+        //         .zip(coefficients[1..].to_vec())
+        //         .collect::<Vec<(&String, f64)>>()
+        // );
+        let predicted = BLR::predict(&x_test, &coefficients, self.binary_threshold);
+        BLR::confuse_me(&predicted, &y_test);
+    }
+    pub fn confuse_me(predicted: &Vec<f64>, actual: &Vec<f64>) {
+        // https://medium.com/@MohammedS/performance-metrics-for-classification-problems-in-machine-learning-part-i-b085d432082b
+        let mut tp = 0.; // class_one_is_class_one
+        let mut fp = 0.; // class_one_is_class_two(Type 1)
+        let mut fng = 0.; // class_two_is_class_one (Type 1)
+        let mut tng = 0.; // class_two_is_class_two
+
+        for (i, j) in actual
+            .iter()
+            .zip(predicted.iter())
+            .collect::<Vec<(&f64, &f64)>>()
+            .iter()
+        {
+            if **i == 0.0 && **j == 0.0 {
+                tp += 1.;
+            }
+            if **i == 1.0 && **j == 1.0 {
+                tng += 1.;
+            }
+            if **i == 0.0 && **j == 1.0 {
+                fp += 1.;
+            }
+            if **i == 1.0 && **j == 0.0 {
+                fng += 1.;
+            }
+        }
+        println!("|------------------------|");
+        println!("|  {:?}    |   {:?}", tp, fp);
+        println!("|------------------------|");
+        println!("|  {:?}    |   {:?}", fng, tng);
+        println!("|------------------------|");
+        println!("Accuracy : {:.3}", (tp + tng) / (tp + fp + fng + tng));
+        println!("Precision : {:.3}", (tp) / (tp + fp));
+        let precision: f64 = (tp) / (tp + fp);
+        println!("Recall (sensitivity) : {:.3}", (tp) / (tp + fng));
+        let recall: f64 = (tp) / (tp + fng);
+        println!("Specificity: {:.3}", (tng) / (fp + tng));
+        println!(
+            "F1 : {:.3}\n\n",
+            (2. * precision * recall) / (precision * recall)
+        );
+    }
+
+    pub fn predict(test_features: &Vec<Vec<f64>>, weights: &Vec<f64>, threshold: f64) -> Vec<f64> {
+        let length = test_features[0].len();
+        let intercept = vec![vec![1.; length]];
+        let new_x_test = [&intercept[..], &test_features[..]].concat();
+        let mut pred = BLR::sigmoid(&new_x_test, weights);
+        pred.iter()
+            .map(|a| if *a > threshold { 1. } else { 0. })
+            .collect()
+    }
+
+    pub fn change_in_loss(coeff: &Vec<f64>, lr: f64, gd: &Vec<f64>) -> Vec<f64> {
+        print!(".");
+        if coeff.len() == gd.len() {
+            element_wise_operation(coeff, &gd.iter().map(|a| a * lr).collect(), "add")
+        } else {
+            panic!("The dimensions do not match")
+        }
+    }
+
+    pub fn gradient_descent(
+        train: &Vec<Vec<f64>>,
+        sigmoid: &Vec<f64>,
+        y_train: &Vec<f64>,
+    ) -> Vec<f64> {
+        let part2 = element_wise_operation(sigmoid, y_train, "sub");
+        let numerator = matrix_vector_product_f(train, &part2);
+        numerator
+            .iter()
+            .map(|a| *a / (y_train.len() as f64))
+            .collect()
+    }
+
+    pub fn log_loss(sigmoid: &Vec<f64>, y_train: &Vec<f64>) -> f64 {
+        let part11 = sigmoid.iter().map(|a| a.log(1.0_f64.exp())).collect();
+        let part12 = y_train.iter().map(|a| a * -1.).collect();
+        let part21 = sigmoid
+            .iter()
+            .map(|a| (1. - a).log(1.0_f64.exp()))
+            .collect();
+        let part22 = y_train.iter().map(|a| 1. - a).collect();
+        let part1 = element_wise_operation(&part11, &part12, "mul");
+        let part2 = element_wise_operation(&part21, &part22, "mul");
+        mean(&element_wise_operation(&part1, &part2, "sub"))
+    }
+
+    pub fn sigmoid(train: &Vec<Vec<f64>>, coeff: &Vec<f64>) -> Vec<f64> {
+        let z = matrix_vector_product_f(&transpose(train), coeff);
+        z.iter().map(|a| 1. / (1. + a.exp())).collect()
+    }
+
+    pub fn float_randomize(matrix: &Vec<Vec<String>>) -> Vec<Vec<f64>> {
+        matrix
             .iter()
             .map(|a| {
                 a.iter()
-                    .filter(|b| **b != "".to_string())
-                    .map(|b| b.parse::<f64>().unwrap())
+                    .map(|b| (*b).replace("\r", "").parse::<f64>().unwrap())
                     .collect::<Vec<f64>>()
             })
-            .collect::<Vec<Vec<f64>>>();
-        // splitting it into train and test as per test percentage passed as parameter to get scores
-        let (train_data, test_data) = train_test_split_f(&random_data, self.test_size);
-        shape("Training data", &train_data);
-        shape("Testing data", &test_data);
+            .collect::<Vec<Vec<f64>>>()
+    }
+
+    pub fn preprocess_train_test_split(
+        matrix: &Vec<Vec<f64>>,
+        test_percentage: f64,
+        target_column: usize,
+        preprocess: &str,
+    ) -> (Vec<Vec<f64>>, Vec<f64>, Vec<Vec<f64>>, Vec<f64>) {
+        /*
+        preprocess : "s" : standardize, "m" : minmaxscaler, "_" : no change
+        */
+
+        let (train_data, test_data) = train_test_split_f(matrix, test_percentage);
+        // println!("Training size: {:?}", train_data.len());
+        // println!("Test size: {:?}", test_data.len());
 
         // converting rows to vector of columns of f64s
+        let mut actual_train = row_to_columns_conversion(&train_data);
+        let mut actual_test = row_to_columns_conversion(&test_data);
 
-        // println!("{:?}",train_data );
-        shape("Training data", &train_data);
-        let actual_train = row_to_columns_conversion(&train_data);
-        // println!(">>>>>");
-        let x = drop_column(&actual_train, self.target);
-        // // the read columns are in transposed form already, so creating vector of features X and adding 1 in front of it for b0
-        let b0_vec: Vec<Vec<f64>> = vec![vec![1.; x[0].len()]]; //[1,1,1...1,1,1]
-        let X = [&b0_vec[..], &x[..]].concat(); // [1,1,1...,1,1,1]+X
-                                                // shape(&X);
-        let xt = MatrixF { matrix: X };
+        match preprocess {
+            "s" => {
+                actual_train = actual_train
+                    .iter()
+                    .map(|a| BLR::standardize_vector_f(a))
+                    .collect::<Vec<Vec<f64>>>();
+                actual_test = actual_test
+                    .iter()
+                    .map(|a| BLR::standardize_vector_f(a))
+                    .collect::<Vec<Vec<f64>>>();
+            }
+            "m" => {
+                actual_train = actual_train
+                    .iter()
+                    .map(|a| min_max_scaler(a))
+                    .collect::<Vec<Vec<f64>>>();
+                actual_test = actual_test
+                    .iter()
+                    .map(|a| min_max_scaler(a))
+                    .collect::<Vec<Vec<f64>>>();
+            }
 
-        // and vector of targets y
-        let y = vec![actual_train[self.target - 1].to_vec()];
-        // print_a_matrix(
-        //     "Features",
-        //     &xt.matrix.iter().map(|a| a[..6].to_vec()).collect(),
-        // );
-        // print_a_matrix("Target", &y);
+            _ => println!(
+                "Using the actual values without preprocessing unless 's' or 'm' is passed"
+            ),
+        };
 
+        (
+            drop_column(&actual_train, target_column),
+            actual_train[target_column - 1].clone(),
+            drop_column(&actual_test, target_column),
+            actual_test[target_column - 1].clone(),
+        )
+    }
+
+    pub fn standardize_vector_f(list: &Vec<f64>) -> Vec<f64> {
         /*
-        beta = np.linalg.inv(X.T@X)@(X.T@y)
-         */
+        Preserves the shape of the original distribution. Doesn't
+        reduce the importance of outliers. Least disruptive to the
+        information in the original data. Default range for
+        MinMaxScaler is O to 1.
+            */
+        list.iter()
+            .map(|a| (*a - mean(list)) / std_dev(list))
+            .collect()
+    }
 
-        // (X.T@X)
-        let xtx = MatrixF {
-            matrix: matrix_multiplication(&xt.matrix, &transpose(&xt.matrix)),
-        };
-        // println!("{:?}", MatrixF::inverse_f(&xtx));
-        let slopes = &matrix_multiplication(
-            &MatrixF::inverse_f(&xtx), // np.linalg.inv(X.T@X)
-            &transpose(&vec![matrix_vector_product_f(&xt.matrix, &y[0])]), //(X.T@y)
-        )[0];
-
-        // combining column names with coefficients
-        let output: Vec<_> = columns[..columns.len() - 1]
-            .iter()
-            .zip(slopes[1..].iter())
-            .collect();
-        // println!("****************** Without Gradient Descent ******************");
-        println!(
-        "\n\nThe coeficients of a columns as per simple linear regression on {:?}% of data is : \n{:?} and b0 is : {:?}",
-        self.test_size * 100.,
-        output,
-        slopes[0]
-    );
-
-        // predicting the values for test features
-        // multiplying each test feture row with corresponding slopes to predict the dependent variable
-        let mut predicted_values = vec![];
-        for i in test_data.iter() {
-            predicted_values.push({
-                let value = i
-                    .iter()
-                    .zip(slopes[1..].iter())
-                    .map(|(a, b)| (a * b))
-                    .collect::<Vec<f64>>();
-                value.iter().fold(slopes[0], |a, b| a + b) // b0+b1x1+b2x2..+bnxn
-            });
-        }
-
-        println!("RMSE : {:?}", rmse(&test_data, &predicted_values));
-        println!("MSE : {:?}", mse(&test_data, &predicted_values)); // cost function
-        println!("MAE : {:?}", mae(&test_data, &predicted_values));
-        println!("MAPE : {:?}", mape(&test_data, &predicted_values));
-        println!(
-            "R2 and adjusted R2 : {:?}",
-            r_square(
-                &test_data
-                    .iter()
-                    .map(|a| a[test_data[0].len() - 1])
-                    .collect(), // passing only the target values
-                &predicted_values,
-                columns.len(),
-            )
-        );
-
-        println!();
-        println!();
+    pub fn min_max_scaler(list: &Vec<f64>) -> Vec<f64> {
+        let (minimum, maximum) = min_max_f(&list);
+        let range: f64 = maximum - minimum;
+        list.iter().map(|a| 1. - ((maximum - a) / range)).collect()
     }
 }
 
-pub fn shape(words: &str, m: &Vec<Vec<f64>>) {
-    // # of rows and columns of a matrix
-    println!("{:?} : {:?}x{:?}", words, m.len(), m[0].len());
-}
+// ================================================================================= // =================================================================================
+// ================================================================================= // =================================================================================
+// ================================================================================= // =================================================================================
+// ================================================================================= // =================================================================================// ================================================================================= // =================================================================================
+// ================================================================================= // =================================================================================
 
-pub fn rmse(test_data: &Vec<Vec<f64>>, predicted: &Vec<f64>) -> f64 {
-    /*
-    square root of (square of difference of predicted and actual divided by number of predications)
-    */
-    (mse(test_data, predicted)).sqrt()
-}
+// pub struct OLS {
+//     pub file_path: String,
+//     pub target: usize, // target column number
+//     pub test_size: f64,
+// }
 
-pub fn mse(test_data: &Vec<Vec<f64>>, predicted: &Vec<f64>) -> f64 {
-    /*
-    square of difference of predicted and actual divided by number of predications
-    */
+// impl OLS {
+//     pub fn fit(&self) {
+//         /*
+//         Source:
+//         Video: https://www.youtube.com/watch?v=K_EH2abOp00
+//         Book: Trevor Hastie,  Robert Tibshirani, Jerome Friedman - The Elements of  Statistical Learning_  Data Mining, Inference, and Pred
+//         Article: https://towardsdatascience.com/regression-an-explanation-of-regression-metrics-and-what-can-go-wrong-a39a9793d914#:~:text=Root%20Mean%20Squared%20Error%3A%20RMSE,value%20predicted%20by%20the%20model.&text=Mean%20Absolute%20Error%3A%20MAE%20is,value%20predicted%20by%20the%20model.
+//         Library:
 
-    let mut square_error: Vec<f64> = vec![];
-    for (n, i) in test_data.iter().enumerate() {
-        let j = match i.last() {
-            Some(x) => (predicted[n] - x) * (predicted[n] - x), // square difference
-            _ => panic!("Something wrong in passed test data"),
-        };
-        square_error.push(j)
-    }
-    // println!("{:?}", square_error);
-    square_error.iter().fold(0., |a, b| a + b) / (predicted.len() as f64)
-}
+//         TODO:
+//         * Whats the role of gradient descent in this?
+//         * rules of regression
+//         * p-value
+//         * Colinearity
+//         */
+//         // read a csv file
+//         let (columns, values) = read_csv(self.file_path.clone()); // output is row wise
+//                                                                   // assuming the last column has the value to be predicted
+//         println!(
+//             "The target here is header named: {:?}",
+//             columns[self.target - 1]
+//         );
 
-pub fn mae(test_data: &Vec<Vec<f64>>, predicted: &Vec<f64>) -> f64 {
-    /*
-    average of absolute difference of predicted and actual
-    */
+//         // // converting vector of string to vector of f64s
+//         let random_data = randomize(&values)
+//             .iter()
+//             .map(|a| {
+//                 a.iter()
+//                     .filter(|b| **b != "".to_string())
+//                     .map(|b| b.parse::<f64>().unwrap())
+//                     .collect::<Vec<f64>>()
+//             })
+//             .collect::<Vec<Vec<f64>>>();
+//         // splitting it into train and test as per test percentage passed as parameter to get scores
+//         let (train_data, test_data) = train_test_split_f(&random_data, self.test_size);
+//         shape("Training data", &train_data);
+//         shape("Testing data", &test_data);
 
-    let mut absolute_error: Vec<f64> = vec![];
-    for (n, i) in test_data.iter().enumerate() {
-        let j = match i.last() {
-            Some(x) => (predicted[n] - x).abs(), // absolute difference
-            _ => panic!("Something wrong in passed test data"),
-        };
-        absolute_error.push(j)
-    }
-    // println!("{:?}", absolute_error);
-    absolute_error.iter().fold(0., |a, b| a + b) / (predicted.len() as f64)
-}
+//         // converting rows to vector of columns of f64s
 
-pub fn r_square(predicted: &Vec<f64>, actual: &Vec<f64>, features: usize) -> (f64, f64) {
-    // https://github.com/radialHuman/rust/blob/master/util/util_ml/src/lib_ml.rs
-    /*
+//         // println!("{:?}",train_data );
+//         shape("Training data", &train_data);
+//         let actual_train = row_to_columns_conversion(&train_data);
+//         // println!(">>>>>");
+//         let x = drop_column(&actual_train, self.target);
+//         // // the read columns are in transposed form already, so creating vector of features X and adding 1 in front of it for b0
+//         let b0_vec: Vec<Vec<f64>> = vec![vec![1.; x[0].len()]]; //[1,1,1...1,1,1]
+//         let X = [&b0_vec[..], &x[..]].concat(); // [1,1,1...,1,1,1]+X
+//                                                 // shape(&X);
+//         let xt = MatrixF { matrix: X };
 
-    */
-    let sst: Vec<_> = actual
-        .iter()
-        .map(|a| {
-            (a - (actual.iter().fold(0., |a, b| a + b) / (actual.len() as f64))
-                * (a - (actual.iter().fold(0., |a, b| a + b) / (actual.len() as f64))))
-        })
-        .collect();
-    let ssr = predicted
-        .iter()
-        .zip(actual.iter())
-        .fold(0., |a, b| a + (b.0 - b.1));
-    let r2 = 1. - (ssr / (sst.iter().fold(0., |a, b| a + b)));
-    // println!("{:?}\n{:?}", predicted, actual);
-    let degree_of_freedom = predicted.len() as f64 - 1. - features as f64;
-    let ar2 = 1. - ((1. - r2) * ((predicted.len() as f64 - 1.) / degree_of_freedom));
-    (r2, ar2)
-}
+//         // and vector of targets y
+//         let y = vec![actual_train[self.target - 1].to_vec()];
+//         // print_a_matrix(
+//         //     "Features",
+//         //     &xt.matrix.iter().map(|a| a[..6].to_vec()).collect(),
+//         // );
+//         // print_a_matrix("Target", &y);
 
-pub fn mape(test_data: &Vec<Vec<f64>>, predicted: &Vec<f64>) -> f64 {
-    /*
-    average of absolute difference of predicted and actual
-    */
+//         /*
+//         beta = np.linalg.inv(X.T@X)@(X.T@y)
+//          */
+//         // (X.T@X)
+//         let xtx = MatrixF {
+//             matrix: matrix_multiplication(&xt.matrix, &transpose(&xt.matrix)),
+//         };
+//         // println!("{:?}", MatrixF::inverse_f(&xtx));
+//         let slopes = &matrix_multiplication(
+//             &MatrixF::inverse_f(&xtx), // np.linalg.inv(X.T@X)
+//             &transpose(&vec![matrix_vector_product_f(&xt.matrix, &y[0])]), //(X.T@y)
+//         )[0];
 
-    let mut absolute_error: Vec<f64> = vec![];
-    for (n, i) in test_data.iter().enumerate() {
-        let j = match i.last() {
-            Some(x) => (((predicted[n] - x) / predicted[n]).abs()) * 100., // absolute difference
-            _ => panic!("Something wrong in passed test data"),
-        };
-        absolute_error.push(j)
-    }
-    // println!("{:?}", absolute_error);
-    absolute_error.iter().fold(0., |a, b| a + b) / (predicted.len() as f64)
-}
+//         // combining column names with coefficients
+//         let output: Vec<_> = columns[..columns.len() - 1]
+//             .iter()
+//             .zip(slopes[1..].iter())
+//             .collect();
+//         // println!("****************** Without Gradient Descent ******************");
+//         println!(
+//         "\n\nThe coeficients of a columns as per simple linear regression on {:?}% of data is : \n{:?} and b0 is : {:?}",
+//         self.test_size * 100.,
+//         output,
+//         slopes[0]
+//     );
 
-pub fn drop_column(matrix: &Vec<Vec<f64>>, column_number: usize) -> Vec<Vec<f64>> {
-    // let part1 = matrix[..column_number - 1].to_vec();
-    // let part2 = matrix[column_number..].to_vec();
-    // shape("target", &part2);
-    [
-        &matrix[..column_number - 1].to_vec()[..],
-        &matrix[column_number..].to_vec()[..],
-    ]
-    .concat()
-}
+//         // predicting the values for test features
+//         // multiplying each test feture row with corresponding slopes to predict the dependent variable
+//         let mut predicted_values = vec![];
+//         for i in test_data.iter() {
+//             predicted_values.push({
+//                 let value = i
+//                     .iter()
+//                     .zip(slopes[1..].iter())
+//                     .map(|(a, b)| (a * b))
+//                     .collect::<Vec<f64>>();
+//                 value.iter().fold(slopes[0], |a, b| a + b) // b0+b1x1+b2x2..+bnxn
+//             });
+//         }
 
-use simple_ml::*;
+//         println!("RMSE : {:?}", rmse(&test_data, &predicted_values));
+//         println!("MSE : {:?}", mse(&test_data, &predicted_values)); // cost function
+//         println!("MAE : {:?}", mae(&test_data, &predicted_values));
+//         println!("MAPE : {:?}", mape(&test_data, &predicted_values));
+//         println!(
+//             "R2 and adjusted R2 : {:?}",
+//             r_square(
+//                 &test_data
+//                     .iter()
+//                     .map(|a| a[test_data[0].len() - 1])
+//                     .collect(), // passing only the target values
+//                 &predicted_values,
+//                 columns.len(),
+//             )
+//         );
 
-pub fn row_to_columns_conversion<T: std::fmt::Debug + Copy>(data: &Vec<Vec<T>>) -> Vec<Vec<T>> {
-    /*
-    Since read_csv gives values row wise, it might be required to convert it into columns for some calulation like aggeration
-    converts [[1,6,11],[2,7,12],[3,8,13],[4,9,14],[5,10,15]] => [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]]
-    */
-    println!("{:?}x{:?} becomes", data.len(), data[0].len());
-    let mut output:Vec<Vec<_>> = vec![];
-    for j in 0..(data[0].len()) {
-        let columns = data.iter().map(|a| a[j]).collect();
-        output.push(columns)
-    }
-    println!("{:?}x{:?}", output.len(), output[0].len());
-    output
-}
+//         println!();
+//         println!();
+//     }
+// }
+
+// pub fn shape(words: &str, m: &Vec<Vec<f64>>) {
+//     // # of rows and columns of a matrix
+//     println!("{:?} : {:?}x{:?}", words, m.len(), m[0].len());
+// }
+
+// pub fn rmse(test_data: &Vec<Vec<f64>>, predicted: &Vec<f64>) -> f64 {
+//     /*
+//     square root of (square of difference of predicted and actual divided by number of predications)
+//     */
+//     (mse(test_data, predicted)).sqrt()
+// }
+
+// pub fn mse(test_data: &Vec<Vec<f64>>, predicted: &Vec<f64>) -> f64 {
+//     /*
+//     square of difference of predicted and actual divided by number of predications
+//     */
+//     let mut square_error: Vec<f64> = vec![];
+//     for (n, i) in test_data.iter().enumerate() {
+//         let j = match i.last() {
+//             Some(x) => (predicted[n] - x) * (predicted[n] - x), // square difference
+//             _ => panic!("Something wrong in passed test data"),
+//         };
+//         square_error.push(j)
+//     }
+//     // println!("{:?}", square_error);
+//     square_error.iter().fold(0., |a, b| a + b) / (predicted.len() as f64)
+// }
+
+// pub fn mae(test_data: &Vec<Vec<f64>>, predicted: &Vec<f64>) -> f64 {
+//     /*
+//     average of absolute difference of predicted and actual
+//     */
+//     let mut absolute_error: Vec<f64> = vec![];
+//     for (n, i) in test_data.iter().enumerate() {
+//         let j = match i.last() {
+//             Some(x) => (predicted[n] - x).abs(), // absolute difference
+//             _ => panic!("Something wrong in passed test data"),
+//         };
+//         absolute_error.push(j)
+//     }
+//     // println!("{:?}", absolute_error);
+//     absolute_error.iter().fold(0., |a, b| a + b) / (predicted.len() as f64)
+// }
+
+// pub fn r_square(predicted: &Vec<f64>, actual: &Vec<f64>, features: usize) -> (f64, f64) {
+//     // https://github.com/radialHuman/rust/blob/master/util/util_ml/src/lib_ml.rs
+//     /*
+
+//     */
+//     let sst: Vec<_> = actual
+//         .iter()
+//         .map(|a| {
+//             (a - (actual.iter().fold(0., |a, b| a + b) / (actual.len() as f64))
+//                 * (a - (actual.iter().fold(0., |a, b| a + b) / (actual.len() as f64))))
+//         })
+//         .collect();
+//     let ssr = predicted
+//         .iter()
+//         .zip(actual.iter())
+//         .fold(0., |a, b| a + (b.0 - b.1));
+//     let r2 = 1. - (ssr / (sst.iter().fold(0., |a, b| a + b)));
+//     // println!("{:?}\n{:?}", predicted, actual);
+//     let degree_of_freedom = predicted.len() as f64 - 1. - features as f64;
+//     let ar2 = 1. - ((1. - r2) * ((predicted.len() as f64 - 1.) / degree_of_freedom));
+//     (r2, ar2)
+// }
+
+// pub fn mape(test_data: &Vec<Vec<f64>>, predicted: &Vec<f64>) -> f64 {
+//     /*
+//     average of absolute difference of predicted and actual
+//     */
+//     let mut absolute_error: Vec<f64> = vec![];
+//     for (n, i) in test_data.iter().enumerate() {
+//         let j = match i.last() {
+//             Some(x) => (((predicted[n] - x) / predicted[n]).abs()) * 100., // absolute difference
+//             _ => panic!("Something wrong in passed test data"),
+//         };
+//         absolute_error.push(j)
+//     }
+//     // println!("{:?}", absolute_error);
+//     absolute_error.iter().fold(0., |a, b| a + b) / (predicted.len() as f64)
+// }
+
+// pub fn drop_column(matrix: &Vec<Vec<f64>>, column_number: usize) -> Vec<Vec<f64>> {
+//     // let part1 = matrix[..column_number - 1].to_vec();
+//     // let part2 = matrix[column_number..].to_vec();
+//     // shape("target", &part2);
+//     [
+//         &matrix[..column_number - 1].to_vec()[..],
+//         &matrix[column_number..].to_vec()[..],
+//     ]
+//     .concat()
+// }
+
+// use simple_ml::*;
+
+// pub fn row_to_columns_conversion<T: std::fmt::Debug + Copy>(data: &Vec<Vec<T>>) -> Vec<Vec<T>> {
+//     /*
+//     Since read_csv gives values row wise, it might be required to convert it into columns for some calulation like aggeration
+//     converts [[1,6,11],[2,7,12],[3,8,13],[4,9,14],[5,10,15]] => [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]]
+//     */
+//     println!("{:?}x{:?} becomes", data.len(), data[0].len());
+//     let mut output:Vec<Vec<_>> = vec![];
+//     for j in 0..(data[0].len()) {
+//         let columns = data.iter().map(|a| a[j]).collect();
+//         output.push(columns)
+//     }
+//     println!("{:?}x{:?}", output.len(), output[0].len());
+//     output
+// }
 
 // ================================================================================= // =================================================================================
 // ================================================================================= // =================================================================================

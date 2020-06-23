@@ -205,15 +205,17 @@ STRUCTS
     > fit
 
 
-2. BinaryLogisticRegressionF : features: Vec<Vec<f64>>,target: Vec<f64>,learning_rate: f64,iterations: u32,
-    > train_test_split
-    > read_n_split_n_shuffle
-    x randomize
-    x weight_initialization
-    > sigmoid_activation
-    x model_optimize
-    > model_predict
-    > pred_test
+2. BLR : file_path: String, test_size: f64, target_column: usize, learning_rate: f64, iter_count: u32, binary_threshold: f64,
+    > fit
+    > preprocess_train_test_split
+    > standardize_vector_f
+    > min_max_scaler
+    > float_randomize
+    > sigmoid
+    > log_loss
+    > gradient_descent
+    > change_in_loss
+    > predict
     > confuse_me
 
 
@@ -270,7 +272,7 @@ FUNCTIONS
     > 2. extra_class : bool if true more than 10 classes else less
     = Vec<usize>
 
-11. normalize_vector_f : between [0.,1.]
+11. min_max_scaler : between [0.,1.]
     > 1. list: A &Vec<f64>
     = Vec<f64>
 
@@ -511,274 +513,76 @@ impl OLS {
     }
 }
 
-
-#[derive(Debug)]
-pub struct BinaryLogisticRegressionF {
-    // https://towardsdatascience.com/logistic-regression-detailed-overview-46c4da4303bc
-    pub features: Vec<Vec<f64>>,
-    pub target: Vec<f64>,
-    pub learning_rate: f64,
-    pub iterations: u32,
+pub struct BLR {
+    pub file_path: String,     // pointing to a csv or txt file
+    pub test_size: f64,        // ex: .30 => random 30% of data become test
+    pub target_column: usize,  // column index which has to be classified
+    pub learning_rate: f64,    // gradient descent step size ex: 0.1, 0.05 etc
+    pub iter_count: u32,       // how many epochs ex: 10000
+    pub binary_threshold: f64, // at what probability will the class be determined ex: 0.6 => anything above 0.6 is 1
 }
-
-impl BinaryLogisticRegressionF {
-    pub fn train_test_split(
-        &self,
-        test_percentage: f64,
-    ) -> (BinaryLogisticRegressionF, BinaryLogisticRegressionF) {
-        let training_rows =
-            round_off_f(self.features[0].len() as f64 * (1. - test_percentage), 0) as usize;
-
-        (
-            // train
-            BinaryLogisticRegressionF {
-                features: self
-                    .features
-                    .iter()
-                    .map(|a| a[0..training_rows - 1].to_vec())
-                    .collect(),
-                target: self.target[0..training_rows - 1].to_vec(),
-                learning_rate: self.learning_rate,
-                iterations: self.iterations,
-            },
-            // test
-            BinaryLogisticRegressionF {
-                features: self
-                    .features
-                    .iter()
-                    .map(|a| a[training_rows..].to_vec())
-                    .collect(),
-                target: self.target[training_rows..].to_vec(),
-                learning_rate: self.learning_rate,
-                iterations: self.iterations,
-            },
-        )
-    }
-
-    pub fn read_n_split_n_shuffle(
-        path: &str,
-        target_header: &str,
-    ) -> (Vec<Vec<String>>, Vec<Vec<String>>) {
+impl BLR {
+    pub fn fit(&self) {
         /*
-        reads a txt or a csv and returns as a vector of vector of string after randomly arranging them
-        the first one is training data
-        split based on header passed as argument
+            Source:
+            Video:
+            Book: Trevor Hastie,  Robert Tibshirani, Jerome Friedman - The Elements of  Statistical Learning_  Data Mining, Inference, and Pred
+            Article: https://towardsdatascience.com/scale-standardize-or-normalize-with-scikit-learn-6ccc7d176a02
+            Library:
         */
-        let (headers, mut values) = read_csv(path.to_string()); // reading csv as vector of string
-                                                                // shuffle data
-        values = BinaryLogisticRegressionF::randomize(&values);
-        let mut target_position = values[0].len() - 1; // as default last column is the target
-                                                       // updating the target column position
-        if headers.contains(&target_header.to_string()) {
-            for (n, i) in headers.iter().enumerate() {
-                if *i == target_header {
-                    target_position = n;
-                }
-            }
 
-            let mut data = vec![];
-            let mut header = vec![];
+        // read a csv file
+        let (columns, values) = read_csv(self.file_path.clone()); // output is row wise
 
-            for j in 0..values[0].len() {
-                if j != target_position {
-                    let mut columns = vec![];
-                    for i in values.iter() {
-                        columns.push(i[j].clone());
-                    }
-                    data.push(columns);
-                } else {
-                    let mut columns = vec![];
-                    for i in values.iter() {
-                        columns.push(i[j].clone());
-                    }
-                    header.push(columns);
-                }
-            }
-            (data, header)
-        } else {
-            panic!("Target not found in {:?}, please check", headers);
-        }
-    }
+        // converting vector of string to vector of f64s
+        let random_data = BLR::float_randomize(&values);
 
-    fn randomize<T: std::clone::Clone>(rows: &Vec<Vec<T>>) -> Vec<Vec<T>> {
-        use rand::seq::SliceRandom;
-        // use rand::thread_rng;
-        let mut order: Vec<usize> = (0..rows.len() as usize).collect();
-        let slice: &mut [usize] = &mut order;
-        let mut rng = thread_rng();
-        slice.shuffle(&mut rng);
-        // println!("{:?}", slice);
+        // splitting it into train and test as per test percentage passed as parameter to get scores
+        let (x_train, y_train, x_test, y_test) =
+            BLR::preprocess_train_test_split(&random_data, self.test_size, self.target_column, "");
 
-        let mut output = vec![];
-        for i in order.iter() {
-            output.push(rows[*i].clone());
-        }
-        output
-    }
-    fn weight_initialization(train: Vec<Vec<f64>>) -> (Vec<f64>, f64) {
-        let w = vec![0.; train.len()];
-        let b = 0.;
-        (w, b)
-    }
+        shape("Training features", &x_train);
+        shape("Test features", &x_test);
+        println!("Training target: {:?}", &y_train.len());
+        println!("Test target: {:?}", &y_test.len());
 
-    pub fn sigmoid_activation(list: &Vec<f64>) -> Vec<f64> {
-        list.iter().map(|a| 1. / ((a * -1.).exp() + 1.)).collect()
-    }
+        // now to the main part
+        let length = x_train[0].len();
+        let feature_count = x_train.len();
+        // let class_count = (unique_values(&y_test).len() + unique_values(&y_test).len()) / 2;
+        let intercept = vec![vec![1.; length]];
+        let new_x_train = [&intercept[..], &x_train[..]].concat();
+        let mut coefficients = vec![0.; feature_count + 1];
 
-    fn model_optimize(&self) -> (Vec<f64>, Vec<f64>, Vec<f64>) {
-        /*
-        Returns
-        derivative of weight
-        derivative of bias
-        cost function's result
-        */
-        // m = X.shape[0]
-        let m = self.features[0].len() as f64;
-        let (w, b) = BinaryLogisticRegressionF::weight_initialization(self.features.clone());
-
-        // sigmoid_activation(np.dot(w,X.T)+b)
-        let dot: Vec<_> = matrix_vector_product_f(&transpose(&self.features), &w)
-            .iter()
-            .map(|a| a + b)
-            .collect();
-        let final_result = BinaryLogisticRegressionF::sigmoid_activation(&dot);
-        // cost = (-1/m)*(np.sum((Y_T*np.log(final_result)) + ((1-Y_T)*(np.log(1-final_result)))))
-        let cost = vector_addition(
-            &mut element_wise_operation(
-                &final_result
-                    .iter()
-                    .map(|a| a.log(1.0_f64.exp()))
-                    .collect::<Vec<f64>>(),
-                &self.target,
-                "mul",
-            ),
-            &mut element_wise_operation(
-                &final_result
-                    .iter()
-                    .map(|a| (1. - a).log(1.0_f64.exp()))
-                    .collect::<Vec<f64>>(),
-                &self.target.iter().map(|a| 1. - a).collect(),
-                "mul",
-            ),
-        )
-        .iter()
-        .map(|a| a * (-1. / m))
-        .collect::<Vec<f64>>();
-
-        // dw = (1/m)*(np.dot(X.T, (final_result-Y.T).T))
-        let mut dw1 = vec![];
-        for i in self.features.iter() {
-            dw1.push(dot_product(
-                &i,
-                &final_result
-                    .iter()
-                    .zip(self.target.clone())
-                    .map(|(a, b)| a - b)
-                    .collect::<Vec<f64>>(),
-            ));
-        }
-        let dw = dw1.iter().map(|a| (1. / m) * a).collect::<Vec<f64>>();
-        // db = (1/m)*(np.sum(final_result-Y.T))
-        let db = element_wise_operation(&self.target.clone(), &final_result, "sub")
-            .iter()
-            .map(|a| a * (-1. / m))
-            .collect::<Vec<f64>>();
-        (dw, db, cost)
-    }
-
-    pub fn model_predict(&self) -> (Vec<f64>, Vec<f64>, Vec<f64>, Vec<f64>, Vec<Vec<f64>>) {
-        let mut costs = vec![];
-        let (mut w,  b_value) =
-            BinaryLogisticRegressionF::weight_initialization(self.features.clone());
-        let mut b = vec![b_value];
-        let mut dw = vec![];
-        let mut db = vec![];
         let mut cost = vec![];
-
-        print!("Calculating coefficients...");
-        for i in 0..self.iterations {
-            dw = BinaryLogisticRegressionF::model_optimize(self).0;
-            db = BinaryLogisticRegressionF::model_optimize(self).1;
-            cost = BinaryLogisticRegressionF::model_optimize(self).2;
-
-            // w = w - (learning_rate * (dw.T))
-            w = w
-                .iter()
-                .zip(dw.iter().map(|a| self.learning_rate * a))
-                .collect::<Vec<(&f64, f64)>>()
-                .iter()
-                .map(|(a, b)| *a - b)
-                .collect::<Vec<f64>>();
-            // b = b - (learning_rate * db)
-            b = db
-                .iter()
-                .map(|a| (self.learning_rate * a) - b[0])
-                .collect::<Vec<f64>>();
-
-            if i % 100 == 0 {
-                costs.push(cost);
-                print!("..");
-            }
+        print!("Reducing loss ...");
+        for _ in 0..self.iter_count {
+            let s = BLR::sigmoid(&new_x_train, &coefficients);
+            cost.push(BLR::log_loss(&s, &y_train));
+            let gd = BLR::gradient_descent(&new_x_train, &s, &y_train);
+            coefficients = BLR::change_in_loss(&coefficients, self.learning_rate, &gd);
         }
-        println!();
-        (w, b, dw, db, costs)
+        // println!("The intercept is : {:?}", coefficients[0]);
+        // println!(
+        //     "The coefficients are : {:?}",
+        //     columns
+        //         .iter()
+        //         .zip(coefficients[1..].to_vec())
+        //         .collect::<Vec<(&String, f64)>>()
+        // );
+        let predicted = BLR::predict(&x_test, &coefficients, self.binary_threshold);
+        BLR::confuse_me(&predicted, &y_test);
     }
-
-    pub fn pred_test(&self, training_weights: &Vec<f64>) -> Vec<f64> {
-        // multiplying every column with corresponding coefficient
-        let mut weighted_features: Vec<Vec<f64>> = vec![];
-        for (n, j) in training_weights.iter().enumerate() {
-            // let mut columns: Vec<Vec<f64>> = vec![];
-            for (m, i) in self.features.iter().enumerate() {
-                if n == m {
-                    weighted_features.push(i.iter().map(|a| a * j).collect())
-                }
-            }
-            // weighted_features.push(columns);
-        }
-        // println!("{:?}", weighted_features);
-        // adding all the rows to get a probability
-        let mut row_wise_addition = vec![];
-        for n in 0..weighted_features[0].len() {
-            let mut rows = vec![];
-            for i in weighted_features.iter() {
-                rows.push(i[n]);
-            }
-            row_wise_addition.push(rows.iter().fold(0., |a, b| a + b))
-        }
-        // turning probabilty into class
-        BinaryLogisticRegressionF::sigmoid_activation(&row_wise_addition)
-            .iter()
-            .map(|a| round_off_f(*a, 0))
-            .collect()
-    }
-
-    // pub fn find_accuracy(&self, training_weights: &Vec<f64>) {
-    //     let prediction = self.pred_test(training_weights);
-    //     let accuracy: Vec<_> = prediction
-    //         .iter()
-    //         .zip(self.target.clone())
-    //         // .collect::<Vec<(&f64, f64)>>()
-    //         .map(|(a, b)| if *a == b { 1 } else { 0 })
-    //         .collect::<Vec<i32>>();
-
-    //     let correct_prediction = accuracy.iter().fold(0, |a, b| a + b) as f64;
-    //     let length = self.target.len() as f64;
-    //     let output = correct_prediction / length;
-    //     // println!("Accuracy {:.3}", output);
-    // }
-    pub fn confuse_me(&self, training_weights: &Vec<f64>) {
+    pub fn confuse_me(predicted: &Vec<f64>, actual: &Vec<f64>) {
         // https://medium.com/@MohammedS/performance-metrics-for-classification-problems-in-machine-learning-part-i-b085d432082b
-        let prediction = self.pred_test(training_weights);
-        let mut fp = 0.; // class_one_is_class_two(Type 1)
         let mut tp = 0.; // class_one_is_class_one
-        let mut fng= 0.; // class_two_is_class_one (Type 1)
+        let mut fp = 0.; // class_one_is_class_two(Type 1)
+        let mut fng = 0.; // class_two_is_class_one (Type 1)
         let mut tng = 0.; // class_two_is_class_two
 
-        for (i, j) in self
-            .target
+        for (i, j) in actual
             .iter()
-            .zip(prediction.iter())
+            .zip(predicted.iter())
             .collect::<Vec<(&f64, &f64)>>()
             .iter()
         {
@@ -792,29 +596,156 @@ impl BinaryLogisticRegressionF {
                 fp += 1.;
             }
             if **i == 1.0 && **j == 0.0 {
-                fng+= 1.;
+                fng += 1.;
             }
         }
         println!("|------------------------|");
-        println!(
-            "|  {:?}    |   {:?}",
-            tp, fp
-        );
+        println!("|  {:?}    |   {:?}", tp, fp);
         println!("|------------------------|");
-        println!(
-            "|  {:?}    |   {:?}",
-            fng, tng
-        );
+        println!("|  {:?}    |   {:?}", fng, tng);
         println!("|------------------------|");
-        println!("Accuracy : {:.3}",(tp + tng)/(tp + fp + fng + tng) );
-        println!("Precision : {:.3}",(tp)/(tp + fp));
-        let precision:f64 = (tp)/(tp + fp);
-        println!("Recall (sensitivity) : {:.3}",(tp)/(tp + fng));
-        let recall:f64 = (tp)/(tp + fng);
-        println!("Specificity: {:.3}",(tng)/(fp + tng));
-        println!("F1 : {:.3}\n\n",(2.*precision*recall)/(precision*recall));
-        
+        println!("Accuracy : {:.3}", (tp + tng) / (tp + fp + fng + tng));
+        println!("Precision : {:.3}", (tp) / (tp + fp));
+        let precision: f64 = (tp) / (tp + fp);
+        println!("Recall (sensitivity) : {:.3}", (tp) / (tp + fng));
+        let recall: f64 = (tp) / (tp + fng);
+        println!("Specificity: {:.3}", (tng) / (fp + tng));
+        println!(
+            "F1 : {:.3}\n\n",
+            (2. * precision * recall) / (precision * recall)
+        );
+    }
 
+    pub fn predict(test_features: &Vec<Vec<f64>>, weights: &Vec<f64>, threshold: f64) -> Vec<f64> {
+        let length = test_features[0].len();
+        let intercept = vec![vec![1.; length]];
+        let new_x_test = [&intercept[..], &test_features[..]].concat();
+        let mut pred = BLR::sigmoid(&new_x_test, weights);
+        pred.iter()
+            .map(|a| if *a > threshold { 1. } else { 0. })
+            .collect()
+    }
+
+    pub fn change_in_loss(coeff: &Vec<f64>, lr: f64, gd: &Vec<f64>) -> Vec<f64> {
+        print!(".");
+        if coeff.len() == gd.len() {
+            element_wise_operation(coeff, &gd.iter().map(|a| a * lr).collect(), "add")
+        } else {
+            panic!("The dimensions do not match")
+        }
+    }
+
+    pub fn gradient_descent(
+        train: &Vec<Vec<f64>>,
+        sigmoid: &Vec<f64>,
+        y_train: &Vec<f64>,
+    ) -> Vec<f64> {
+        let part2 = element_wise_operation(sigmoid, y_train, "sub");
+        let numerator = matrix_vector_product_f(train, &part2);
+        numerator
+            .iter()
+            .map(|a| *a / (y_train.len() as f64))
+            .collect()
+    }
+
+    pub fn log_loss(sigmoid: &Vec<f64>, y_train: &Vec<f64>) -> f64 {
+        let part11 = sigmoid.iter().map(|a| a.log(1.0_f64.exp())).collect();
+        let part12 = y_train.iter().map(|a| a * -1.).collect();
+        let part21 = sigmoid
+            .iter()
+            .map(|a| (1. - a).log(1.0_f64.exp()))
+            .collect();
+        let part22 = y_train.iter().map(|a| 1. - a).collect();
+        let part1 = element_wise_operation(&part11, &part12, "mul");
+        let part2 = element_wise_operation(&part21, &part22, "mul");
+        mean(&element_wise_operation(&part1, &part2, "sub"))
+    }
+
+    pub fn sigmoid(train: &Vec<Vec<f64>>, coeff: &Vec<f64>) -> Vec<f64> {
+        let z = matrix_vector_product_f(&transpose(train), coeff);
+        z.iter().map(|a| 1. / (1. + a.exp())).collect()
+    }
+
+    pub fn float_randomize(matrix: &Vec<Vec<String>>) -> Vec<Vec<f64>> {
+        matrix
+            .iter()
+            .map(|a| {
+                a.iter()
+                    .map(|b| (*b).replace("\r", "").parse::<f64>().unwrap())
+                    .collect::<Vec<f64>>()
+            })
+            .collect::<Vec<Vec<f64>>>()
+    }
+
+    pub fn preprocess_train_test_split(
+        matrix: &Vec<Vec<f64>>,
+        test_percentage: f64,
+        target_column: usize,
+        preprocess: &str,
+    ) -> (Vec<Vec<f64>>, Vec<f64>, Vec<Vec<f64>>, Vec<f64>) {
+        /*
+        preprocess : "s" : standardize, "m" : minmaxscaler, "_" : no change
+        */
+
+        let (train_data, test_data) = train_test_split_f(matrix, test_percentage);
+        // println!("Training size: {:?}", train_data.len());
+        // println!("Test size: {:?}", test_data.len());
+
+        // converting rows to vector of columns of f64s
+        let mut actual_train = row_to_columns_conversion(&train_data);
+        let mut actual_test = row_to_columns_conversion(&test_data);
+
+        match preprocess {
+            "s" => {
+                actual_train = actual_train
+                    .iter()
+                    .map(|a| BLR::standardize_vector_f(a))
+                    .collect::<Vec<Vec<f64>>>();
+                actual_test = actual_test
+                    .iter()
+                    .map(|a| BLR::standardize_vector_f(a))
+                    .collect::<Vec<Vec<f64>>>();
+            }
+            "m" => {
+                actual_train = actual_train
+                    .iter()
+                    .map(|a| min_max_scaler(a))
+                    .collect::<Vec<Vec<f64>>>();
+                actual_test = actual_test
+                    .iter()
+                    .map(|a| min_max_scaler(a))
+                    .collect::<Vec<Vec<f64>>>();
+            }
+
+            _ => println!(
+                "Using the actual values without preprocessing unless 's' or 'm' is passed"
+            ),
+        };
+
+        (
+            drop_column(&actual_train, target_column),
+            actual_train[target_column - 1].clone(),
+            drop_column(&actual_test, target_column),
+            actual_test[target_column - 1].clone(),
+        )
+    }
+
+    pub fn standardize_vector_f(list: &Vec<f64>) -> Vec<f64> {
+        /*
+        Preserves the shape of the original distribution. Doesn't
+        reduce the importance of outliers. Least disruptive to the
+        information in the original data. Default range for
+        MinMaxScaler is O to 1.
+            */
+        list.iter()
+            .map(|a| (*a - mean(list)) / std_dev(list))
+            .collect()
+    }
+
+    pub fn min_max_scaler(list: &Vec<f64>) -> Vec<f64> {
+        let (minimum, maximum) = min_max_f(&list);
+        let range: f64 = maximum - minimum;
+        list.iter().map(|a| 1. - ((maximum - a) / range)).collect()
     }
 }
 
@@ -1082,7 +1013,7 @@ where
     list.iter().map(|a| map[a]).collect()
 }
 
-pub fn normalize_vector_f(list: &Vec<f64>) -> Vec<f64> {
+pub fn min_max_scaler(list: &Vec<f64>) -> Vec<f64> {
     // println!("========================================================================================================================================================");
     let (minimum, maximum) = min_max_f(&list);
     let range: f64 = maximum - minimum;

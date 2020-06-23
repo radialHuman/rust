@@ -2,9 +2,7 @@
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
 ## Changes
-* lib_ml : 5 Linear regression metrics functions, shape, drop_column added
-* lib_matrix : row_to_columns_conversion, columns_to_rows_conversion added
-* MultivariantLinearRegression, which did not give similar result as established libraries replaced with OLS, which is based on matrix operations unlike the predecessor  
+* lib_ml : BinarLogisticRegressionF, which did not give similar result as established libraries replaced with BLR 
 
 ## List of Functions and Structs
 
@@ -50,15 +48,17 @@
 ### lib_ml
     1. OLS:
         > fit
-    2. BinaryLogisticRegressionF:
-        > train_test_split
-        > read_n_split_n_shuffle
-            x randomize
-            x weightInitialization
-        > sigmoid_activation
-            x model_optimize
-        > model_predict
-        > pred_test
+    2. BLR:
+        > fit
+        > preprocess_train_test_split
+        > standardize_vector_f
+        > min_max_scaler
+        > float_randomize
+        > sigmoid
+        > log_loss
+        > gradient_descent
+        > change_in_loss
+        > predict
         > confuse_me
 
     1. coefficient
@@ -125,8 +125,9 @@
     3. remove_stop_words
     
 ---
-## Comparision
-* OLS : [scikit learn's LinearRegression](https://github.com/radialHuman/rust_ml/tree/master/from_scratch/src)
+## Comparision with [Scikit learn's output](https://github.com/radialHuman/rust_ml/tree/master/from_scratch/src)
+* OLS 
+* BLR 
 ----
 ### About the author
 * Used Python, learning Rust

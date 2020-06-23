@@ -400,7 +400,7 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
     println!(
         "{:?}\nNormalized to : {:?}\n",
         arr,
-        normalize_vector_f(&arr)
+        min_max_scaler(&arr)
     );
     let (min, max) = min_max_f(&arr);
     println!("In {:?}\nminimum is {} and maximum is {}\n", arr, min, max);
@@ -542,54 +542,28 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
     println!("{:?}", values);
     print_a_matrix("One Hot Encoded", &one_hot_encoding(&values));
 
-    println!("\n>>>>>>>>>>>>>>>>> ORDINARY LEAST SQUARE" );
-    let file = "./data/ccpp.csv".to_string();
-    let lr = OLS{
-        file_path: file.clone(),
-        target : 5,
-        test_size: 0.20,
-    };
-    lr.fit();
-    println!();
+    // println!("\n>>>>>>>>>>>>>>>>> ORDINARY LEAST SQUARE" );
+    let mut file = "./data/ccpp.csv".to_string();
+    // let lr = OLS{
+    //     file_path: file.clone(),
+    //     target : 5,
+    //     test_size: 0.20,
+    // };
+    // lr.fit();
+    // println!();
 
 
     println!(">>>>>>>>>>>>>>>>> Simple Logistic Regression" );
-    // reading in data and splitting it into features and target,needs target column name to be passed as &str
-    let (x, y) = BinaryLogisticRegressionF::read_n_split_n_shuffle(
-        "./data/data_banknote_authentication.txt",
-        "class\r",
-    );
-    // converting features and target into f64
-    let X: Vec<Vec<f64>> = x
-        .iter()
-        .map(|a| a.iter().map(|a| a.parse().unwrap()).collect())
-        .collect();
-    // ..1 is for removing \r in target
-    let Y: Vec<Vec<f64>> = y
-        .iter()
-        .map(|a| a.iter().map(|a| a[..1].parse().unwrap()).collect())
-        .collect();
-
-    // starting logistic regression
-    let blr = BinaryLogisticRegressionF {
-        features: X.to_vec(),
-        target: Y[0].clone(),
-        learning_rate: 0.001,
-        iterations: 500,
-    };
-
-    // spliting train and test data
-    let test_percentage = 0.25;
-    let train = blr.train_test_split(test_percentage).0;
-    let test = blr.train_test_split(test_percentage).1;
-
-    // building model and displaying result
-    let weights = blr.model_predict().0;
-    println!("The weights from entire dataset {:?}", weights);
-    let weights_train = train.model_predict().0;
-    println!("The weights from training dataset {:?}", weights_train);
-    &test.confuse_me(&weights_train);
-
+    file = "./data/data_banknote_authentication.txt".to_string();
+    let logistic = BLR{
+        file_path: file.clone(), 
+        test_size: 0.20, 
+        target_column:5, 
+        learning_rate:0.1, 
+        iter_count:1000, 
+        binary_threshold:0.5
+        };
+    logistic.fit();
 }
 
 /*
@@ -1176,18 +1150,23 @@ R2 and adjusted R2 : (0.9998950102848876, 0.999894735010333)
 >>>>>>>>>>>>>>>>> Simple Logistic Regression
 Reading the file ...
 Number of rows = 1371
-Calculating coefficients.............
-The weights from entire dataset [-0.52379458806487, -0.701463439051971, 0.1281607554500729, 0.020781894223760856]
-Calculating coefficients.............
-The weights from training dataset [-0.5179470226167316, -0.7532658612639012, 0.1544776718628419, 0.032200345452334675]
+1098x5 becomes
+5x1098
+274x5 becomes
+5x274
+Using the actual values without preprocessing unless 's' or 'm' is passed
+"Training features" : 4x1098
+"Test features" : 4x274
+Training target: 1098
+Test target: 274
+Reducing loss ...........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................|------------------------|
+|  154.0    |   2.0
 |------------------------|
-|  144.0    |   40.0
+|  2.0    |   116.0
 |------------------------|
-|  80.0    |   79.0
-|------------------------|
-Accuracy : 0.650
-Precision : 0.783
-Recall (sensitivity) : 0.643
-Specificity: 0.664
+Accuracy : 0.985
+Precision : 0.987
+Recall (sensitivity) : 0.987
+Specificity: 0.983
 F1 : 2.000
 */

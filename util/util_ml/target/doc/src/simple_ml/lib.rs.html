@@ -3056,75 +3056,6 @@
 <span id="3056">3056</span>
 <span id="3057">3057</span>
 <span id="3058">3058</span>
-<span id="3059">3059</span>
-<span id="3060">3060</span>
-<span id="3061">3061</span>
-<span id="3062">3062</span>
-<span id="3063">3063</span>
-<span id="3064">3064</span>
-<span id="3065">3065</span>
-<span id="3066">3066</span>
-<span id="3067">3067</span>
-<span id="3068">3068</span>
-<span id="3069">3069</span>
-<span id="3070">3070</span>
-<span id="3071">3071</span>
-<span id="3072">3072</span>
-<span id="3073">3073</span>
-<span id="3074">3074</span>
-<span id="3075">3075</span>
-<span id="3076">3076</span>
-<span id="3077">3077</span>
-<span id="3078">3078</span>
-<span id="3079">3079</span>
-<span id="3080">3080</span>
-<span id="3081">3081</span>
-<span id="3082">3082</span>
-<span id="3083">3083</span>
-<span id="3084">3084</span>
-<span id="3085">3085</span>
-<span id="3086">3086</span>
-<span id="3087">3087</span>
-<span id="3088">3088</span>
-<span id="3089">3089</span>
-<span id="3090">3090</span>
-<span id="3091">3091</span>
-<span id="3092">3092</span>
-<span id="3093">3093</span>
-<span id="3094">3094</span>
-<span id="3095">3095</span>
-<span id="3096">3096</span>
-<span id="3097">3097</span>
-<span id="3098">3098</span>
-<span id="3099">3099</span>
-<span id="3100">3100</span>
-<span id="3101">3101</span>
-<span id="3102">3102</span>
-<span id="3103">3103</span>
-<span id="3104">3104</span>
-<span id="3105">3105</span>
-<span id="3106">3106</span>
-<span id="3107">3107</span>
-<span id="3108">3108</span>
-<span id="3109">3109</span>
-<span id="3110">3110</span>
-<span id="3111">3111</span>
-<span id="3112">3112</span>
-<span id="3113">3113</span>
-<span id="3114">3114</span>
-<span id="3115">3115</span>
-<span id="3116">3116</span>
-<span id="3117">3117</span>
-<span id="3118">3118</span>
-<span id="3119">3119</span>
-<span id="3120">3120</span>
-<span id="3121">3121</span>
-<span id="3122">3122</span>
-<span id="3123">3123</span>
-<span id="3124">3124</span>
-<span id="3125">3125</span>
-<span id="3126">3126</span>
-<span id="3127">3127</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">math</span>::<span class="ident">round</span>;
 <span class="kw">use</span> <span class="ident">rand</span>::<span class="kw-2">*</span>;
@@ -3333,15 +3264,17 @@ STRUCTS
     &gt; fit
 
 
-2. BinaryLogisticRegressionF : features: Vec&lt;Vec&lt;f64&gt;&gt;,target: Vec&lt;f64&gt;,learning_rate: f64,iterations: u32,
-    &gt; train_test_split
-    &gt; read_n_split_n_shuffle
-    x randomize
-    x weight_initialization
-    &gt; sigmoid_activation
-    x model_optimize
-    &gt; model_predict
-    &gt; pred_test
+2. BLR : file_path: String, test_size: f64, target_column: usize, learning_rate: f64, iter_count: u32, binary_threshold: f64,
+    &gt; fit
+    &gt; preprocess_train_test_split
+    &gt; standardize_vector_f
+    &gt; min_max_scaler
+    &gt; float_randomize
+    &gt; sigmoid
+    &gt; log_loss
+    &gt; gradient_descent
+    &gt; change_in_loss
+    &gt; predict
     &gt; confuse_me
 
 
@@ -3398,7 +3331,7 @@ FUNCTIONS
     &gt; 2. extra_class : bool if true more than 10 classes else less
     = Vec&lt;usize&gt;
 
-11. normalize_vector_f : between [0.,1.]
+11. min_max_scaler : between [0.,1.]
     &gt; 1. list: A &amp;Vec&lt;f64&gt;
     = Vec&lt;f64&gt;
 
@@ -3639,274 +3572,76 @@ FUNCTIONS
     }
 }
 
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BinaryLogisticRegressionF</span> {
-    <span class="comment">// https://towardsdatascience.com/logistic-regression-detailed-overview-46c4da4303bc</span>
-    <span class="kw">pub</span> <span class="ident">features</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">target</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">learning_rate</span>: <span class="ident">f64</span>,
-    <span class="kw">pub</span> <span class="ident">iterations</span>: <span class="ident">u32</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BLR</span> {
+    <span class="kw">pub</span> <span class="ident">file_path</span>: <span class="ident">String</span>,     <span class="comment">// pointing to a csv or txt file</span>
+    <span class="kw">pub</span> <span class="ident">test_size</span>: <span class="ident">f64</span>,        <span class="comment">// ex: .30 =&gt; random 30% of data become test</span>
+    <span class="kw">pub</span> <span class="ident">target_column</span>: <span class="ident">usize</span>,  <span class="comment">// column index which has to be classified</span>
+    <span class="kw">pub</span> <span class="ident">learning_rate</span>: <span class="ident">f64</span>,    <span class="comment">// gradient descent step size ex: 0.1, 0.05 etc</span>
+    <span class="kw">pub</span> <span class="ident">iter_count</span>: <span class="ident">u32</span>,       <span class="comment">// how many epochs ex: 10000</span>
+    <span class="kw">pub</span> <span class="ident">binary_threshold</span>: <span class="ident">f64</span>, <span class="comment">// at what probability will the class be determined ex: 0.6 =&gt; anything above 0.6 is 1</span>
 }
-
-<span class="kw">impl</span> <span class="ident">BinaryLogisticRegressionF</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">train_test_split</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">test_percentage</span>: <span class="ident">f64</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">BinaryLogisticRegressionF</span>, <span class="ident">BinaryLogisticRegressionF</span>) {
-        <span class="kw">let</span> <span class="ident">training_rows</span> <span class="op">=</span>
-            <span class="ident">round_off_f</span>(<span class="self">self</span>.<span class="ident">features</span>[<span class="number">0</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span> <span class="op">*</span> (<span class="number">1.</span> <span class="op">-</span> <span class="ident">test_percentage</span>), <span class="number">0</span>) <span class="kw">as</span> <span class="ident">usize</span>;
-
-        (
-            <span class="comment">// train</span>
-            <span class="ident">BinaryLogisticRegressionF</span> {
-                <span class="ident">features</span>: <span class="self">self</span>
-                    .<span class="ident">features</span>
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>[<span class="number">0</span>..<span class="ident">training_rows</span> <span class="op">-</span> <span class="number">1</span>].<span class="ident">to_vec</span>())
-                    .<span class="ident">collect</span>(),
-                <span class="ident">target</span>: <span class="self">self</span>.<span class="ident">target</span>[<span class="number">0</span>..<span class="ident">training_rows</span> <span class="op">-</span> <span class="number">1</span>].<span class="ident">to_vec</span>(),
-                <span class="ident">learning_rate</span>: <span class="self">self</span>.<span class="ident">learning_rate</span>,
-                <span class="ident">iterations</span>: <span class="self">self</span>.<span class="ident">iterations</span>,
-            },
-            <span class="comment">// test</span>
-            <span class="ident">BinaryLogisticRegressionF</span> {
-                <span class="ident">features</span>: <span class="self">self</span>
-                    .<span class="ident">features</span>
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>[<span class="ident">training_rows</span>..].<span class="ident">to_vec</span>())
-                    .<span class="ident">collect</span>(),
-                <span class="ident">target</span>: <span class="self">self</span>.<span class="ident">target</span>[<span class="ident">training_rows</span>..].<span class="ident">to_vec</span>(),
-                <span class="ident">learning_rate</span>: <span class="self">self</span>.<span class="ident">learning_rate</span>,
-                <span class="ident">iterations</span>: <span class="self">self</span>.<span class="ident">iterations</span>,
-            },
-        )
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_n_split_n_shuffle</span>(
-        <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">target_header</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
+<span class="kw">impl</span> <span class="ident">BLR</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="comment">/*
-        reads a txt or a csv and returns as a vector of vector of string after randomly arranging them
-        the first one is training data
-        split based on header passed as argument
+            Source:
+            Video:
+            Book: Trevor Hastie,  Robert Tibshirani, Jerome Friedman - The Elements of  Statistical Learning_  Data Mining, Inference, and Pred
+            Article: https://towardsdatascience.com/scale-standardize-or-normalize-with-scikit-learn-6ccc7d176a02
+            Library:
         */</span>
-        <span class="kw">let</span> (<span class="ident">headers</span>, <span class="kw-2">mut</span> <span class="ident">values</span>) <span class="op">=</span> <span class="ident">read_csv</span>(<span class="ident">path</span>.<span class="ident">to_string</span>()); <span class="comment">// reading csv as vector of string</span>
-                                                                <span class="comment">// shuffle data</span>
-        <span class="ident">values</span> <span class="op">=</span> <span class="ident">BinaryLogisticRegressionF</span>::<span class="ident">randomize</span>(<span class="kw-2">&amp;</span><span class="ident">values</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">target_position</span> <span class="op">=</span> <span class="ident">values</span>[<span class="number">0</span>].<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>; <span class="comment">// as default last column is the target</span>
-                                                       <span class="comment">// updating the target column position</span>
-        <span class="kw">if</span> <span class="ident">headers</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">target_header</span>.<span class="ident">to_string</span>()) {
-            <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">i</span>) <span class="kw">in</span> <span class="ident">headers</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">i</span> <span class="op">=</span><span class="op">=</span> <span class="ident">target_header</span> {
-                    <span class="ident">target_position</span> <span class="op">=</span> <span class="ident">n</span>;
-                }
-            }
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">header</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+        <span class="comment">// read a csv file</span>
+        <span class="kw">let</span> (<span class="ident">columns</span>, <span class="ident">values</span>) <span class="op">=</span> <span class="ident">read_csv</span>(<span class="self">self</span>.<span class="ident">file_path</span>.<span class="ident">clone</span>()); <span class="comment">// output is row wise</span>
 
-            <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">values</span>[<span class="number">0</span>].<span class="ident">len</span>() {
-                <span class="kw">if</span> <span class="ident">j</span> <span class="op">!</span><span class="op">=</span> <span class="ident">target_position</span> {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">columns</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-                    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">values</span>.<span class="ident">iter</span>() {
-                        <span class="ident">columns</span>.<span class="ident">push</span>(<span class="ident">i</span>[<span class="ident">j</span>].<span class="ident">clone</span>());
-                    }
-                    <span class="ident">data</span>.<span class="ident">push</span>(<span class="ident">columns</span>);
-                } <span class="kw">else</span> {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">columns</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-                    <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">values</span>.<span class="ident">iter</span>() {
-                        <span class="ident">columns</span>.<span class="ident">push</span>(<span class="ident">i</span>[<span class="ident">j</span>].<span class="ident">clone</span>());
-                    }
-                    <span class="ident">header</span>.<span class="ident">push</span>(<span class="ident">columns</span>);
-                }
-            }
-            (<span class="ident">data</span>, <span class="ident">header</span>)
-        } <span class="kw">else</span> {
-            <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Target not found in {:?}, please check&quot;</span>, <span class="ident">headers</span>);
-        }
-    }
+        <span class="comment">// converting vector of string to vector of f64s</span>
+        <span class="kw">let</span> <span class="ident">random_data</span> <span class="op">=</span> <span class="ident">BLR</span>::<span class="ident">float_randomize</span>(<span class="kw-2">&amp;</span><span class="ident">values</span>);
 
-    <span class="kw">fn</span> <span class="ident">randomize</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">std</span>::<span class="ident">clone</span>::<span class="ident">Clone</span><span class="op">&gt;</span>(<span class="ident">rows</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">seq</span>::<span class="ident">SliceRandom</span>;
-        <span class="comment">// use rand::thread_rng;</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">order</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> <span class="op">=</span> (<span class="number">0</span>..<span class="ident">rows</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">collect</span>();
-        <span class="kw">let</span> <span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">usize</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">order</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">thread_rng</span>();
-        <span class="ident">slice</span>.<span class="ident">shuffle</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>);
-        <span class="comment">// println!(&quot;{:?}&quot;, slice);</span>
+        <span class="comment">// splitting it into train and test as per test percentage passed as parameter to get scores</span>
+        <span class="kw">let</span> (<span class="ident">x_train</span>, <span class="ident">y_train</span>, <span class="ident">x_test</span>, <span class="ident">y_test</span>) <span class="op">=</span>
+            <span class="ident">BLR</span>::<span class="ident">preprocess_train_test_split</span>(<span class="kw-2">&amp;</span><span class="ident">random_data</span>, <span class="self">self</span>.<span class="ident">test_size</span>, <span class="self">self</span>.<span class="ident">target_column</span>, <span class="string">&quot;&quot;</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">order</span>.<span class="ident">iter</span>() {
-            <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">rows</span>[<span class="kw-2">*</span><span class="ident">i</span>].<span class="ident">clone</span>());
-        }
-        <span class="ident">output</span>
-    }
-    <span class="kw">fn</span> <span class="ident">weight_initialization</span>(<span class="ident">train</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">f64</span>) {
-        <span class="kw">let</span> <span class="ident">w</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0.</span>; <span class="ident">train</span>.<span class="ident">len</span>()];
-        <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="number">0.</span>;
-        (<span class="ident">w</span>, <span class="ident">b</span>)
-    }
+        <span class="ident">shape</span>(<span class="string">&quot;Training features&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">x_train</span>);
+        <span class="ident">shape</span>(<span class="string">&quot;Test features&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">x_test</span>);
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Training target: {:?}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">y_train</span>.<span class="ident">len</span>());
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Test target: {:?}&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">y_test</span>.<span class="ident">len</span>());
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sigmoid_activation</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
-        <span class="ident">list</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="number">1.</span> <span class="op">/</span> ((<span class="ident">a</span> <span class="op">*</span> <span class="op">-</span><span class="number">1.</span>).<span class="ident">exp</span>() <span class="op">+</span> <span class="number">1.</span>)).<span class="ident">collect</span>()
-    }
+        <span class="comment">// now to the main part</span>
+        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">x_train</span>[<span class="number">0</span>].<span class="ident">len</span>();
+        <span class="kw">let</span> <span class="ident">feature_count</span> <span class="op">=</span> <span class="ident">x_train</span>.<span class="ident">len</span>();
+        <span class="comment">// let class_count = (unique_values(&amp;y_test).len() + unique_values(&amp;y_test).len()) / 2;</span>
+        <span class="kw">let</span> <span class="ident">intercept</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="macro">vec</span><span class="macro">!</span>[<span class="number">1.</span>; <span class="ident">length</span>]];
+        <span class="kw">let</span> <span class="ident">new_x_train</span> <span class="op">=</span> [<span class="kw-2">&amp;</span><span class="ident">intercept</span>[..], <span class="kw-2">&amp;</span><span class="ident">x_train</span>[..]].<span class="ident">concat</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">coefficients</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0.</span>; <span class="ident">feature_count</span> <span class="op">+</span> <span class="number">1</span>];
 
-    <span class="kw">fn</span> <span class="ident">model_optimize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) {
-        <span class="comment">/*
-        Returns
-        derivative of weight
-        derivative of bias
-        cost function&#39;s result
-        */</span>
-        <span class="comment">// m = X.shape[0]</span>
-        <span class="kw">let</span> <span class="ident">m</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">features</span>[<span class="number">0</span>].<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>;
-        <span class="kw">let</span> (<span class="ident">w</span>, <span class="ident">b</span>) <span class="op">=</span> <span class="ident">BinaryLogisticRegressionF</span>::<span class="ident">weight_initialization</span>(<span class="self">self</span>.<span class="ident">features</span>.<span class="ident">clone</span>());
-
-        <span class="comment">// sigmoid_activation(np.dot(w,X.T)+b)</span>
-        <span class="kw">let</span> <span class="ident">dot</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">matrix_vector_product_f</span>(<span class="kw-2">&amp;</span><span class="ident">transpose</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">features</span>), <span class="kw-2">&amp;</span><span class="ident">w</span>)
-            .<span class="ident">iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span> <span class="op">+</span> <span class="ident">b</span>)
-            .<span class="ident">collect</span>();
-        <span class="kw">let</span> <span class="ident">final_result</span> <span class="op">=</span> <span class="ident">BinaryLogisticRegressionF</span>::<span class="ident">sigmoid_activation</span>(<span class="kw-2">&amp;</span><span class="ident">dot</span>);
-        <span class="comment">// cost = (-1/m)*(np.sum((Y_T*np.log(final_result)) + ((1-Y_T)*(np.log(1-final_result)))))</span>
-        <span class="kw">let</span> <span class="ident">cost</span> <span class="op">=</span> <span class="ident">vector_addition</span>(
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">element_wise_operation</span>(
-                <span class="kw-2">&amp;</span><span class="ident">final_result</span>
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">log</span>(<span class="number">1.0_f64</span>.<span class="ident">exp</span>()))
-                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">target</span>,
-                <span class="string">&quot;mul&quot;</span>,
-            ),
-            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">element_wise_operation</span>(
-                <span class="kw-2">&amp;</span><span class="ident">final_result</span>
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> (<span class="number">1.</span> <span class="op">-</span> <span class="ident">a</span>).<span class="ident">log</span>(<span class="number">1.0_f64</span>.<span class="ident">exp</span>()))
-                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">target</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="number">1.</span> <span class="op">-</span> <span class="ident">a</span>).<span class="ident">collect</span>(),
-                <span class="string">&quot;mul&quot;</span>,
-            ),
-        )
-        .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span> <span class="op">*</span> (<span class="op">-</span><span class="number">1.</span> <span class="op">/</span> <span class="ident">m</span>))
-        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-
-        <span class="comment">// dw = (1/m)*(np.dot(X.T, (final_result-Y.T).T))</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dw1</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">features</span>.<span class="ident">iter</span>() {
-            <span class="ident">dw1</span>.<span class="ident">push</span>(<span class="ident">dot_product</span>(
-                <span class="kw-2">&amp;</span><span class="ident">i</span>,
-                <span class="kw-2">&amp;</span><span class="ident">final_result</span>
-                    .<span class="ident">iter</span>()
-                    .<span class="ident">zip</span>(<span class="self">self</span>.<span class="ident">target</span>.<span class="ident">clone</span>())
-                    .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">a</span>, <span class="ident">b</span>)<span class="op">|</span> <span class="ident">a</span> <span class="op">-</span> <span class="ident">b</span>)
-                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>(),
-            ));
-        }
-        <span class="kw">let</span> <span class="ident">dw</span> <span class="op">=</span> <span class="ident">dw1</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> (<span class="number">1.</span> <span class="op">/</span> <span class="ident">m</span>) <span class="op">*</span> <span class="ident">a</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-        <span class="comment">// db = (1/m)*(np.sum(final_result-Y.T))</span>
-        <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">element_wise_operation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">target</span>.<span class="ident">clone</span>(), <span class="kw-2">&amp;</span><span class="ident">final_result</span>, <span class="string">&quot;sub&quot;</span>)
-            .<span class="ident">iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span> <span class="op">*</span> (<span class="op">-</span><span class="number">1.</span> <span class="op">/</span> <span class="ident">m</span>))
-            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-        (<span class="ident">dw</span>, <span class="ident">db</span>, <span class="ident">cost</span>)
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">model_predict</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">costs</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-        <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">w</span>,  <span class="ident">b_value</span>) <span class="op">=</span>
-            <span class="ident">BinaryLogisticRegressionF</span>::<span class="ident">weight_initialization</span>(<span class="self">self</span>.<span class="ident">features</span>.<span class="ident">clone</span>());
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">b</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">b_value</span>];
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dw</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">db</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cost</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-
-        <span class="macro">print</span><span class="macro">!</span>(<span class="string">&quot;Calculating coefficients...&quot;</span>);
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">iterations</span> {
-            <span class="ident">dw</span> <span class="op">=</span> <span class="ident">BinaryLogisticRegressionF</span>::<span class="ident">model_optimize</span>(<span class="self">self</span>).<span class="number">0</span>;
-            <span class="ident">db</span> <span class="op">=</span> <span class="ident">BinaryLogisticRegressionF</span>::<span class="ident">model_optimize</span>(<span class="self">self</span>).<span class="number">1</span>;
-            <span class="ident">cost</span> <span class="op">=</span> <span class="ident">BinaryLogisticRegressionF</span>::<span class="ident">model_optimize</span>(<span class="self">self</span>).<span class="number">2</span>;
-
-            <span class="comment">// w = w - (learning_rate * (dw.T))</span>
-            <span class="ident">w</span> <span class="op">=</span> <span class="ident">w</span>
-                .<span class="ident">iter</span>()
-                .<span class="ident">zip</span>(<span class="ident">dw</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">learning_rate</span> <span class="op">*</span> <span class="ident">a</span>))
-                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="ident">f64</span>, <span class="ident">f64</span>)<span class="op">&gt;</span><span class="op">&gt;</span>()
-                .<span class="ident">iter</span>()
-                .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">a</span>, <span class="ident">b</span>)<span class="op">|</span> <span class="kw-2">*</span><span class="ident">a</span> <span class="op">-</span> <span class="ident">b</span>)
-                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-            <span class="comment">// b = b - (learning_rate * db)</span>
-            <span class="ident">b</span> <span class="op">=</span> <span class="ident">db</span>
-                .<span class="ident">iter</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> (<span class="self">self</span>.<span class="ident">learning_rate</span> <span class="op">*</span> <span class="ident">a</span>) <span class="op">-</span> <span class="ident">b</span>[<span class="number">0</span>])
-                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>();
-
-            <span class="kw">if</span> <span class="ident">i</span> <span class="op">%</span> <span class="number">100</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
-                <span class="ident">costs</span>.<span class="ident">push</span>(<span class="ident">cost</span>);
-                <span class="macro">print</span><span class="macro">!</span>(<span class="string">&quot;..&quot;</span>);
-            }
+        <span class="macro">print</span><span class="macro">!</span>(<span class="string">&quot;Reducing loss ...&quot;</span>);
+        <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">iter_count</span> {
+            <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">BLR</span>::<span class="ident">sigmoid</span>(<span class="kw-2">&amp;</span><span class="ident">new_x_train</span>, <span class="kw-2">&amp;</span><span class="ident">coefficients</span>);
+            <span class="ident">cost</span>.<span class="ident">push</span>(<span class="ident">BLR</span>::<span class="ident">log_loss</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>, <span class="kw-2">&amp;</span><span class="ident">y_train</span>));
+            <span class="kw">let</span> <span class="ident">gd</span> <span class="op">=</span> <span class="ident">BLR</span>::<span class="ident">gradient_descent</span>(<span class="kw-2">&amp;</span><span class="ident">new_x_train</span>, <span class="kw-2">&amp;</span><span class="ident">s</span>, <span class="kw-2">&amp;</span><span class="ident">y_train</span>);
+            <span class="ident">coefficients</span> <span class="op">=</span> <span class="ident">BLR</span>::<span class="ident">change_in_loss</span>(<span class="kw-2">&amp;</span><span class="ident">coefficients</span>, <span class="self">self</span>.<span class="ident">learning_rate</span>, <span class="kw-2">&amp;</span><span class="ident">gd</span>);
         }
-        <span class="macro">println</span><span class="macro">!</span>();
-        (<span class="ident">w</span>, <span class="ident">b</span>, <span class="ident">dw</span>, <span class="ident">db</span>, <span class="ident">costs</span>)
+        <span class="comment">// println!(&quot;The intercept is : {:?}&quot;, coefficients[0]);</span>
+        <span class="comment">// println!(</span>
+        <span class="comment">//     &quot;The coefficients are : {:?}&quot;,</span>
+        <span class="comment">//     columns</span>
+        <span class="comment">//         .iter()</span>
+        <span class="comment">//         .zip(coefficients[1..].to_vec())</span>
+        <span class="comment">//         .collect::&lt;Vec&lt;(&amp;String, f64)&gt;&gt;()</span>
+        <span class="comment">// );</span>
+        <span class="kw">let</span> <span class="ident">predicted</span> <span class="op">=</span> <span class="ident">BLR</span>::<span class="ident">predict</span>(<span class="kw-2">&amp;</span><span class="ident">x_test</span>, <span class="kw-2">&amp;</span><span class="ident">coefficients</span>, <span class="self">self</span>.<span class="ident">binary_threshold</span>);
+        <span class="ident">BLR</span>::<span class="ident">confuse_me</span>(<span class="kw-2">&amp;</span><span class="ident">predicted</span>, <span class="kw-2">&amp;</span><span class="ident">y_test</span>);
     }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pred_test</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">training_weights</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
-        <span class="comment">// multiplying every column with corresponding coefficient</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">weighted_features</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-        <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">j</span>) <span class="kw">in</span> <span class="ident">training_weights</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-            <span class="comment">// let mut columns: Vec&lt;Vec&lt;f64&gt;&gt; = vec![];</span>
-            <span class="kw">for</span> (<span class="ident">m</span>, <span class="ident">i</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">features</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                <span class="kw">if</span> <span class="ident">n</span> <span class="op">=</span><span class="op">=</span> <span class="ident">m</span> {
-                    <span class="ident">weighted_features</span>.<span class="ident">push</span>(<span class="ident">i</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span> <span class="op">*</span> <span class="ident">j</span>).<span class="ident">collect</span>())
-                }
-            }
-            <span class="comment">// weighted_features.push(columns);</span>
-        }
-        <span class="comment">// println!(&quot;{:?}&quot;, weighted_features);</span>
-        <span class="comment">// adding all the rows to get a probability</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">row_wise_addition</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-        <span class="kw">for</span> <span class="ident">n</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">weighted_features</span>[<span class="number">0</span>].<span class="ident">len</span>() {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rows</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-            <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">weighted_features</span>.<span class="ident">iter</span>() {
-                <span class="ident">rows</span>.<span class="ident">push</span>(<span class="ident">i</span>[<span class="ident">n</span>]);
-            }
-            <span class="ident">row_wise_addition</span>.<span class="ident">push</span>(<span class="ident">rows</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="number">0.</span>, <span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span> <span class="op">+</span> <span class="ident">b</span>))
-        }
-        <span class="comment">// turning probabilty into class</span>
-        <span class="ident">BinaryLogisticRegressionF</span>::<span class="ident">sigmoid_activation</span>(<span class="kw-2">&amp;</span><span class="ident">row_wise_addition</span>)
-            .<span class="ident">iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">round_off_f</span>(<span class="kw-2">*</span><span class="ident">a</span>, <span class="number">0</span>))
-            .<span class="ident">collect</span>()
-    }
-
-    <span class="comment">// pub fn find_accuracy(&amp;self, training_weights: &amp;Vec&lt;f64&gt;) {</span>
-    <span class="comment">//     let prediction = self.pred_test(training_weights);</span>
-    <span class="comment">//     let accuracy: Vec&lt;_&gt; = prediction</span>
-    <span class="comment">//         .iter()</span>
-    <span class="comment">//         .zip(self.target.clone())</span>
-    <span class="comment">//         // .collect::&lt;Vec&lt;(&amp;f64, f64)&gt;&gt;()</span>
-    <span class="comment">//         .map(|(a, b)| if *a == b { 1 } else { 0 })</span>
-    <span class="comment">//         .collect::&lt;Vec&lt;i32&gt;&gt;();</span>
-
-    <span class="comment">//     let correct_prediction = accuracy.iter().fold(0, |a, b| a + b) as f64;</span>
-    <span class="comment">//     let length = self.target.len() as f64;</span>
-    <span class="comment">//     let output = correct_prediction / length;</span>
-    <span class="comment">//     // println!(&quot;Accuracy {:.3}&quot;, output);</span>
-    <span class="comment">// }</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">confuse_me</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">training_weights</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">confuse_me</span>(<span class="ident">predicted</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">actual</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) {
         <span class="comment">// https://medium.com/@MohammedS/performance-metrics-for-classification-problems-in-machine-learning-part-i-b085d432082b</span>
-        <span class="kw">let</span> <span class="ident">prediction</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pred_test</span>(<span class="ident">training_weights</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fp</span> <span class="op">=</span> <span class="number">0.</span>; <span class="comment">// class_one_is_class_two(Type 1)</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tp</span> <span class="op">=</span> <span class="number">0.</span>; <span class="comment">// class_one_is_class_one</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fng</span><span class="op">=</span> <span class="number">0.</span>; <span class="comment">// class_two_is_class_one (Type 1)</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fp</span> <span class="op">=</span> <span class="number">0.</span>; <span class="comment">// class_one_is_class_two(Type 1)</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fng</span> <span class="op">=</span> <span class="number">0.</span>; <span class="comment">// class_two_is_class_one (Type 1)</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tng</span> <span class="op">=</span> <span class="number">0.</span>; <span class="comment">// class_two_is_class_two</span>
 
-        <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">j</span>) <span class="kw">in</span> <span class="self">self</span>
-            .<span class="ident">target</span>
+        <span class="kw">for</span> (<span class="ident">i</span>, <span class="ident">j</span>) <span class="kw">in</span> <span class="ident">actual</span>
             .<span class="ident">iter</span>()
-            .<span class="ident">zip</span>(<span class="ident">prediction</span>.<span class="ident">iter</span>())
+            .<span class="ident">zip</span>(<span class="ident">predicted</span>.<span class="ident">iter</span>())
             .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="ident">f64</span>, <span class="kw-2">&amp;</span><span class="ident">f64</span>)<span class="op">&gt;</span><span class="op">&gt;</span>()
             .<span class="ident">iter</span>()
         {
@@ -3920,29 +3655,156 @@ FUNCTIONS
                 <span class="ident">fp</span> <span class="op">+</span><span class="op">=</span> <span class="number">1.</span>;
             }
             <span class="kw">if</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">i</span> <span class="op">=</span><span class="op">=</span> <span class="number">1.0</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">j</span> <span class="op">=</span><span class="op">=</span> <span class="number">0.0</span> {
-                <span class="ident">fng</span><span class="op">+</span><span class="op">=</span> <span class="number">1.</span>;
+                <span class="ident">fng</span> <span class="op">+</span><span class="op">=</span> <span class="number">1.</span>;
             }
         }
         <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;|------------------------|&quot;</span>);
-        <span class="macro">println</span><span class="macro">!</span>(
-            <span class="string">&quot;|  {:?}    |   {:?}&quot;</span>,
-            <span class="ident">tp</span>, <span class="ident">fp</span>
-        );
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;|  {:?}    |   {:?}&quot;</span>, <span class="ident">tp</span>, <span class="ident">fp</span>);
         <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;|------------------------|&quot;</span>);
-        <span class="macro">println</span><span class="macro">!</span>(
-            <span class="string">&quot;|  {:?}    |   {:?}&quot;</span>,
-            <span class="ident">fng</span>, <span class="ident">tng</span>
-        );
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;|  {:?}    |   {:?}&quot;</span>, <span class="ident">fng</span>, <span class="ident">tng</span>);
         <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;|------------------------|&quot;</span>);
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Accuracy : {:.3}&quot;</span>,(<span class="ident">tp</span> <span class="op">+</span> <span class="ident">tng</span>)<span class="op">/</span>(<span class="ident">tp</span> <span class="op">+</span> <span class="ident">fp</span> <span class="op">+</span> <span class="ident">fng</span> <span class="op">+</span> <span class="ident">tng</span>) );
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Precision : {:.3}&quot;</span>,(<span class="ident">tp</span>)<span class="op">/</span>(<span class="ident">tp</span> <span class="op">+</span> <span class="ident">fp</span>));
-        <span class="kw">let</span> <span class="ident">precision</span>:<span class="ident">f64</span> <span class="op">=</span> (<span class="ident">tp</span>)<span class="op">/</span>(<span class="ident">tp</span> <span class="op">+</span> <span class="ident">fp</span>);
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Recall (sensitivity) : {:.3}&quot;</span>,(<span class="ident">tp</span>)<span class="op">/</span>(<span class="ident">tp</span> <span class="op">+</span> <span class="ident">fng</span>));
-        <span class="kw">let</span> <span class="ident">recall</span>:<span class="ident">f64</span> <span class="op">=</span> (<span class="ident">tp</span>)<span class="op">/</span>(<span class="ident">tp</span> <span class="op">+</span> <span class="ident">fng</span>);
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Specificity: {:.3}&quot;</span>,(<span class="ident">tng</span>)<span class="op">/</span>(<span class="ident">fp</span> <span class="op">+</span> <span class="ident">tng</span>));
-        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;F1 : {:.3}\n\n&quot;</span>,(<span class="number">2.</span><span class="kw-2">*</span><span class="ident">precision</span><span class="kw-2">*</span><span class="ident">recall</span>)<span class="op">/</span>(<span class="ident">precision</span><span class="kw-2">*</span><span class="ident">recall</span>));
-        
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Accuracy : {:.3}&quot;</span>, (<span class="ident">tp</span> <span class="op">+</span> <span class="ident">tng</span>) <span class="op">/</span> (<span class="ident">tp</span> <span class="op">+</span> <span class="ident">fp</span> <span class="op">+</span> <span class="ident">fng</span> <span class="op">+</span> <span class="ident">tng</span>));
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Precision : {:.3}&quot;</span>, (<span class="ident">tp</span>) <span class="op">/</span> (<span class="ident">tp</span> <span class="op">+</span> <span class="ident">fp</span>));
+        <span class="kw">let</span> <span class="ident">precision</span>: <span class="ident">f64</span> <span class="op">=</span> (<span class="ident">tp</span>) <span class="op">/</span> (<span class="ident">tp</span> <span class="op">+</span> <span class="ident">fp</span>);
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Recall (sensitivity) : {:.3}&quot;</span>, (<span class="ident">tp</span>) <span class="op">/</span> (<span class="ident">tp</span> <span class="op">+</span> <span class="ident">fng</span>));
+        <span class="kw">let</span> <span class="ident">recall</span>: <span class="ident">f64</span> <span class="op">=</span> (<span class="ident">tp</span>) <span class="op">/</span> (<span class="ident">tp</span> <span class="op">+</span> <span class="ident">fng</span>);
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Specificity: {:.3}&quot;</span>, (<span class="ident">tng</span>) <span class="op">/</span> (<span class="ident">fp</span> <span class="op">+</span> <span class="ident">tng</span>));
+        <span class="macro">println</span><span class="macro">!</span>(
+            <span class="string">&quot;F1 : {:.3}\n\n&quot;</span>,
+            (<span class="number">2.</span> <span class="op">*</span> <span class="ident">precision</span> <span class="op">*</span> <span class="ident">recall</span>) <span class="op">/</span> (<span class="ident">precision</span> <span class="op">*</span> <span class="ident">recall</span>)
+        );
+    }
 
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">predict</span>(<span class="ident">test_features</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">weights</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">threshold</span>: <span class="ident">f64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">test_features</span>[<span class="number">0</span>].<span class="ident">len</span>();
+        <span class="kw">let</span> <span class="ident">intercept</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="macro">vec</span><span class="macro">!</span>[<span class="number">1.</span>; <span class="ident">length</span>]];
+        <span class="kw">let</span> <span class="ident">new_x_test</span> <span class="op">=</span> [<span class="kw-2">&amp;</span><span class="ident">intercept</span>[..], <span class="kw-2">&amp;</span><span class="ident">test_features</span>[..]].<span class="ident">concat</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pred</span> <span class="op">=</span> <span class="ident">BLR</span>::<span class="ident">sigmoid</span>(<span class="kw-2">&amp;</span><span class="ident">new_x_test</span>, <span class="ident">weights</span>);
+        <span class="ident">pred</span>.<span class="ident">iter</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">a</span> <span class="op">&gt;</span> <span class="ident">threshold</span> { <span class="number">1.</span> } <span class="kw">else</span> { <span class="number">0.</span> })
+            .<span class="ident">collect</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">change_in_loss</span>(<span class="ident">coeff</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">lr</span>: <span class="ident">f64</span>, <span class="ident">gd</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
+        <span class="macro">print</span><span class="macro">!</span>(<span class="string">&quot;.&quot;</span>);
+        <span class="kw">if</span> <span class="ident">coeff</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">gd</span>.<span class="ident">len</span>() {
+            <span class="ident">element_wise_operation</span>(<span class="ident">coeff</span>, <span class="kw-2">&amp;</span><span class="ident">gd</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span> <span class="op">*</span> <span class="ident">lr</span>).<span class="ident">collect</span>(), <span class="string">&quot;add&quot;</span>)
+        } <span class="kw">else</span> {
+            <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;The dimensions do not match&quot;</span>)
+        }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gradient_descent</span>(
+        <span class="ident">train</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">sigmoid</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>,
+        <span class="ident">y_train</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">part2</span> <span class="op">=</span> <span class="ident">element_wise_operation</span>(<span class="ident">sigmoid</span>, <span class="ident">y_train</span>, <span class="string">&quot;sub&quot;</span>);
+        <span class="kw">let</span> <span class="ident">numerator</span> <span class="op">=</span> <span class="ident">matrix_vector_product_f</span>(<span class="ident">train</span>, <span class="kw-2">&amp;</span><span class="ident">part2</span>);
+        <span class="ident">numerator</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">a</span> <span class="op">/</span> (<span class="ident">y_train</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>))
+            .<span class="ident">collect</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">log_loss</span>(<span class="ident">sigmoid</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">y_train</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span> {
+        <span class="kw">let</span> <span class="ident">part11</span> <span class="op">=</span> <span class="ident">sigmoid</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">log</span>(<span class="number">1.0_f64</span>.<span class="ident">exp</span>())).<span class="ident">collect</span>();
+        <span class="kw">let</span> <span class="ident">part12</span> <span class="op">=</span> <span class="ident">y_train</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span> <span class="op">*</span> <span class="op">-</span><span class="number">1.</span>).<span class="ident">collect</span>();
+        <span class="kw">let</span> <span class="ident">part21</span> <span class="op">=</span> <span class="ident">sigmoid</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> (<span class="number">1.</span> <span class="op">-</span> <span class="ident">a</span>).<span class="ident">log</span>(<span class="number">1.0_f64</span>.<span class="ident">exp</span>()))
+            .<span class="ident">collect</span>();
+        <span class="kw">let</span> <span class="ident">part22</span> <span class="op">=</span> <span class="ident">y_train</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="number">1.</span> <span class="op">-</span> <span class="ident">a</span>).<span class="ident">collect</span>();
+        <span class="kw">let</span> <span class="ident">part1</span> <span class="op">=</span> <span class="ident">element_wise_operation</span>(<span class="kw-2">&amp;</span><span class="ident">part11</span>, <span class="kw-2">&amp;</span><span class="ident">part12</span>, <span class="string">&quot;mul&quot;</span>);
+        <span class="kw">let</span> <span class="ident">part2</span> <span class="op">=</span> <span class="ident">element_wise_operation</span>(<span class="kw-2">&amp;</span><span class="ident">part21</span>, <span class="kw-2">&amp;</span><span class="ident">part22</span>, <span class="string">&quot;mul&quot;</span>);
+        <span class="ident">mean</span>(<span class="kw-2">&amp;</span><span class="ident">element_wise_operation</span>(<span class="kw-2">&amp;</span><span class="ident">part1</span>, <span class="kw-2">&amp;</span><span class="ident">part2</span>, <span class="string">&quot;sub&quot;</span>))
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sigmoid</span>(<span class="ident">train</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">coeff</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">z</span> <span class="op">=</span> <span class="ident">matrix_vector_product_f</span>(<span class="kw-2">&amp;</span><span class="ident">transpose</span>(<span class="ident">train</span>), <span class="ident">coeff</span>);
+        <span class="ident">z</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="number">1.</span> <span class="op">/</span> (<span class="number">1.</span> <span class="op">+</span> <span class="ident">a</span>.<span class="ident">exp</span>())).<span class="ident">collect</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">float_randomize</span>(<span class="ident">matrix</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="ident">matrix</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> {
+                <span class="ident">a</span>.<span class="ident">iter</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> (<span class="kw-2">*</span><span class="ident">b</span>).<span class="ident">replace</span>(<span class="string">&quot;\r&quot;</span>, <span class="string">&quot;&quot;</span>).<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>())
+                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+            })
+            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">preprocess_train_test_split</span>(
+        <span class="ident">matrix</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">test_percentage</span>: <span class="ident">f64</span>,
+        <span class="ident">target_column</span>: <span class="ident">usize</span>,
+        <span class="ident">preprocess</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) {
+        <span class="comment">/*
+        preprocess : &quot;s&quot; : standardize, &quot;m&quot; : minmaxscaler, &quot;_&quot; : no change
+        */</span>
+
+        <span class="kw">let</span> (<span class="ident">train_data</span>, <span class="ident">test_data</span>) <span class="op">=</span> <span class="ident">train_test_split_f</span>(<span class="ident">matrix</span>, <span class="ident">test_percentage</span>);
+        <span class="comment">// println!(&quot;Training size: {:?}&quot;, train_data.len());</span>
+        <span class="comment">// println!(&quot;Test size: {:?}&quot;, test_data.len());</span>
+
+        <span class="comment">// converting rows to vector of columns of f64s</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">actual_train</span> <span class="op">=</span> <span class="ident">row_to_columns_conversion</span>(<span class="kw-2">&amp;</span><span class="ident">train_data</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">actual_test</span> <span class="op">=</span> <span class="ident">row_to_columns_conversion</span>(<span class="kw-2">&amp;</span><span class="ident">test_data</span>);
+
+        <span class="kw">match</span> <span class="ident">preprocess</span> {
+            <span class="string">&quot;s&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">actual_train</span> <span class="op">=</span> <span class="ident">actual_train</span>
+                    .<span class="ident">iter</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">BLR</span>::<span class="ident">standardize_vector_f</span>(<span class="ident">a</span>))
+                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+                <span class="ident">actual_test</span> <span class="op">=</span> <span class="ident">actual_test</span>
+                    .<span class="ident">iter</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">BLR</span>::<span class="ident">standardize_vector_f</span>(<span class="ident">a</span>))
+                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+            }
+            <span class="string">&quot;m&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">actual_train</span> <span class="op">=</span> <span class="ident">actual_train</span>
+                    .<span class="ident">iter</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">min_max_scaler</span>(<span class="ident">a</span>))
+                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+                <span class="ident">actual_test</span> <span class="op">=</span> <span class="ident">actual_test</span>
+                    .<span class="ident">iter</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">min_max_scaler</span>(<span class="ident">a</span>))
+                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+            }
+
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">println</span><span class="macro">!</span>(
+                <span class="string">&quot;Using the actual values without preprocessing unless &#39;s&#39; or &#39;m&#39; is passed&quot;</span>
+            ),
+        };
+
+        (
+            <span class="ident">drop_column</span>(<span class="kw-2">&amp;</span><span class="ident">actual_train</span>, <span class="ident">target_column</span>),
+            <span class="ident">actual_train</span>[<span class="ident">target_column</span> <span class="op">-</span> <span class="number">1</span>].<span class="ident">clone</span>(),
+            <span class="ident">drop_column</span>(<span class="kw-2">&amp;</span><span class="ident">actual_test</span>, <span class="ident">target_column</span>),
+            <span class="ident">actual_test</span>[<span class="ident">target_column</span> <span class="op">-</span> <span class="number">1</span>].<span class="ident">clone</span>(),
+        )
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">standardize_vector_f</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
+        <span class="comment">/*
+        Preserves the shape of the original distribution. Doesn&#39;t
+        reduce the importance of outliers. Least disruptive to the
+        information in the original data. Default range for
+        MinMaxScaler is O to 1.
+            */</span>
+        <span class="ident">list</span>.<span class="ident">iter</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> (<span class="kw-2">*</span><span class="ident">a</span> <span class="op">-</span> <span class="ident">mean</span>(<span class="ident">list</span>)) <span class="op">/</span> <span class="ident">std_dev</span>(<span class="ident">list</span>))
+            .<span class="ident">collect</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">min_max_scaler</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> (<span class="ident">minimum</span>, <span class="ident">maximum</span>) <span class="op">=</span> <span class="ident">min_max_f</span>(<span class="kw-2">&amp;</span><span class="ident">list</span>);
+        <span class="kw">let</span> <span class="ident">range</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">maximum</span> <span class="op">-</span> <span class="ident">minimum</span>;
+        <span class="ident">list</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="number">1.</span> <span class="op">-</span> ((<span class="ident">maximum</span> <span class="op">-</span> <span class="ident">a</span>) <span class="op">/</span> <span class="ident">range</span>)).<span class="ident">collect</span>()
     }
 }
 
@@ -4210,7 +4072,7 @@ FUNCTIONS
     <span class="ident">list</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">map</span>[<span class="ident">a</span>]).<span class="ident">collect</span>()
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normalize_vector_f</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">min_max_scaler</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
     <span class="comment">// println!(&quot;========================================================================================================================================================&quot;);</span>
     <span class="kw">let</span> (<span class="ident">minimum</span>, <span class="ident">maximum</span>) <span class="op">=</span> <span class="ident">min_max_f</span>(<span class="kw-2">&amp;</span><span class="ident">list</span>);
     <span class="kw">let</span> <span class="ident">range</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="ident">maximum</span> <span class="op">-</span> <span class="ident">minimum</span>;
