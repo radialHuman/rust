@@ -724,7 +724,7 @@ pub fn row_to_columns_conversion<T: std::fmt::Debug + Copy>(data: &Vec<Vec<T>>) 
     Since read_csv gives values row wise, it might be required to convert it into columns for some calulation like aggeration
     converts [[1,6,11],[2,7,12],[3,8,13],[4,9,14],[5,10,15]] => [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]]
     */
-    println!("{:?}x{:?} becomes", data.len(), data[0].len());
+    // println!("{:?}x{:?} becomes", data.len(), data[0].len());
     let mut output = vec![];
     for j in 0..data[0].len() {
         let mut columns = vec![];
@@ -733,7 +733,7 @@ pub fn row_to_columns_conversion<T: std::fmt::Debug + Copy>(data: &Vec<Vec<T>>) 
         }
         output.push(columns)
     }
-    println!("{:?}x{:?}", output.len(), output[0].len());
+    // println!("{:?}x{:?}", output.len(), output[0].len());
     output
 }
 
@@ -742,7 +742,7 @@ pub fn columns_to_rows_conversion<T: std::fmt::Debug + Copy>(data: &Vec<Vec<T>>)
     Opposite of row_to_columns_conversion
     converts  [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]] => [[1,6,11],[2,7,12],[3,8,13],[4,9,14],[5,10,15]]
     */
-    println!("{:?}x{:?} becomes", data.len(), data[0].len());
+    // println!("{:?}x{:?} becomes", data.len(), data[0].len());
     let mut output = vec![];
     for j in 0..data[0].len() {
         let mut columns = vec![];
@@ -751,6 +751,6 @@ pub fn columns_to_rows_conversion<T: std::fmt::Debug + Copy>(data: &Vec<Vec<T>>)
         }
         output.push(columns)
     }
-    println!("{:?}x{:?}", output.len(), output[0].len());
+    // println!("{:?}x{:?}", output.len(), output[0].len());
     output
 }

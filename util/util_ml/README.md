@@ -2,7 +2,7 @@
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
 ## Changes
-* lib_ml : BinarLogisticRegressionF, which did not give similar result as established libraries replaced with BLR 
+* lib_ml : Common functions rearranged, KNN, Distance added
 
 ## List of Functions and Structs
 
@@ -50,16 +50,19 @@
         > fit
     2. BLR:
         > fit
-        > preprocess_train_test_split
-        > standardize_vector_f
-        > min_max_scaler
-        > float_randomize
         > sigmoid
         > log_loss
         > gradient_descent
         > change_in_loss
         > predict
-        > confuse_me
+    3. KNN
+        > fit
+        x predict
+    4. Distance
+        > distance_euclidean
+        > distance_manhattan
+        > distance_cosine
+        > distance_chebyshev
 
     1. coefficient
     2. convert_and_impute
@@ -93,6 +96,11 @@
     30. r_square
     31. mape
     32. drop_column
+    33. preprocess_train_test_split
+    34. standardize_vector_f
+    35. min_max_scaler
+    36. float_randomize
+    37. confuse_me
 ---
 ### lib_nn
     1. LayerDetails :
@@ -126,8 +134,9 @@
     
 ---
 ## Comparision with [Scikit learn's output](https://github.com/radialHuman/rust_ml/tree/master/from_scratch/src)
-* OLS 
-* BLR 
+* OLS : Ordinary Least square Regression
+* BLR : Binary Logistic Regression
+* KNN : K-Nearest Neighbour
 ----
 ### About the author
 * Used Python, learning Rust

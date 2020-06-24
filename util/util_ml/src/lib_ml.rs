@@ -8,16 +8,22 @@ STRUCTS
 
 2. BLR : file_path: String, test_size: f64, target_column: usize, learning_rate: f64, iter_count: u32, binary_threshold: f64,
     > fit
-    > preprocess_train_test_split
-    > standardize_vector_f
-    > min_max_scaler
-    > float_randomize
     > sigmoid
     > log_loss
     > gradient_descent
     > change_in_loss
     > predict
-    > confuse_me
+
+3. KNN : file_path: String, test_size: f64, target_column: usize, k: usize, method: &'a str
+    > fit
+    x predict
+
+4. Distance : row1: Vec<f64>, row2: Vec<f64>
+    > distance_euclidean
+    > distance_manhattan
+    > distance_cosine
+    > distance_chebyshev
+
 
 FUNCTIONS
 ---------
@@ -92,13 +98,13 @@ FUNCTIONS
     2. > beta: &Vec<Vec<f64>>
     = Vec<Vec<f64>>
 
-15. randomize_vector_f :
-    1. > rows : &Vec<f64>
-    = Vec<f64>
+15. randomize_vector :
+    1. > rows : &Vec<T>
+    = Vec<T>
 
-16. randomize_f :
-    1. > rows : &Vec<Vec<f64>>
-    = Vec<Vec<f64>>
+16. randomize :
+    1. > rows : &Vec<Vec<T>>
+    = Vec<Vec<T>>
 
 17. train_test_split_vector_f :
     1. > input: &Vec<f64>
@@ -143,8 +149,8 @@ FUNCTIONS
 
 25. one_hot_encoding :
     1. > column: &Vec<&str>
-    = Vec<Vec<u8>>
-
+     = Vec<Vec<u8>>
+    
 26. shape : shows #rowsx#columns
     1. m: &Vec<Vec<f64>>
     = ()
@@ -179,14 +185,39 @@ FUNCTIONS
     2. column_number
     = Vec<Vec<f64>>
 
+33. preprocess_train_test_split
+    1. matrix: &Vec<Vec<f64>>,
+    2. test_percentage: f64,
+    3 .target_column: usize,
+    4 .preprocess: &str : "s","m"
+     = (Vec<Vec<f64>>, Vec<f64>, Vec<Vec<f64>>, Vec<f64>) : x_train, y_train, x_test, y_test
+
+34. standardize_vector_f
+    1. list: &Vec<f64>
+     = Vec<f64>
+
+35. min_max_scaler
+    1. list: &Vec<f64>
+    = Vec<f64>
+
+36. float_randomize
+    1. matrix: &Vec<Vec<String>>
+    = Vec<Vec<f64>>
+
+37. confuse_me
+    1. predicted: &Vec<f64>
+    2. actual: &Vec<f64>
+     = ()
+
 */
 
-use crate::lib_matrix;
-use lib_matrix::*;
+// use crate::lib_matrix;
+// use lib_matrix::*;
+
 
 pub struct OLS {
     pub file_path: String,
-    pub target : usize, // target column number
+    pub target: usize, // target column number
     pub test_size: f64,
 }
 
@@ -208,10 +239,10 @@ impl OLS {
 
         // read a csv file
         let (columns, values) = read_csv(self.file_path.clone()); // output is row wise
-        // assuming the last column has the value to be predicted
+                                                                  // assuming the last column has the value to be predicted
         println!(
             "The target here is header named: {:?}",
-            columns[self.target-1]
+            columns[self.target - 1]
         );
 
         // // converting vector of string to vector of f64s
@@ -219,32 +250,36 @@ impl OLS {
             .iter()
             .map(|a| {
                 a.iter()
+                    .filter(|b| **b != "".to_string())
                     .map(|b| b.parse::<f64>().unwrap())
                     .collect::<Vec<f64>>()
             })
             .collect::<Vec<Vec<f64>>>();
-        println!(">>>>>>>");
         // splitting it into train and test as per test percentage passed as parameter to get scores
         let (train_data, test_data) = train_test_split_f(&random_data, self.test_size);
-        // println!("Training size: {:?}", train_data.len());
-        // println!("Test size: {:?}", test_data.len());
+        shape("Training data", &train_data);
+        shape("Testing data", &test_data);
 
         // converting rows to vector of columns of f64s
-        let mut actual_train = row_to_columns_conversion(&train_data);
-        actual_train = drop_column(&actual_train,self.target);
-        // let actual_test = row_to_columns_conversion(&test_data);
 
+        // println!("{:?}",train_data );
+        shape("Training data", &train_data);
+        let actual_train = row_to_columns_conversion(&train_data);
+        // println!(">>>>>");
+        let x = drop_column(&actual_train, self.target);
         // // the read columns are in transposed form already, so creating vector of features X and adding 1 in front of it for b0
-        let b0_vec: Vec<Vec<f64>> = vec![vec![1.; actual_train[0].len()]]; //[1,1,1...1,1,1]
-        let X = [&b0_vec[..], &actual_train[..]].concat(); // [1,1,1...,1,1,1]+X
-                                                           // shape(&X);
-        let xt = MatrixF {
-            matrix: X[..X.len() - 1].to_vec(),
-        };
+        let b0_vec: Vec<Vec<f64>> = vec![vec![1.; x[0].len()]]; //[1,1,1...1,1,1]
+        let X = [&b0_vec[..], &x[..]].concat(); // [1,1,1...,1,1,1]+X
+                                                // shape(&X);
+        let xt = MatrixF { matrix: X };
 
         // and vector of targets y
-        let y = vec![actual_train[self.target].to_vec()];
-        // println!(">>>>>\n{:?}", y);
+        let y = vec![actual_train[self.target - 1].to_vec()];
+        // print_a_matrix(
+        //     "Features",
+        //     &xt.matrix.iter().map(|a| a[..6].to_vec()).collect(),
+        // );
+        // print_a_matrix("Target", &y);
 
         /*
         beta = np.linalg.inv(X.T@X)@(X.T@y)
@@ -305,7 +340,6 @@ impl OLS {
 
         println!();
         println!();
-
     }
 }
 
@@ -328,14 +362,14 @@ impl BLR {
         */
 
         // read a csv file
-        let (columns, values) = read_csv(self.file_path); // output is row wise
+        let (columns, values) = read_csv(self.file_path.clone()); // output is row wise
 
         // converting vector of string to vector of f64s
-        let random_data = BLR::float_randomize(&values);
+        let random_data = float_randomize(&values);
 
         // splitting it into train and test as per test percentage passed as parameter to get scores
         let (x_train, y_train, x_test, y_test) =
-            BLR::preprocess_train_test_split(&random_data, self.test_size, self.target_column, "");
+            preprocess_train_test_split(&random_data, self.test_size, self.target_column, "");
 
         shape("Training features", &x_train);
         shape("Test features", &x_test);
@@ -367,50 +401,9 @@ impl BLR {
         //         .collect::<Vec<(&String, f64)>>()
         // );
         let predicted = BLR::predict(&x_test, &coefficients, self.binary_threshold);
-        BLR::confuse_me(&predicted, &y_test);
+        confuse_me(&predicted, &y_test);
     }
-    pub fn confuse_me(predicted: &Vec<f64>, actual: &Vec<f64>) {
-        // https://medium.com/@MohammedS/performance-metrics-for-classification-problems-in-machine-learning-part-i-b085d432082b
-        let mut tp = 0.; // class_one_is_class_one
-        let mut fp = 0.; // class_one_is_class_two(Type 1)
-        let mut fng = 0.; // class_two_is_class_one (Type 1)
-        let mut tng = 0.; // class_two_is_class_two
-
-        for (i, j) in actual
-            .iter()
-            .zip(predicted.iter())
-            .collect::<Vec<(&f64, &f64)>>()
-            .iter()
-        {
-            if **i == 0.0 && **j == 0.0 {
-                tp += 1.;
-            }
-            if **i == 1.0 && **j == 1.0 {
-                tng += 1.;
-            }
-            if **i == 0.0 && **j == 1.0 {
-                fp += 1.;
-            }
-            if **i == 1.0 && **j == 0.0 {
-                fng += 1.;
-            }
-        }
-        println!("|------------------------|");
-        println!("|  {:?}    |   {:?}", tp, fp);
-        println!("|------------------------|");
-        println!("|  {:?}    |   {:?}", fng, tng);
-        println!("|------------------------|");
-        println!("Accuracy : {:.3}", (tp + tng) / (tp + fp + fng + tng));
-        println!("Precision : {:.3}", (tp) / (tp + fp));
-        let precision: f64 = (tp) / (tp + fp);
-        println!("Recall (sensitivity) : {:.3}", (tp) / (tp + fng));
-        let recall: f64 = (tp) / (tp + fng);
-        println!("Specificity: {:.3}", (tng) / (fp + tng));
-        println!(
-            "F1 : {:.3}\n\n",
-            (2. * precision * recall) / (precision * recall)
-        );
-    }
+    
 
     pub fn predict(test_features: &Vec<Vec<f64>>, weights: &Vec<f64>, threshold: f64) -> Vec<f64> {
         let length = test_features[0].len();
@@ -462,90 +455,153 @@ impl BLR {
         z.iter().map(|a| 1. / (1. + a.exp())).collect()
     }
 
-    pub fn float_randomize(matrix: &Vec<Vec<String>>) -> Vec<Vec<f64>> {
-        matrix
-            .iter()
-            .map(|a| {
-                a.iter()
-                    .map(|b| (*b).replace("\r", "").parse::<f64>().unwrap())
-                    .collect::<Vec<f64>>()
-            })
-            .collect::<Vec<Vec<f64>>>()
-    }
-
-    pub fn preprocess_train_test_split(
-        matrix: &Vec<Vec<f64>>,
-        test_percentage: f64,
-        target_column: usize,
-        preprocess: &str,
-    ) -> (Vec<Vec<f64>>, Vec<f64>, Vec<Vec<f64>>, Vec<f64>) {
-        /*
-        preprocess : "s" : standardize, "m" : minmaxscaler, "_" : no change
-        */
-
-        let (train_data, test_data) = train_test_split_f(matrix, test_percentage);
-        // println!("Training size: {:?}", train_data.len());
-        // println!("Test size: {:?}", test_data.len());
-
-        // converting rows to vector of columns of f64s
-        let mut actual_train = row_to_columns_conversion(&train_data);
-        let mut actual_test = row_to_columns_conversion(&test_data);
-
-        match preprocess {
-            "s" => {
-                actual_train = actual_train
-                    .iter()
-                    .map(|a| BLR::standardize_vector_f(a))
-                    .collect::<Vec<Vec<f64>>>();
-                actual_test = actual_test
-                    .iter()
-                    .map(|a| BLR::standardize_vector_f(a))
-                    .collect::<Vec<Vec<f64>>>();
-            }
-            "m" => {
-                actual_train = actual_train
-                    .iter()
-                    .map(|a| min_max_scaler(a))
-                    .collect::<Vec<Vec<f64>>>();
-                actual_test = actual_test
-                    .iter()
-                    .map(|a| min_max_scaler(a))
-                    .collect::<Vec<Vec<f64>>>();
-            }
-
-            _ => println!(
-                "Using the actual values without preprocessing unless 's' or 'm' is passed"
-            ),
-        };
-
-        (
-            drop_column(&actual_train, target_column),
-            actual_train[target_column - 1].clone(),
-            drop_column(&actual_test, target_column),
-            actual_test[target_column - 1].clone(),
-        )
-    }
-
-    pub fn standardize_vector_f(list: &Vec<f64>) -> Vec<f64> {
-        /*
-        Preserves the shape of the original distribution. Doesn't
-        reduce the importance of outliers. Least disruptive to the
-        information in the original data. Default range for
-        MinMaxScaler is O to 1.
-            */
-        list.iter()
-            .map(|a| (*a - mean(list)) / std_dev(list))
-            .collect()
-    }
-
-    pub fn min_max_scaler(list: &Vec<f64>) -> Vec<f64> {
-        let (minimum, maximum) = min_max_f(&list);
-        let range: f64 = maximum - minimum;
-        list.iter().map(|a| 1. - ((maximum - a) / range)).collect()
-    }
 }
 
 
+pub struct KNN<'a>{
+    pub file_path: String,
+    pub test_size: f64,
+    pub target_column: usize,
+    pub k: usize,
+    pub method: &'a str
+}
+impl<'a> KNN<'a>{
+pub fn fit(&self) {
+    /*
+    method : Euclidean or Chebyshev or cosine or Manhattan or Minkowski or Weighted
+    */
+    // read a csv file
+    let (_, values) = read_csv(self.file_path.clone()); // output is row wise
+
+    // converting vector of string to vector of f64s
+    let random_data = float_randomize(&values); // blr needs to be removed
+
+    // splitting it into train and test as per test percentage passed as parameter to get scores
+    let (x_train, y_train, x_test, y_test) =
+        preprocess_train_test_split(&random_data, self.test_size, self.target_column, ""); // blr needs to be removed
+
+    // now to the main part
+    // since it is row wise, conversion
+    let train_rows = columns_to_rows_conversion(&x_train);
+    let test_rows = columns_to_rows_conversion(&x_test);
+    shape("train Rows:", &train_rows);
+    shape("test Rows:", &test_rows);
+    // println!("{:?}", y_train.len());
+
+    // predicting values
+    let predcited = KNN::predict(&train_rows, &y_train, &test_rows, self.method, self.k);
+    println!("Metrics");
+    confuse_me(
+        &predcited.iter().map(|a| *a as f64).collect::<Vec<f64>>(),
+        &y_test,
+    ); // blr needs to be removed
+}
+
+fn predict(
+    train_rows: &Vec<Vec<f64>>,
+    train_values: &Vec<f64>,
+    test_rows: &Vec<Vec<f64>>,
+    method: &str,
+    k: usize,
+) -> Vec<i32> {
+    match method {
+        "e" => println!("\n\nCalculating KNN using euclidean distance ..."),
+        "ma" => println!("\n\nCalculating KNN using manhattan distance ..."),
+        "co" => println!("\n\nCalculating KNN using cosine distance ..."),
+        "ch" => println!("\n\nCalculating KNN using chebyshev distance ..."),
+        _ => panic!("The method has to be either 'e' or 'ma' or 'co' or 'ch'"),
+    };
+    let mut predcited = vec![];
+    for j in test_rows.iter() {
+        let mut class_found = vec![];
+        for (n, i) in train_rows.iter().enumerate() {
+            // println!("{:?},{:?},{:?}", j, n, i);
+            let dis = Distance{row1:i.clone(),row2:j.clone()};
+            match method {
+                "e" => class_found.push((dis.distance_euclidean(), train_values[n])),
+                "ma" => class_found.push((dis.distance_manhattan(), train_values[n])),
+                "co" => class_found.push((dis.distance_cosine(), train_values[n])),
+                "ch" => class_found.push((dis.distance_chebyshev(), train_values[n])),
+                _ => (), // cant happen as it would panic in the previous match
+            };
+        }
+        // sorting acsending the vector by first value of tuple
+        class_found.sort_by(|(a, _), (c, _)| (*a).partial_cmp(c).unwrap());
+        let k_nearest = class_found[..k].to_vec();
+        let knn: Vec<f64> = k_nearest.iter().map(|a| a.1).collect();
+        // converting classes to int and classifying
+        let nearness = value_counts(&knn.iter().map(|a| *a as i32).collect());
+        // finding the closest
+        predcited.push(*nearness.iter().next_back().unwrap().0)
+    }
+    predcited
+}
+}
+
+pub struct Distance{
+    pub row1: Vec<f64>,
+    pub row2: Vec<f64>,
+}
+impl Distance{
+pub fn distance_euclidean(&self) -> f64 {
+    // sqrt(sum((row1-row2)**2))
+
+    let distance = self.row1
+        .iter()
+        .zip(self.row2.iter())
+        .map(|(a, b)| (*a - *b) * (*a - *b))
+        .collect::<Vec<f64>>();
+    distance.iter().fold(0., |a, b| a + b).sqrt()
+}
+
+pub fn distance_manhattan(&self) -> f64 {
+    // sum(|row1-row2|)
+
+    let distance = self.row1
+        .iter()
+        .zip(self.row2.iter())
+        .map(|(a, b)| (*a - *b).abs())
+        .collect::<Vec<f64>>();
+    distance.iter().fold(0., |a, b| a + b)
+}
+
+pub fn distance_cosine(&self) -> f64 {
+    // 1- (a.b)/(|a||b|)
+
+    let numerator = self.row1
+        .iter()
+        .zip(self.row2.iter())
+        .map(|(a, b)| (*a * *b))
+        .collect::<Vec<f64>>()
+        .iter()
+        .fold(0., |a, b| a + b);
+    let denominator = (self.row1
+        .iter()
+        .map(|a| a * a)
+        .collect::<Vec<f64>>()
+        .iter()
+        .fold(0., |a, b| a + b)
+        .sqrt())
+        * (self.row2
+            .iter()
+            .map(|a| a * a)
+            .collect::<Vec<f64>>()
+            .iter()
+            .fold(0., |a, b| a + b)
+            .sqrt());
+    1. - numerator / denominator
+}
+
+pub fn distance_chebyshev(&self) -> f64 {
+    // max(|row1-row2|)
+    let distance = self.row1
+        .iter()
+        .zip(self.row2.iter())
+        .map(|(a, b)| (*a - *b).abs())
+        .collect::<Vec<f64>>();
+    distance.iter().cloned().fold(0. / 0., f64::max)
+}
+}
 
 pub fn mean<T>(list: &Vec<T>) -> f64
 where
@@ -560,6 +616,7 @@ where
         + std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
+    // https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/
     let zero: T = "0".parse().unwrap();
     let len_str = list.len().to_string();
     let length: T = len_str.parse().unwrap();
@@ -583,6 +640,7 @@ where
         + std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
+    // https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/
     let zero: T = "0".parse().unwrap();
     let mu = mean(list);
     let _len_str: T = list.len().to_string().parse().unwrap(); // is division is required
@@ -610,6 +668,7 @@ where
         + std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
+    // https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/
     let mu1 = mean(list1);
     let mu2 = mean(list2);
     let zero: T = "0".parse().unwrap();
@@ -619,7 +678,7 @@ where
         a + ((*b.0 - mu1.to_string().parse().unwrap()) * (*b.1 - mu2.to_string().parse().unwrap()))
     });
     let numerator: f64 = output.to_string().parse().unwrap();
-    numerator / _len_str
+    numerator // / _len_str  // (this is not being divided by populaiton size)
 }
 
 pub fn coefficient<T>(list1: &Vec<T>, list2: &Vec<T>) -> (f64, f64)
@@ -636,6 +695,10 @@ where
         + std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
+    /*
+    To find slope and intercept of a line
+    */
+    // https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/
     let b1 = covariance(list1, list2) / variance(list1);
     let b0 = mean(list2) - (b1 * mean(list1));
     (b0.to_string().parse().unwrap(), b1)
@@ -655,6 +718,7 @@ where
         + std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
+    // https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/
     let train_features = &train.iter().map(|a| a.0).collect();
     let test_features = &test.iter().map(|a| a.1).collect();
     let (offset, slope) = coefficient(train_features, test_features);
@@ -662,6 +726,8 @@ where
     let b1: T = slope.to_string().parse().unwrap();
     let predicted_output = test.iter().map(|a| b0 + b1 * a.0).collect();
     let original_output: Vec<_> = test.iter().map(|a| a.0).collect();
+    println!("========================================================================================================================================================");
+    println!("b0 = {:?} and b1= {:?}", b0, b1);
     println!(
         "RMSE: {:?}",
         root_mean_square(&predicted_output, &original_output)
@@ -680,7 +746,7 @@ where
         + std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
-    println!("========================================================================================================================================================");
+    // https://machinelearningmastery.com/implement-simple-linear-regression-scratch-python/
     let zero: T = "0".parse().unwrap();
     let tupled: Vec<_> = list1.iter().zip(list2).collect();
     let length: T = list1.len().to_string().parse().unwrap();
@@ -696,7 +762,10 @@ where
 use std::collections::HashMap;
 use std::fs;
 pub fn read_csv<'a>(path: String) -> (Vec<String>, Vec<Vec<String>>) {
-    println!("========================================================================================================================================================");
+    /*
+    Returns headers and row wise values as strings
+    */
+    // println!("========================================================================================================================================================");
     println!("Reading the file ...");
     let file = fs::read_to_string(&path).unwrap();
     let splitted: Vec<&str> = file.split("\n").collect();
@@ -721,6 +790,9 @@ where
     U: std::cmp::PartialEq + Copy + std::marker::Copy + std::string::ToString + std::str::FromStr,
     <U as std::str::FromStr>::Err: std::fmt::Debug,
 {
+    /*
+    Convert a vector to a type by passing a value of that type and pass a value to replace missing values
+    */
     println!("========================================================================================================================================================");
     // takes string input and converts it to int or float
     let mut output: Vec<_> = vec![];
@@ -758,7 +830,10 @@ where
 }
 
 pub fn impute_string<'a>(list: &'a mut Vec<String>, impute_with: &'a str) -> Vec<&'a str> {
-    println!("========================================================================================================================================================");
+    /*
+    Replace missing value with the string thats passed
+    */
+    // println!("========================================================================================================================================================");
     list.iter()
         .enumerate()
         .map(|(n, a)| {
@@ -833,25 +908,25 @@ pub fn log_gradient_f(
         first_calc.push(row);
     }
 
-    let first_calc_T = transpose(&first_calc);
-    let mut X = vec![];
+    let first_calc_t = transpose(&first_calc);
+    let mut x = vec![];
     for j in 0..matrix1[0].len() {
         let mut row = vec![];
         for i in matrix1.iter() {
             row.push(i[j]);
         }
-        X.push(row);
+        x.push(row);
     }
 
-    // PYTHON : // final_calc = np.dot(first_calc.T, X)
+    // PYTHON : // final_calc = np.dot(first_calc.T, x)
     let mut final_calc = vec![];
-    for i in first_calc_T.iter() {
-        for j in X.iter() {
+    for i in first_calc_t.iter() {
+        for j in x.iter() {
             final_calc.push(dot_product(&i, &j))
         }
     }
 
-    // println!("{:?}\n{:?}", &first_calc_T, &X);
+    // println!("{:?}\n{:?}", &first_calc_t, &x);
     // println!("{:?}", &final_calc);
     // println!(
     //     "{:?}",
@@ -870,12 +945,12 @@ pub fn logistic_predict(matrix1: &Vec<Vec<f64>>, beta: &Vec<Vec<f64>>) -> Vec<Ve
     output
 }
 
-pub fn randomize_vector_f(rows: &Vec<f64>) -> Vec<f64> {
+pub fn randomize_vector<T:std::clone::Clone>(rows: &Vec<T>) -> Vec<T> {
     /*
     Shuffle values inside vector
     */
     use rand::seq::SliceRandom;
-    use rand::{thread_rng, Rng};
+    // use rand::thread_rng;
     let mut order: Vec<usize> = (0..rows.len() as usize).collect();
     let slice: &mut [usize] = &mut order;
     let mut rng = thread_rng();
@@ -889,12 +964,12 @@ pub fn randomize_vector_f(rows: &Vec<f64>) -> Vec<f64> {
     output
 }
 
-pub fn randomize_f(rows: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
+pub fn randomize<T:std::clone::Clone>(rows: &Vec<Vec<T>>) -> Vec<Vec<T>> {
     /*
     Shuffle rows inside matrix
     */
     use rand::seq::SliceRandom;
-    use rand::{thread_rng, Rng};
+    // use rand::thread_rng;
     let mut order: Vec<usize> = (0..rows.len() as usize).collect();
     let slice: &mut [usize] = &mut order;
     let mut rng = thread_rng();
@@ -907,29 +982,13 @@ pub fn randomize_f(rows: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
     }
     output
 }
-
-pub fn randomize<T: std::clone::Clone>(rows: &Vec<Vec<T>>) -> Vec<Vec<T>> {
-        use rand::seq::SliceRandom;
-        use rand::{thread_rng, Rng};
-        let mut order: Vec<usize> = (0..rows.len()  as usize).collect();
-        let slice: &mut [usize] = &mut order;
-        let mut rng = thread_rng();
-        slice.shuffle(&mut rng);
-        // println!("{:?}", slice);
-
-        let mut output = vec![];
-        for i in order.iter() {
-            output.push(rows[*i].clone());
-        }
-        output
-    }
 
 pub fn train_test_split_vector_f(input: &Vec<f64>, percentage: f64) -> (Vec<f64>, Vec<f64>) {
     /*
     Shuffle and split percentage of test for vector
     */
     // shuffle
-    let data = randomize_vector_f(input);
+    let data = randomize_vector(input);
     // println!("{:?}", data);
     // split
     let test_count = (data.len() as f64 * percentage) as usize;
@@ -948,7 +1007,7 @@ pub fn train_test_split_f(
     Shuffle and split percentage of test for matrix
     */
     // shuffle
-    let data = randomize_f(input);
+    let data = randomize(input);
     // println!("{:?}", data);
     // split
     let test_count = (data.len() as f64 * percentage) as usize;
@@ -958,6 +1017,7 @@ pub fn train_test_split_f(
     let train = data[test_count..].to_vec();
     (train, test)
 }
+
 pub fn correlation<T>(list1: &Vec<T>, list2: &Vec<T>, name: &str) -> f64
 where
     T: std::iter::Sum<T>
@@ -974,14 +1034,19 @@ where
         + std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
+    /*
+    Correlation
+    "p" => pearson
+    "s" => spearman's
+    */
     let cov = covariance(list1, list2);
     let output = match name {
-        "p" => cov / (std_dev(list1) * std_dev(list2)),
+        "p" => (cov / (std_dev(list1) * std_dev(list2))) / list1.len() as f64,
         "s" => {
             // https://statistics.laerd.com/statistical-guides/spearmans-rank-order-correlation-statistical-guide-2.php
             //covariance(&rank(list1), &rank(list2))/(std_dev(&rank(list1))*std_dev(&rank(list2)))
-            let ranked_list1 = s_rank(list1);
-            let ranked_list2 = s_rank(list2);
+            let ranked_list1 = spearman_rank(list1);
+            let ranked_list2 = spearman_rank(list2);
             let len = list1.len() as f64;
             // sorting rnaks back to original positions
             let mut rl1 = vec![];
@@ -1011,6 +1076,12 @@ where
         }
         _ => panic!("Either `p`: Pearson or `s`:Spearman has to be the name. Please retry!"),
     };
+    match output {
+        x if x < 0.2 && x > -0.2 => println!("There is a weak correlation between the two :"),
+        x if x > 0.6 => println!("There is a strong positive correlation between the two :"),
+        x if x < -0.6 => println!("There is a strong negative correlation between the two :"),
+        _ => (),
+    }
     output
 }
 
@@ -1035,7 +1106,7 @@ where
     var.sqrt()
 }
 
-pub fn s_rank<T>(list1: &Vec<T>) -> Vec<(T, f64)>
+pub fn spearman_rank<T>(list1: &Vec<T>) -> Vec<(T, f64)>
 where
     T: std::iter::Sum<T>
         + std::ops::Div<Output = T>
@@ -1051,6 +1122,9 @@ where
         + std::str::FromStr,
     <T as std::str::FromStr>::Err: std::fmt::Debug,
 {
+    /*
+    Returns ranking of each value in ascending order with thier spearman rank in a vector of tuple
+    */
     // https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient
     let mut sorted = list1.clone();
     sorted.sort_by(|a, b| a.partial_cmp(b).unwrap());
@@ -1068,7 +1142,7 @@ where
         }
     }
     // calculating the rank
-    let mut rank: Vec<_> = repeats
+    let rank: Vec<_> = repeats
         .iter()
         .map(|(a, b)| {
             (a, b.iter().fold(0., |a, b| a + *b as f64) / b.len() as f64) // mean of each position vector
@@ -1083,7 +1157,7 @@ where
     T: std::cmp::PartialEq + std::fmt::Debug + Copy,
 {
     /*
-    Returns the positions of the number to be found in a matrix
+    Returns the positions of the number to be found in a vector
     */
     let tuple: Vec<_> = list
         .iter()
@@ -1138,7 +1212,6 @@ where
     }
 }
 
-
 pub fn one_hot_encoding(column: &Vec<&str>) -> Vec<Vec<u8>> {
     /*
     Counts unique values
@@ -1156,9 +1229,9 @@ pub fn one_hot_encoding(column: &Vec<&str>) -> Vec<Vec<u8>> {
 }
 
 
-pub fn shape(m: &Vec<Vec<f64>>) {
+pub fn shape(words: &str, m: &Vec<Vec<f64>>) {
     // # of rows and columns of a matrix
-    println!("{:?}x{:?}", m.len(), m[0].len());
+    println!("{:?} : {:?}x{:?}", words, m.len(), m[0].len());
 }
 
 pub fn rmse(test_data: &Vec<Vec<f64>>, predicted: &Vec<f64>) -> f64 {
@@ -1252,3 +1325,128 @@ pub fn drop_column(matrix: &Vec<Vec<f64>>, column_number: usize) -> Vec<Vec<f64>
     ]
     .concat()
 }
+
+pub fn float_randomize(matrix: &Vec<Vec<String>>) -> Vec<Vec<f64>> {
+        matrix
+            .iter()
+            .map(|a| {
+                a.iter()
+                    .map(|b| (*b).replace("\r", "").parse::<f64>().unwrap())
+                    .collect::<Vec<f64>>()
+            })
+            .collect::<Vec<Vec<f64>>>()
+    }
+
+pub fn preprocess_train_test_split(
+        matrix: &Vec<Vec<f64>>,
+        test_percentage: f64,
+        target_column: usize,
+        preprocess: &str,
+    ) -> (Vec<Vec<f64>>, Vec<f64>, Vec<Vec<f64>>, Vec<f64>) {
+        /*
+        preprocess : "s" : standardize, "m" : minmaxscaler, "_" : no change
+        */
+
+        let (train_data, test_data) = train_test_split_f(matrix, test_percentage);
+        // println!("Training size: {:?}", train_data.len());
+        // println!("Test size: {:?}", test_data.len());
+
+        // converting rows to vector of columns of f64s
+        let mut actual_train = row_to_columns_conversion(&train_data);
+        let mut actual_test = row_to_columns_conversion(&test_data);
+
+        match preprocess {
+            "s" => {
+                actual_train = actual_train
+                    .iter()
+                    .map(|a| standardize_vector_f(a))
+                    .collect::<Vec<Vec<f64>>>();
+                actual_test = actual_test
+                    .iter()
+                    .map(|a| standardize_vector_f(a))
+                    .collect::<Vec<Vec<f64>>>();
+            }
+            "m" => {
+                actual_train = actual_train
+                    .iter()
+                    .map(|a| min_max_scaler(a))
+                    .collect::<Vec<Vec<f64>>>();
+                actual_test = actual_test
+                    .iter()
+                    .map(|a| min_max_scaler(a))
+                    .collect::<Vec<Vec<f64>>>();
+            }
+
+            _ => println!(
+                "Using the actual values without preprocessing unless 's' or 'm' is passed"
+            ),
+        };
+
+        (
+            drop_column(&actual_train, target_column),
+            actual_train[target_column - 1].clone(),
+            drop_column(&actual_test, target_column),
+            actual_test[target_column - 1].clone(),
+        )
+    }
+
+pub fn standardize_vector_f(list: &Vec<f64>) -> Vec<f64> {
+        /*
+        Preserves the shape of the original distribution. Doesn't
+        reduce the importance of outliers. Least disruptive to the
+        information in the original data. Default range for
+        MinMaxScaler is O to 1.
+            */
+        list.iter()
+            .map(|a| (*a - mean(list)) / std_dev(list))
+            .collect()
+    }
+
+    // pub fn min_max_scaler(list: &Vec<f64>) -> Vec<f64> {
+    //     let (minimum, maximum) = min_max_f(&list);
+    //     let range: f64 = maximum - minimum;
+    //     list.iter().map(|a| 1. - ((maximum - a) / range)).collect()
+    // }
+
+pub fn confuse_me(predicted: &Vec<f64>, actual: &Vec<f64>) {
+        // https://medium.com/@MohammedS/performance-metrics-for-classification-problems-in-machine-learning-part-i-b085d432082b
+        let mut tp = 0.; // class_one_is_class_one
+        let mut fp = 0.; // class_one_is_class_two(Type 1)
+        let mut fng = 0.; // class_two_is_class_one (Type 1)
+        let mut tng = 0.; // class_two_is_class_two
+
+        for (i, j) in actual
+            .iter()
+            .zip(predicted.iter())
+            .collect::<Vec<(&f64, &f64)>>()
+            .iter()
+        {
+            if **i == 0.0 && **j == 0.0 {
+                tp += 1.;
+            }
+            if **i == 1.0 && **j == 1.0 {
+                tng += 1.;
+            }
+            if **i == 0.0 && **j == 1.0 {
+                fp += 1.;
+            }
+            if **i == 1.0 && **j == 0.0 {
+                fng += 1.;
+            }
+        }
+        println!("\n|------------------------|");
+        println!("|  {:?}    |   {:?}", tp, fp);
+        println!("|------------------------|");
+        println!("|  {:?}    |   {:?}", fng, tng);
+        println!("|------------------------|");
+        println!("Accuracy : {:.3}", (tp + tng) / (tp + fp + fng + tng));
+        println!("Precision : {:.3}", (tp) / (tp + fp));
+        let precision: f64 = (tp) / (tp + fp);
+        println!("Recall (sensitivity) : {:.3}", (tp) / (tp + fng));
+        let recall: f64 = (tp) / (tp + fng);
+        println!("Specificity: {:.3}", (tng) / (fp + tng));
+        println!(
+            "F1 : {:.3}\n\n",
+            (2. * precision * recall) / (precision * recall)
+        );
+    }
