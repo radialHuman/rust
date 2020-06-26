@@ -175,6 +175,22 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
         remove_stop_words(string2.clone())
     );
 
+    println!("\nTOKENIZE with multiple symbols");
+    let s = "The plus sign, +, is a binary operator that indicates addition, as in 2 + 3 = 5. It can also serve as a unary operator that leaves its operand unchanged (+x means the same as x). This notation may be used when it is desired to emphasize the positiveness of a number, especially when contrasting with the negative (+5 versus −5).";
+    println!(
+        "{:?} =>\n{:?}",
+        s,
+        tokenize(s.to_string(), &vec!["+","(",")"])
+    );
+
+    println!("\nTOKENIZE default");
+    let s = "The plus sign, +, is a binary operator that indicates addition, as in 2 + 3 = 5. It can also serve as a unary operator that leaves its operand unchanged (+x means the same as x). This notation may be used when it is desired to emphasize the positiveness of a number, especially when contrasting with the negative (+5 versus −5).";
+    println!(
+        "{:?} =>\n{:?}",
+        s,
+        tokenize(s.to_string(), &vec![])
+    );
+
     println!();
     println!();
     println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -828,8 +844,13 @@ Removing stop words from
 gives
 "Rust multi-paradigm programming language focused performance safety, especially safe concurrency.[15][16] Rust syntactically similar C++,[17] provides memory safety without using garbage collection.\nRust originally designed Graydon Hoare Mozilla Research, contributions Dave Herman, Brendan Eich, others.[18][19] designers refined language writing Servo layout browser engine,[20] Rust compiler. compiler free open-source software dual-licensed MIT License Apache License 2.0."
 
+TOKENIZE with multiple symbols
+"The plus sign, +, is a binary operator that indicates addition, as in 2 + 3 = 5. It can also serve as a unary operator that leaves its operand unchanged (+x means the same as x). This notation may be used when it is desired to emphasize the positiveness of a number, especially when contrasting with the negative (+5 versus −5)." =>
+["The", "plus", "sign,", ",", "is", "a", "binary", "operator", "that", "indicates", "addition,", "as", "in", "2", "", "3", "=", "5.", "It", "can", "also", "serve", "as", "a", "unary", "operator", "that", "leaves", "its", "operand", "unchanged", "x", "means", "the", "same", "as", "x.", "This", "notation", "may", "be", "used", "when", "it", "is", "desired", "to", "emphasize", "the", "positiveness", "of", "a", "number,", "especially", "when", "contrasting", "with", "the", "negative", "5", "versus", "−5."]
 
-
+TOKENIZE default
+"The plus sign, +, is a binary operator that indicates addition, as in 2 + 3 = 5. It can also serve as a unary operator that leaves its operand unchanged (+x means the same as x). This notation may be used when it is desired to emphasize the positiveness of a number, especially when contrasting with the negative (+5 versus −5)." =>
+["The", "plus", "sign,", "+,", "is", "a", "binary", "operator", "that", "indicates", "addition,", "as", "in", "2", "+", "3", "=", "5.", "It", "can", "also", "serve", "as", "a", "unary", "operator", "that", "leaves", "its", "operand", "unchanged", "(+x", "means", "the", "same", "as", "x).", "This", "notation", "may", "be", "used", "when", "it", "is", "desired", "to", "emphasize", "the", "positiveness", "of", "a", "number,", "especially", "when", "contrasting", "with", "the", "negative", "(+5", "versus", "−5)."]
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                                                               LIB_MATRIX

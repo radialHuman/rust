@@ -5,6 +5,7 @@
 ## Changes in this version
 * lib_ml : outlier finder, Percentile finder, quartile calculator
 * lib_matrix : DataFrame, groupby (sum and mean)
+* lib_string : tokenize
 
 ---
 ### Comparision with [Scikit learn's output](https://github.com/radialHuman/rust_ml/tree/master/from_scratch/src)
@@ -154,6 +155,7 @@
     1. extract_vowels_consonants
     2. sentence_case
     3. remove_stop_words
+    4. tokenize
     
 ---
 ### About the author

@@ -32,6 +32,11 @@ FUNCTIONS
     > 1. string : String
      = String
 
+4. tokenize :
+    > string: String
+    > symbol: &Vec<&'a str> 
+     = Vec<String>
+
 */
 
 pub struct StringToMatch {
@@ -770,4 +775,31 @@ pub fn remove_stop_words(string: String) -> String {
         .map(|a| String::from(*a))
         .collect::<Vec<String>>()
         .join(" ")
+}
+
+
+pub fn tokenize<'a>(string: String, symbol: &Vec<&'a str>) -> Vec<String> {
+    /*
+    Tokeninzes by space and if required by any other symbol passed in as a vector
+    To use only space and nothing else, pass empty vector
+    */
+
+    let output1: Vec<&str> = string.split(" ").collect();
+    let mut output2 = output1
+        .iter()
+        .map(|a| a.to_string())
+        .collect::<Vec<String>>();
+    let mut output = vec![];
+    for j in symbol.iter() {
+        for i in output2.iter() {
+            if i.contains(j) {
+                output.push((*i).split(j).collect());
+            } else {
+                output.push(i.to_string());
+            }
+        }
+        output2 = output.clone();
+        output = vec![];
+    }
+    output2
 }

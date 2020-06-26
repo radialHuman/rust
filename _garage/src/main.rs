@@ -708,6 +708,13 @@ fn main() {
     // df.groupby(0, "mean");
     // df.groupby(1, "sum");
     // df.groupby(1, "mean");
+
+    // let s = "The plus sign, +, is a binary operator that indicates addition, as in 2 + 3 = 5. It can also serve as a unary operator that leaves its operand unchanged (+x means the same as x). This notation may be used when it is desired to emphasize the positiveness of a number, especially when contrasting with the negative (+5 versus −5).";
+    // println!(
+    //     "{:?} =>\n{:?}",
+    //     s,
+    //     tokenize(s.to_string(), &vec!["+", ")", "("])
+    // );
 }
 
 
