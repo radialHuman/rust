@@ -1,6 +1,6 @@
 [package]
 name = "simple_ml"
-version = "0.2.9"
+version = "0.2.10"
 authors = ["rd2575691 <52597852+rd2575691@users.noreply.github.com>"]
 edition = "2018"
 description = "Functions required for data analysis and machine learning tasks"

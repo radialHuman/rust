@@ -222,6 +222,9 @@ STRUCTS
     > distance_cosine
     > distance_chebyshev
 
+5. Kmeans : file_path: String, k: usize, iterations: u32
+    > fit
+
 
 FUNCTIONS
 ---------
@@ -406,6 +409,11 @@ FUNCTIONS
     1. predicted: &Vec<f64>
     2. actual: &Vec<f64>
      = ()
+
+38. cv
+    1. data : &Vec<Vec<T>>
+    2. k : usize
+    = (Vec<Vec<T>>,Vec<Vec<T>>)
 
 */
 
@@ -797,6 +805,122 @@ pub fn distance_chebyshev(&self) -> f64 {
         .map(|(a, b)| (*a - *b).abs())
         .collect::<Vec<f64>>();
     distance.iter().cloned().fold(0. / 0., f64::max)
+}
+}
+
+pub struct Kmeans{
+    pub file_path: String,
+    pub k: usize,
+    pub iterations: u32
+}
+impl Kmeans{
+    pub fn fit(&self) {
+    /*
+        Source:
+        Video:
+        Book: Trevor Hastie,  Robert Tibshirani, Jerome Friedman - The Elements of  Statistical Learning_  Data Mining, Inference, and Pred
+        Article: https://www.analyticsvidhya.com/blog/2019/08/comprehensive-guide-k-means-clustering/
+        Library:
+
+        ABOUT:
+        * Assuming no duplicate rows exist
+        * Only features and no targets in the input data
+
+        Procedure:
+        1. Prepare data : remove target if any
+        2. Select K centroids
+        3. Find closest points (Eucledian distance)
+        4. Calcualte new mean
+        5. Repeat 3,4 till the same points ened up in the cluster
+
+        TODO:
+        * Add cost function to minimize
+    */
+
+    // read a csv file
+    let (_, values) = read_csv(self.file_path.clone()); // output is row wise
+
+    // converting vector of string to vector of f64s
+    let random_data: Vec<_> = float_randomize(&values);
+
+    // selecting first k points as centroid (already in random order)
+    let mut centroids = randomize(&random_data)[..self.k].to_vec();
+    print_a_matrix("Original means", &centroids);
+
+    let mut new_mean: Vec<Vec<f64>> = vec![];
+    for x in 0..self.iterations - 1 {
+        let mut updated_cluster = vec![];
+        let mut nearest_centroid_number = vec![];
+        for i in random_data.iter() {
+            let mut distance = vec![];
+            for (centroid_number, j) in centroids.iter().enumerate() {
+                let dis = Distance {
+                    row1: i.clone(),
+                    row2: j.clone(),
+                };
+                distance.push((centroid_number, dis.distance_euclidean()))
+            }
+            distance.sort_by(|m, n| m.1.partial_cmp(&n.1).unwrap());
+            nearest_centroid_number.push(distance[0].0);
+        }
+
+        // combining cluster number and data
+        let clusters: Vec<(&usize, &Vec<f64>)> = nearest_centroid_number
+            .iter()
+            .zip(random_data.iter())
+            .collect();
+        // println!("{:?}", clusters);
+
+        // finding new centorid
+        new_mean = vec![];
+        for (m, _) in centroids.iter().enumerate() {
+            let mut group = vec![];
+            for i in clusters.iter() {
+                if *i.0 == m {
+                    group.push(i.1.clone());
+                }
+            }
+            new_mean.push(
+                group
+                    .iter()
+                    .fold(vec![0.; self.k], |a, b| element_wise_operation(&a, b, "add"))
+                    .iter()
+                    .map(|a| a / (group.len() as f64)) // the mean part in K-means
+                    .collect(),
+            );
+            updated_cluster = clusters.clone()
+        }
+        println!("Iteration {:?}", x);
+        if centroids == new_mean {
+            // show in a list of cluster number as per the order of row in original data
+            let mut rearranged_output = vec![];
+            for i in values
+                .iter()
+                .map(|a| a.iter().map(|b| b.parse().unwrap()).collect())
+                .collect::<Vec<Vec<f64>>>()
+                .iter()
+            {
+                for (c, v) in updated_cluster.iter() {
+                    if i == *v {
+                        rearranged_output.push((c, v));
+                        break;
+                    }
+                }
+            }
+            // displaying only the clusters assigned to  each row
+            println!(
+                "CLUSTERS\n{:?}",
+                rearranged_output
+                    .iter()
+                    .map(|a| **(a.0))
+                    .collect::<Vec<usize>>()
+            );
+            break;
+        } else {
+            centroids = new_mean.clone();
+        }
+    }
+    print_a_matrix("Final means", &centroids);
 }
 }
 
@@ -1429,7 +1553,7 @@ pub fn one_hot_encoding(column: &Vec<&str>) -> Vec<Vec<u8>> {
 
 pub fn shape(words: &str, m: &Vec<Vec<f64>>) {
     // # of rows and columns of a matrix
-    println!("{:?} : {:?}x{:?}", words, m.len(), m[0].len());
+    println!("{:?} : Rows: {:?}, Columns: {:?}", words, m.len(), m[0].len());
 }
 
 pub fn rmse(test_data: &Vec<Vec<f64>>, predicted: &Vec<f64>) -> f64 {
@@ -1649,6 +1773,16 @@ pub fn confuse_me(predicted: &Vec<f64>, actual: &Vec<f64>) {
         );
     }
 
+pub fn cv<T: Copy>(data: &Vec<Vec<T>>, k: usize) -> (Vec<Vec<T>>, Vec<Vec<T>>) {
+    /*
+    K-fold Cross validation
+    */
+
+    (
+        randomize(&data.clone())[k..].to_vec(),
+        randomize(&data.clone())[..k].to_vec(),
+    )
+}
 
 /*
 DESCRIPTION

@@ -134,9 +134,9 @@ dependencies = [
 
 [[package]]
 name = "simple_ml"
-version = "0.2.8"
+version = "0.2.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a464d7b2453463da75c3641153cae74b8ee2605ef4b954b6d20ac8f8b877531b"
+checksum = "77e9f6b383fb4407c47ee8436ac2bc4cfd41136c2f6ed7b996547934b299a90f"
 dependencies = [
  "libmath",
  "rand 0.7.3",

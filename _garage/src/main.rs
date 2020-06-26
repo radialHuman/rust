@@ -650,59 +650,42 @@ fn main() {
     //     test_size: 0.20,
     // };
     // lr.fit();
-    println!(
-        "{:?}",
-        distance_chebyshev(&vec![0., 3., 4., 5.], &vec![7., 6., 3., -1.])
-    );
-}
-pub fn distance_manhattan(row1: &Vec<f64>, row2: &Vec<f64>) -> f64 {
-    // sum(|row1-row2|)
-
-    let distance = row1
-        .iter()
-        .zip(row2.iter())
-        .map(|(a, b)| (*a - *b).abs())
-        .collect::<Vec<f64>>();
-    distance.iter().fold(0., |a, b| a + b)
-}
-
-pub fn distance_chebyshev(row1: &Vec<f64>, row2: &Vec<f64>) -> f64 {
-    // max(|row1-row2|)
-    let distance = row1
-        .iter()
-        .zip(row2.iter())
-        .map(|(a, b)| (*a - *b).abs())
-        .collect::<Vec<f64>>();
-    println!("{:?}", distance);
-    distance.iter().cloned().fold(0. / 0., f64::max)
+    let a = vec![
+        vec![1, 2, 3],
+        vec![4, 5, 6],
+        vec![7, 8, 9],
+        vec![10, 20, 30],
+        vec![40, 50, 60],
+        vec![70, 80, 90],
+        vec![100, 200, 300],
+        vec![400, 500, 600],
+        vec![700, 800, 900],
+        vec![-1, -2, -3],
+        vec![-4, -5, -6],
+        vec![-7, -8, -9],
+        vec![-10, -20, -30],
+        vec![-40, -50, -60],
+        vec![-70, -80, -90],
+        vec![-100, -200, -300],
+        vec![-400, -500, -600],
+        vec![-700, -800, -900],
+    ];
+    println!("Train : {:?}, Test: {:?}", cv(&a, 2).0, cv(&a, 2).1);
+    println!("Train : {:?}, Test: {:?}", cv(&a, 2).0, cv(&a, 2).1);
+    println!("Train : {:?}, Test: {:?}", cv(&a, 2).0, cv(&a, 2).1);
 }
 
-pub fn distance_cosine(row1: &Vec<f64>, row2: &Vec<f64>) -> f64 {
-    // 1-(a.b)/(|a||b|)
+pub fn cv<T: Copy>(data: &Vec<Vec<T>>, k: usize) -> (Vec<Vec<T>>, Vec<Vec<T>>) {
+    /*
+    K-fold Cross validation
+    */
 
-    let numerator = row1
-        .iter()
-        .zip(row2.iter())
-        .map(|(a, b)| (*a * *b))
-        .collect::<Vec<f64>>()
-        .iter()
-        .fold(0., |a, b| a + b);
-    let denominator = (row1
-        .iter()
-        .map(|a| a * a)
-        .collect::<Vec<f64>>()
-        .iter()
-        .fold(0., |a, b| a + b)
-        .sqrt())
-        * (row2
-            .iter()
-            .map(|a| a * a)
-            .collect::<Vec<f64>>()
-            .iter()
-            .fold(0., |a, b| a + b)
-            .sqrt());
-    1. - numerator / denominator
+    (
+        randomize(&data.clone())[k..].to_vec(),
+        randomize(&data.clone())[..k].to_vec(),
+    )
 }
+
 // ================================================================================= // =================================================================================
 // ================================================================================= // =================================================================================
 // ================================================================================= // =================================================================================

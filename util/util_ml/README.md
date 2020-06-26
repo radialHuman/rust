@@ -2,7 +2,7 @@
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
 ## Changes
-* lib_ml : Common functions rearranged, KNN, Distance added
+* lib_ml : cross validation, KMeans
 
 ## List of Functions and Structs
 
@@ -63,6 +63,8 @@
         > distance_manhattan
         > distance_cosine
         > distance_chebyshev
+    5. Kmeans
+        > fit
 
     1. coefficient
     2. convert_and_impute
@@ -101,6 +103,7 @@
     35. min_max_scaler
     36. float_randomize
     37. confuse_me
+    38. cv
 ---
 ### lib_nn
     1. LayerDetails :
@@ -133,10 +136,11 @@
     3. remove_stop_words
     
 ---
-## Comparision with [Scikit learn's output](https://github.com/radialHuman/rust_ml/tree/master/from_scratch/src)
-* OLS : Ordinary Least square Regression
-* BLR : Binary Logistic Regression
-* KNN : K-Nearest Neighbour
+### Comparision with [Scikit learn's output](https://github.com/radialHuman/rust_ml/tree/master/from_scratch/src)
+* OLS
+* BLR
+* KNN
+* Kmeans
 ----
 ### About the author
 * Used Python, learning Rust
