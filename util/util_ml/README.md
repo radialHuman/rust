@@ -1,9 +1,22 @@
 ## Description
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
+> Inspired by Python libraires like numpy, sklearn, pandas etc.. 
 
-## Changes
+## Changes in this version
 * lib_ml : outlier finder, Percentile finder, quartile calculator
-* lib_matrix : groupby (sum and mean)
+* lib_matrix : DataFrame, groupby (sum and mean)
+
+---
+### Comparision with [Scikit learn's output](https://github.com/radialHuman/rust_ml/tree/master/from_scratch/src)
+* OLS
+* BLR
+* KNN
+* Kmeans
+----
+### Vibliography ?
+* For Rust : [Crazcalm's Tech Stack](https://www.youtube.com/playlist?list=PLVhhUNGAUIQScqB26DdUq4n1Y2n3auM7X)
+* For lib_nn : [nnfs.io](https://www.youtube.com/playlist?list=PLQVvvaa0QuDcjD5BAw2DxE6OF2tius3V3)
+* Other blogs mentioned inside
 
 ## List of Functions and Structs
 
@@ -143,18 +156,8 @@
     3. remove_stop_words
     
 ---
-### Comparision with [Scikit learn's output](https://github.com/radialHuman/rust_ml/tree/master/from_scratch/src)
-* OLS
-* BLR
-* KNN
-* Kmeans
-----
 ### About the author
 * Used Python, learning Rust
 * Feedback appreciated
 * rd2575691@gmail.com
----
-### Vibliography ?
-* For Rust : [Crazcalm's Tech Stack](https://www.youtube.com/playlist?list=PLVhhUNGAUIQScqB26DdUq4n1Y2n3auM7X)
-* For lib_nn : [nnfs.io](https://www.youtube.com/playlist?list=PLQVvvaa0QuDcjD5BAw2DxE6OF2tius3V3)
-* Other blogs mentioned inside
+
