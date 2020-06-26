@@ -1,6 +1,6 @@
 ## Description
-> To make a library of functions that are frequently used for data anlaysis and machine learning tasks
-> Inspired by Python libraires like numpy, sklearn, pandas etc.. 
+* To make a library of functions that are frequently used for data anlaysis and machine learning tasks
+* Inspired by Python libraires like numpy, sklearn, pandas etc.. 
 
 ## Changes in this version
 * lib_ml : outlier finder, Percentile finder, quartile calculator
