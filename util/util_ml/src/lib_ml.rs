@@ -216,6 +216,19 @@ FUNCTIONS
     1. data : &Vec<Vec<T>>
     2. k : usize
     = (Vec<Vec<T>>,Vec<Vec<T>>)
+    
+39. z_outlier_f
+    1. list : &Vec<f64>
+    = Vec<f64>
+
+40. percentile_f
+    1. list:&Vec<f64>
+    2. percentile:u32)
+    = f64
+
+41. quartile_f
+    1. list:&Vec<f64>
+    
 */
 
 // use crate::lib_matrix;
@@ -1583,4 +1596,39 @@ pub fn cv<T: Copy>(data: &Vec<Vec<T>>, k: usize) -> (Vec<Vec<T>>, Vec<Vec<T>>) {
         randomize(&data.clone())[k..].to_vec(),
         randomize(&data.clone())[..k].to_vec(),
     )
+}
+
+
+pub fn z_outlier_f(list: &Vec<f64>) -> Vec<f64> {
+    /*
+    Anything below -3 or beyond 3 std deviations is considered as an outlier
+    */
+
+    let mut v_clone = list.clone();
+    v_clone.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let z_v: Vec<_> = v_clone
+        .iter()
+        .map(|a| (z_score(&v_clone, *a), *a))
+        .collect();
+    z_v.iter()
+        .filter(|(a, _)| (*a > 3.) || (*a < -3.))
+        .map(|a| a.1)
+        .collect::<Vec<f64>>()
+}
+
+pub fn percentile_f(list:&Vec<f64>, percentile:u32)-> f64{
+    /*
+    Returns passed percentile in the list
+    */
+    // https://en.wikipedia.org/wiki/Percentile
+    list.clone().sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let oridinal_rank = round_off_f((percentile as f64/100.)*(list.len() as f64),0);
+    list[oridinal_rank as usize-1]
+}
+
+pub fn quartile_f(list:&Vec<f64>){
+    /*
+    Returns quartiles like in a boxplot
+    */
+    println!("Percentile:\n10th :{:?}\n25th :{:?}\n50th :{:?}\n75th :{:?}\n90th :{:?}", percentile_f(list, 10), percentile_f(list, 25), percentile_f(list, 50), percentile_f(list, 75), percentile_f(list, 90));
 }

@@ -415,6 +415,18 @@ FUNCTIONS
     2. k : usize
     = (Vec<Vec<T>>,Vec<Vec<T>>)
 
+39. z_outlier_f
+    1. list : &Vec<f64>
+    = Vec<f64>
+
+40. percentile_f
+    1. list:&Vec<f64>
+    2. percentile:u32)
+    = f64
+
+41. quartile_f
+    1. list:&Vec<f64>
+
 */
 
 // use crate::lib_matrix;
@@ -1784,16 +1796,53 @@ pub fn cv<T: Copy>(data: &Vec<Vec<T>>, k: usize) -> (Vec<Vec<T>>, Vec<Vec<T>>) {
     )
 }
 
+pub fn z_outlier_f(list: &Vec<f64>) -> Vec<f64> {
+    /*
+    Anything below -3 or beyond 3 std deviations is considered as an outlier
+    */
+
+    let mut v_clone = list.clone();
+    v_clone.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let z_v: Vec<_> = v_clone
+        .iter()
+        .map(|a| (z_score(&v_clone, *a), *a))
+        .collect();
+    z_v.iter()
+        .filter(|(a, _)| (*a > 3.) || (*a < -3.))
+        .map(|a| a.1)
+        .collect::<Vec<f64>>()
+}
+
+pub fn percentile_f(list:&Vec<f64>, percentile:u32)-> f64{
+    /*
+    Returns passed percentile in the list
+    */
+    // https://en.wikipedia.org/wiki/Percentile
+    list.clone().sort_by(|a, b| a.partial_cmp(b).unwrap());
+    let oridinal_rank = round_off_f((percentile as f64/100.)*(list.len() as f64),0);
+    list[oridinal_rank as usize-1]
+}
+
+pub fn quartile_f(list:&Vec<f64>){
+    /*
+    Returns quartiles like in a boxplot
+    */
+    println!("Percentile:\n10th :{:?}\n25th :{:?}\n50th :{:?}\n75th :{:?}\n90th :{:?}", percentile_f(list, 10), percentile_f(list, 25), percentile_f(list, 50), percentile_f(list, 75), percentile_f(list, 90));
+}
+
 /*
 DESCRIPTION
 -----------------------------------------
 STRUCTS
 -------
-1. MatrixF : upto 100x100
+1. MatrixF : matrix: Vec<Vec<f64>> // upto 100x100
     > determinant_f
     > inverse_f
     > is_square_matrix
     x round_off_f
+
+2. DataFrame : string: Vec<Vec<&'a str>>, numbers: Vec<Vec<f64>>, boolean: Vec<Vec<bool>>,
+    > groupby : string_column_number , operation: &str // "sum" or "mean"
 
 FUNCTIONS
 ---------
@@ -2050,6 +2099,55 @@ impl MatrixF {
             output.push(vec![0.; size]);
         }
         output
+    }
+}
+
+
+pub struct DataFrame<'a> {
+    // stored column wise
+    pub string: Vec<Vec<&'a str>>,
+    pub numbers: Vec<Vec<f64>>,
+    pub boolean: Vec<Vec<bool>>,
+}
+impl<'a> DataFrame<'a> {
+    pub fn groupby(&self, string_column_number: usize, operation: &str) {
+        // removing other string columns and boolean columns as they dont play any role
+
+        let reduced_dataframe_string = self.string[string_column_number].clone();
+        let reduced_dataframe_float = self.numbers.clone();
+
+        // finding unique string values and the index they occur in
+        let unique_string = unique_values(&reduced_dataframe_string);
+        let mut unique_string_index = vec![];
+        for i in unique_string.iter() {
+            let mut single_string = vec![];
+            for (n, j) in reduced_dataframe_string.iter().enumerate() {
+                if i == j {
+                    single_string.push(n);
+                }
+            }
+            unique_string_index.push(single_string);
+        }
+
+        // operating on numerical columns
+        let mut output = vec![];
+        for i in unique_string_index.iter() {
+            let mut result = vec![];
+                for j in reduced_dataframe_float.iter() {
+                        let seperated = j.iter().enumerate().filter(|(n,a)| i.contains(n) ).collect::<Vec<(usize,&f64)>>();
+                        match operation {
+            "sum" => {
+                result.push(seperated.iter().map(|a| a.1).fold(0.,|a,b| a+b));
+            }
+            "mean" => {
+                result.push(seperated.iter().map(|a| a.1).fold(0.,|a,b| a+b)/(seperated.len() as f64));
+            }
+            _ => panic!("Enter either 'sum' or 'mean'"),
+        };
+                    }
+                    output.push(result[0]);
+                }
+        println!("{:?}", unique_string.iter().zip(output.iter()).collect::<Vec<(&&str,&f64)>>());
     }
 }
 
@@ -2438,7 +2536,7 @@ pub fn split_vector<T: std::clone::Clone>(vector: &Vec<T>, parts: i32) -> Vec<Ve
         }
         output
     } else {
-        panic!("This partition is not possible, check the number of partiotions passed")
+        panic!("This partition is not possible, check the number of partitions passed")
     }
 }
 

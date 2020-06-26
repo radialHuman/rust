@@ -2,7 +2,8 @@
 > To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 
 ## Changes
-* lib_ml : cross validation, KMeans
+* lib_ml : outlier finder, Percentile finder, quartile calculator
+* lib_matrix : groupby (sum and mean)
 
 ## List of Functions and Structs
 
@@ -16,6 +17,9 @@
         > inverse_f
             x identity_matrix
             x zero_matrix
+
+    2. DataFrame:
+        > groupby
 
     1. dot_product
     2. element_wise_operation
@@ -104,6 +108,9 @@
     36. float_randomize
     37. confuse_me
     38. cv
+    39. z_outlier_f
+    40. percentile_f
+    41. quartile_f
 ---
 ### lib_nn
     1. LayerDetails :

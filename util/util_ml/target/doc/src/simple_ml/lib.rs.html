@@ -3367,6 +3367,104 @@
 <span id="3367">3367</span>
 <span id="3368">3368</span>
 <span id="3369">3369</span>
+<span id="3370">3370</span>
+<span id="3371">3371</span>
+<span id="3372">3372</span>
+<span id="3373">3373</span>
+<span id="3374">3374</span>
+<span id="3375">3375</span>
+<span id="3376">3376</span>
+<span id="3377">3377</span>
+<span id="3378">3378</span>
+<span id="3379">3379</span>
+<span id="3380">3380</span>
+<span id="3381">3381</span>
+<span id="3382">3382</span>
+<span id="3383">3383</span>
+<span id="3384">3384</span>
+<span id="3385">3385</span>
+<span id="3386">3386</span>
+<span id="3387">3387</span>
+<span id="3388">3388</span>
+<span id="3389">3389</span>
+<span id="3390">3390</span>
+<span id="3391">3391</span>
+<span id="3392">3392</span>
+<span id="3393">3393</span>
+<span id="3394">3394</span>
+<span id="3395">3395</span>
+<span id="3396">3396</span>
+<span id="3397">3397</span>
+<span id="3398">3398</span>
+<span id="3399">3399</span>
+<span id="3400">3400</span>
+<span id="3401">3401</span>
+<span id="3402">3402</span>
+<span id="3403">3403</span>
+<span id="3404">3404</span>
+<span id="3405">3405</span>
+<span id="3406">3406</span>
+<span id="3407">3407</span>
+<span id="3408">3408</span>
+<span id="3409">3409</span>
+<span id="3410">3410</span>
+<span id="3411">3411</span>
+<span id="3412">3412</span>
+<span id="3413">3413</span>
+<span id="3414">3414</span>
+<span id="3415">3415</span>
+<span id="3416">3416</span>
+<span id="3417">3417</span>
+<span id="3418">3418</span>
+<span id="3419">3419</span>
+<span id="3420">3420</span>
+<span id="3421">3421</span>
+<span id="3422">3422</span>
+<span id="3423">3423</span>
+<span id="3424">3424</span>
+<span id="3425">3425</span>
+<span id="3426">3426</span>
+<span id="3427">3427</span>
+<span id="3428">3428</span>
+<span id="3429">3429</span>
+<span id="3430">3430</span>
+<span id="3431">3431</span>
+<span id="3432">3432</span>
+<span id="3433">3433</span>
+<span id="3434">3434</span>
+<span id="3435">3435</span>
+<span id="3436">3436</span>
+<span id="3437">3437</span>
+<span id="3438">3438</span>
+<span id="3439">3439</span>
+<span id="3440">3440</span>
+<span id="3441">3441</span>
+<span id="3442">3442</span>
+<span id="3443">3443</span>
+<span id="3444">3444</span>
+<span id="3445">3445</span>
+<span id="3446">3446</span>
+<span id="3447">3447</span>
+<span id="3448">3448</span>
+<span id="3449">3449</span>
+<span id="3450">3450</span>
+<span id="3451">3451</span>
+<span id="3452">3452</span>
+<span id="3453">3453</span>
+<span id="3454">3454</span>
+<span id="3455">3455</span>
+<span id="3456">3456</span>
+<span id="3457">3457</span>
+<span id="3458">3458</span>
+<span id="3459">3459</span>
+<span id="3460">3460</span>
+<span id="3461">3461</span>
+<span id="3462">3462</span>
+<span id="3463">3463</span>
+<span id="3464">3464</span>
+<span id="3465">3465</span>
+<span id="3466">3466</span>
+<span id="3467">3467</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">math</span>::<span class="ident">round</span>;
 <span class="kw">use</span> <span class="ident">rand</span>::<span class="kw-2">*</span>;
@@ -3784,6 +3882,18 @@ FUNCTIONS
     1. data : &amp;Vec&lt;Vec&lt;T&gt;&gt;
     2. k : usize
     = (Vec&lt;Vec&lt;T&gt;&gt;,Vec&lt;Vec&lt;T&gt;&gt;)
+
+39. z_outlier_f
+    1. list : &amp;Vec&lt;f64&gt;
+    = Vec&lt;f64&gt;
+
+40. percentile_f
+    1. list:&amp;Vec&lt;f64&gt;
+    2. percentile:u32)
+    = f64
+
+41. quartile_f
+    1. list:&amp;Vec&lt;f64&gt;
 
 */</span>
 
@@ -5154,16 +5264,53 @@ FUNCTIONS
     )
 }
 
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">z_outlier_f</span>(<span class="ident">list</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span> {
+    <span class="comment">/*
+    Anything below -3 or beyond 3 std deviations is considered as an outlier
+    */</span>
+
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v_clone</span> <span class="op">=</span> <span class="ident">list</span>.<span class="ident">clone</span>();
+    <span class="ident">v_clone</span>.<span class="ident">sort_by</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">partial_cmp</span>(<span class="ident">b</span>).<span class="ident">unwrap</span>());
+    <span class="kw">let</span> <span class="ident">z_v</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">v_clone</span>
+        .<span class="ident">iter</span>()
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> (<span class="ident">z_score</span>(<span class="kw-2">&amp;</span><span class="ident">v_clone</span>, <span class="kw-2">*</span><span class="ident">a</span>), <span class="kw-2">*</span><span class="ident">a</span>))
+        .<span class="ident">collect</span>();
+    <span class="ident">z_v</span>.<span class="ident">iter</span>()
+        .<span class="ident">filter</span>(<span class="op">|</span>(<span class="ident">a</span>, <span class="kw">_</span>)<span class="op">|</span> (<span class="kw-2">*</span><span class="ident">a</span> <span class="op">&gt;</span> <span class="number">3.</span>) <span class="op">|</span><span class="op">|</span> (<span class="kw-2">*</span><span class="ident">a</span> <span class="op">&lt;</span> <span class="op">-</span><span class="number">3.</span>))
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="number">1</span>)
+        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">percentile_f</span>(<span class="ident">list</span>:<span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>, <span class="ident">percentile</span>:<span class="ident">u32</span>)<span class="op">-</span><span class="op">&gt;</span> <span class="ident">f64</span>{
+    <span class="comment">/*
+    Returns passed percentile in the list
+    */</span>
+    <span class="comment">// https://en.wikipedia.org/wiki/Percentile</span>
+    <span class="ident">list</span>.<span class="ident">clone</span>().<span class="ident">sort_by</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">partial_cmp</span>(<span class="ident">b</span>).<span class="ident">unwrap</span>());
+    <span class="kw">let</span> <span class="ident">oridinal_rank</span> <span class="op">=</span> <span class="ident">round_off_f</span>((<span class="ident">percentile</span> <span class="kw">as</span> <span class="ident">f64</span><span class="op">/</span><span class="number">100.</span>)<span class="kw-2">*</span>(<span class="ident">list</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>),<span class="number">0</span>);
+    <span class="ident">list</span>[<span class="ident">oridinal_rank</span> <span class="kw">as</span> <span class="ident">usize</span><span class="op">-</span><span class="number">1</span>]
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">quartile_f</span>(<span class="ident">list</span>:<span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>){
+    <span class="comment">/*
+    Returns quartiles like in a boxplot
+    */</span>
+    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;Percentile:\n10th :{:?}\n25th :{:?}\n50th :{:?}\n75th :{:?}\n90th :{:?}&quot;</span>, <span class="ident">percentile_f</span>(<span class="ident">list</span>, <span class="number">10</span>), <span class="ident">percentile_f</span>(<span class="ident">list</span>, <span class="number">25</span>), <span class="ident">percentile_f</span>(<span class="ident">list</span>, <span class="number">50</span>), <span class="ident">percentile_f</span>(<span class="ident">list</span>, <span class="number">75</span>), <span class="ident">percentile_f</span>(<span class="ident">list</span>, <span class="number">90</span>));
+}
+
 <span class="comment">/*
 DESCRIPTION
 -----------------------------------------
 STRUCTS
 -------
-1. MatrixF : upto 100x100
+1. MatrixF : matrix: Vec&lt;Vec&lt;f64&gt;&gt; // upto 100x100
     &gt; determinant_f
     &gt; inverse_f
     &gt; is_square_matrix
     x round_off_f
+
+2. DataFrame : string: Vec&lt;Vec&lt;&amp;&#39;a str&gt;&gt;, numbers: Vec&lt;Vec&lt;f64&gt;&gt;, boolean: Vec&lt;Vec&lt;bool&gt;&gt;,
+    &gt; groupby : string_column_number , operation: &amp;str // &quot;sum&quot; or &quot;mean&quot;
 
 FUNCTIONS
 ---------
@@ -5420,6 +5567,55 @@ FUNCTIONS
             <span class="ident">output</span>.<span class="ident">push</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="number">0.</span>; <span class="ident">size</span>]);
         }
         <span class="ident">output</span>
+    }
+}
+
+
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">DataFrame</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="comment">// stored column wise</span>
+    <span class="kw">pub</span> <span class="ident">string</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">numbers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">boolean</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">DataFrame</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">groupby</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">string_column_number</span>: <span class="ident">usize</span>, <span class="ident">operation</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) {
+        <span class="comment">// removing other string columns and boolean columns as they dont play any role</span>
+
+        <span class="kw">let</span> <span class="ident">reduced_dataframe_string</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">string</span>[<span class="ident">string_column_number</span>].<span class="ident">clone</span>();
+        <span class="kw">let</span> <span class="ident">reduced_dataframe_float</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">numbers</span>.<span class="ident">clone</span>();
+
+        <span class="comment">// finding unique string values and the index they occur in</span>
+        <span class="kw">let</span> <span class="ident">unique_string</span> <span class="op">=</span> <span class="ident">unique_values</span>(<span class="kw-2">&amp;</span><span class="ident">reduced_dataframe_string</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">unique_string_index</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">unique_string</span>.<span class="ident">iter</span>() {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">single_string</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+            <span class="kw">for</span> (<span class="ident">n</span>, <span class="ident">j</span>) <span class="kw">in</span> <span class="ident">reduced_dataframe_string</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+                <span class="kw">if</span> <span class="ident">i</span> <span class="op">=</span><span class="op">=</span> <span class="ident">j</span> {
+                    <span class="ident">single_string</span>.<span class="ident">push</span>(<span class="ident">n</span>);
+                }
+            }
+            <span class="ident">unique_string_index</span>.<span class="ident">push</span>(<span class="ident">single_string</span>);
+        }
+
+        <span class="comment">// operating on numerical columns</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">unique_string_index</span>.<span class="ident">iter</span>() {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">result</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+                <span class="kw">for</span> <span class="ident">j</span> <span class="kw">in</span> <span class="ident">reduced_dataframe_float</span>.<span class="ident">iter</span>() {
+                        <span class="kw">let</span> <span class="ident">seperated</span> <span class="op">=</span> <span class="ident">j</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>().<span class="ident">filter</span>(<span class="op">|</span>(<span class="ident">n</span>,<span class="ident">a</span>)<span class="op">|</span> <span class="ident">i</span>.<span class="ident">contains</span>(<span class="ident">n</span>) ).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">usize</span>,<span class="kw-2">&amp;</span><span class="ident">f64</span>)<span class="op">&gt;</span><span class="op">&gt;</span>();
+                        <span class="kw">match</span> <span class="ident">operation</span> {
+            <span class="string">&quot;sum&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">result</span>.<span class="ident">push</span>(<span class="ident">seperated</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="number">1</span>).<span class="ident">fold</span>(<span class="number">0.</span>,<span class="op">|</span><span class="ident">a</span>,<span class="ident">b</span><span class="op">|</span> <span class="ident">a</span><span class="op">+</span><span class="ident">b</span>));
+            }
+            <span class="string">&quot;mean&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">result</span>.<span class="ident">push</span>(<span class="ident">seperated</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="number">1</span>).<span class="ident">fold</span>(<span class="number">0.</span>,<span class="op">|</span><span class="ident">a</span>,<span class="ident">b</span><span class="op">|</span> <span class="ident">a</span><span class="op">+</span><span class="ident">b</span>)<span class="op">/</span>(<span class="ident">seperated</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">f64</span>));
+            }
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Enter either &#39;sum&#39; or &#39;mean&#39;&quot;</span>),
+        };
+                    }
+                    <span class="ident">output</span>.<span class="ident">push</span>(<span class="ident">result</span>[<span class="number">0</span>]);
+                }
+        <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">unique_string</span>.<span class="ident">iter</span>().<span class="ident">zip</span>(<span class="ident">output</span>.<span class="ident">iter</span>()).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">&amp;</span><span class="ident">str</span>,<span class="kw-2">&amp;</span><span class="ident">f64</span>)<span class="op">&gt;</span><span class="op">&gt;</span>());
     }
 }
 
@@ -5808,7 +6004,7 @@ FUNCTIONS
         }
         <span class="ident">output</span>
     } <span class="kw">else</span> {
-        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;This partition is not possible, check the number of partiotions passed&quot;</span>)
+        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;This partition is not possible, check the number of partitions passed&quot;</span>)
     }
 }
 

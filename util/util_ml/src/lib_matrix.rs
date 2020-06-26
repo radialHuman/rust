@@ -3,11 +3,14 @@ DESCRIPTION
 -----------------------------------------
 STRUCTS
 -------
-1. MatrixF : upto 100x100
+1. MatrixF : matrix: Vec<Vec<f64>> // upto 100x100
     > determinant_f
     > inverse_f
     > is_square_matrix
     > round_off_f
+
+2. DataFrame : string: Vec<Vec<&'a str>>, numbers: Vec<Vec<f64>>, boolean: Vec<Vec<bool>>,
+    > groupby : string_column_number , operation: &str // "sum" or "mean"
 
 FUNCTIONS
 ---------
@@ -265,6 +268,56 @@ impl MatrixF {
         output
     }
 }
+
+
+pub struct DataFrame<'a> {
+    // stored column wise
+    pub string: Vec<Vec<&'a str>>,
+    pub numbers: Vec<Vec<f64>>,
+    pub boolean: Vec<Vec<bool>>,
+}
+impl<'a> DataFrame<'a> {
+    pub fn groupby(&self, string_column_number: usize, operation: &str) {
+        // removing other string columns and boolean columns as they dont play any role
+
+        let reduced_dataframe_string = self.string[string_column_number].clone();
+        let reduced_dataframe_float = self.numbers.clone();
+
+        // finding unique string values and the index they occur in
+        let unique_string = unique_values(&reduced_dataframe_string);
+        let mut unique_string_index = vec![];
+        for i in unique_string.iter() {
+            let mut single_string = vec![];
+            for (n, j) in reduced_dataframe_string.iter().enumerate() {
+                if i == j {
+                    single_string.push(n);
+                }
+            }
+            unique_string_index.push(single_string);
+        }
+
+        // operating on numerical columns
+        let mut output = vec![];
+        for i in unique_string_index.iter() {
+            let mut result = vec![];
+                for j in reduced_dataframe_float.iter() {
+                        let seperated = j.iter().enumerate().filter(|(n,a)| i.contains(n) ).collect::<Vec<(usize,&f64)>>();
+                        match operation {
+            "sum" => {
+                result.push(seperated.iter().map(|a| a.1).fold(0.,|a,b| a+b));
+            }
+            "mean" => {
+                result.push(seperated.iter().map(|a| a.1).fold(0.,|a,b| a+b)/(seperated.len() as f64));
+            }
+            _ => panic!("Enter either 'sum' or 'mean'"),
+        };
+                    }
+                    output.push(result[0]);
+                }
+        println!("{:?}", unique_string.iter().zip(output.iter()).collect::<Vec<(&&str,&f64)>>());
+    }
+}
+
 
 pub fn print_a_matrix<T: std::fmt::Debug>(string: &str, matrix: &Vec<Vec<T>>) {
     // To print a matrix in a manner that resembles a matrix
