@@ -7,5 +7,5 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-simple_ml = "0.2.10"
+simple_ml = "0.2.11"
 rand = "0.7"

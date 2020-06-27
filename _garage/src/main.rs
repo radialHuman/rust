@@ -715,7 +715,48 @@ fn main() {
     //     s,
     //     tokenize(s.to_string(), &vec!["+", ")", "("])
     // );
+
+
+    // let df = DataFrame {
+    //     string: vec![
+    //         vec![
+    //             "One", "Two", "Three", "One", "Two", "Three", "One", "Two", "Three", "One", "Two",
+    //             "Three",
+    //         ],
+    //         vec!["1", "2", "3", "1", "2", "3", "1", "2", "3", "1", "2", "3"],
+    //     ],
+    //     numerical: vec![
+    //         vec![1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 12., 11.],
+    //         vec![
+    //             -1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,
+    //         ],
+    //     ],
+    //     boolean: vec![vec![
+    //         true, false, true, true, true, false, true, true, true, false, true, true,
+    //     ]],
+    // };
+    // df.describe();
+    // df.groupby(1,"sum");
+
+    // // creating hashmaps
+    // let mut string_columns:HashMap<&str,Vec<&str>> = HashMap::new();
+    // string_columns.insert("string_1",vec!["One", "Two", "Three", "One", "Two", "Three", "One", "Two", "Three", "One", "Two","Three"]);
+    // string_columns.insert("string_2",vec!["1", "2", "3", "1", "2", "3", "1", "2", "3", "1", "2", "3"]);
+    // let mut numerical_columns:HashMap<&str,Vec<f64>> = HashMap::new();
+    // numerical_columns.insert("numerical_1",vec![1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 12., 11.]);
+    // numerical_columns.insert("numerical_2",vec![-1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,]);
+    // let mut boolean_columns:HashMap<&str,Vec<bool>> = HashMap::new();
+    // boolean_columns.insert("boolean_1",vec![true, false, true, true, true, false, true, true, true, false, true, true]);
+
+    // let dm = DataMap {
+    //     string:  string_columns,
+    //     numerical: numerical_columns,
+    //     boolean: boolean_columns,};
+    // dm.describe();
+    // dm.groupby("string_2", "mean");
 }
+
+
 
 
 

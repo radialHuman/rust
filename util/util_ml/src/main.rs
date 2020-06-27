@@ -1,5 +1,6 @@
 mod lib;
 use lib::*;
+use std::collections::HashMap;
 
 fn main() {
     println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -346,7 +347,7 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
             "One", "Two", "One", "Two", "One", "One", "Two", "Two", "One", "One", "Two", "One",
             "One",
         ]],
-        numbers: vec![
+        numerical: vec![
             vec![1., 2., 1., 2., 1., 1., 2., 2., 1., 1., 2., 1., 1.],
             vec![1., 2., 1., 2., 1., 1., 2., 2., 1., 1., 2., 1., 1.],
             vec![1., 2., 1., 2., 1., 1., 2., 2., 1., 1., 2., 1., 1.],
@@ -366,7 +367,7 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
         vec!["Positive","Positive","Positive","Positive","Positive","Positive","Positive","Positive","Positive","Positive","Positive","Positive","Positive",
         "Negative","Negative","Negative","Negative","Negative","Negative","Negative","Negative","Negative","Negative","Negative","Negative","Negative"]
         ],
-        numbers: vec![
+        numerical: vec![
             vec![1., 2., 1., 2., 1., 1., 2., 2., 1., 1., 2., 1., 1., -1., -2., -1., -2., -1., -1., -2., -2., -1., -1., -2., -1., -1.],
             vec![1., 2., 1., 2., 1., 1., 2., 2., 1., 1., 2., 1., 1., -1., -2., -1., -2., -1., -1., -2., -2., -1., -1., -2., -1., -1.],
             vec![1., 2., 1., 2., 1., 1., 2., 2., 1., 1., 2., 1., 1., -1., -2., -1., -2., -1., -1., -2., -2., -1., -1., -2., -1., -1.],
@@ -376,7 +377,44 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
 
     df.groupby(1, "sum");
     df.groupby(1, "mean");
+
+    df = DataFrame {
+        string: vec![
+            vec![
+                "One", "Two", "Three", "One", "Two", "Three", "One", "Two", "Three", "One", "Two",
+                "Three",
+            ],
+            vec!["1", "2", "3", "1", "2", "3", "1", "2", "3", "1", "2", "3"],
+        ],
+        numerical: vec![
+            vec![1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 12., 11.],
+            vec![
+                -1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,
+            ],
+        ],
+        boolean: vec![vec![
+            true, false, true, true, true, false, true, true, true, false, true, true,
+        ]],
+    };
+    df.describe();
     println!();
+
+    // creating hashmaps
+    let mut string_columns:HashMap<&str,Vec<&str>> = HashMap::new();
+    string_columns.insert("string_1",vec!["One", "Two", "Three", "One", "Two", "Three", "One", "Two", "Three", "One", "Two","Three"]);
+    string_columns.insert("string_2",vec!["1", "2", "3", "1", "2", "3", "1", "2", "3", "1", "2", "3"]);
+    let mut numerical_columns:HashMap<&str,Vec<f64>> = HashMap::new();
+    numerical_columns.insert("numerical_1",vec![1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 12., 11.]);
+    numerical_columns.insert("numerical_2",vec![-1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,]);
+    let mut boolean_columns:HashMap<&str,Vec<bool>> = HashMap::new();
+    boolean_columns.insert("boolean_1",vec![true, false, true, true, true, false, true, true, true, false, true, true]);
+
+    let dm = DataMap {
+        string:  string_columns,
+        numerical: numerical_columns,
+        boolean: boolean_columns,};
+    dm.describe();
+    dm.groupby("string_2", "mean");
 
     println!();
     println!();
@@ -671,7 +709,7 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
     knn.fit();
 
 
-    println!("\n>>>>>>>>>>>>>>>>> K-Means CLustering" );
+    println!("\n>>>>>>>>>>>>>>>>> K-Means Clustering" );
     file = "./data/ccpp.csv".to_string();
     let kmeans = Kmeans{
         file_path: file.clone(),
@@ -1115,10 +1153,48 @@ String matrix to &str matrix
 
 GROUPBY
 
-[("One", 8.0), ("Two", 10.0)]
-[("One", 1.0), ("Two", 2.0)]
-[("Positive", 18.0), ("Negative", -18.0)]
-[("Positive", 1.3846153846153846), ("Negative", -1.3846153846153846)]
+Grouped on 0 => [("One", 8.0), ("Two", 10.0)]
+Grouped on 0 => [("One", 1.0), ("Two", 2.0)]
+Grouped on 1 => [("Positive", 18.0), ("Negative", -18.0)]
+Grouped on 1 => [("Positive", 1.3846153846153846), ("Negative", -1.3846153846153846)]
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+      Details of the DataFrame
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+String column #0  Values count : {"One": 4, "Three": 4, "Two": 4}
+String column #1  Values count : {"1": 4, "2": 4, "3": 4}
+String column #0  Values count : {false: 3, true: 9}
+Numerical column #0
+        Count :12
+        Minimum :1.0  Maximum : 12.0
+        Mean :6.5  Std Deviation : 3.452052529534663
+        Percentile:     10th :1.0       25th :3.0       50th :6.0       75th :9.0       90th :12.0
+        Outliers :[]
+Numerical column #1
+        Count :12
+        Minimum :-1.0  Maximum : -12.0
+        Mean :-6.5  Std Deviation : 3.452052529534663
+        Percentile:     10th :-1.0      25th :-3.0      50th :-6.0      75th :-9.0      90th :-11.0
+        Outliers :[]
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+      Details of the DataMap
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+String column :"string_2"  Values count : {"1": 4, "2": 4, "3": 4}
+String column :"string_1"  Values count : {"One": 4, "Three": 4, "Two": 4}
+Boolean column :"boolean_1"  Values count : {false: 3, true: 9}
+Numerical column :"numerical_1"
+        Count :12
+        Minimum :1.0  Maximum : 12.0
+        Mean :6.5  Std Deviation : 3.452052529534663
+        Percentile:     10th :1.0       25th :3.0       50th :6.0       75th :9.0       90th :12.0
+        Outliers :[]
+Numerical column :"numerical_2"
+        Count :12
+        Minimum :-1.0  Maximum : -12.0
+        Mean :-6.5  Std Deviation : 3.452052529534663
+        Percentile:     10th :-1.0      25th :-3.0      50th :-6.0      75th :-9.0      90th :-11.0
+        Outliers :[]
+Grouped by "string_2" => [("1", 5.5), ("2", 6.75), ("3", 7.25)]
 
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -1332,7 +1408,7 @@ F1 : 2.000
 
 
 
->>>>>>>>>>>>>>>>> K-Means CLustering
+>>>>>>>>>>>>>>>>> K-Means Clustering
 Reading the file ...
 Number of rows = 9567
 Original means

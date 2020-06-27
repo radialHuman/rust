@@ -1630,5 +1630,5 @@ pub fn quartile_f(list:&Vec<f64>){
     /*
     Returns quartiles like in a boxplot
     */
-    println!("Percentile:\n10th :{:?}\n25th :{:?}\n50th :{:?}\n75th :{:?}\n90th :{:?}", percentile_f(list, 10), percentile_f(list, 25), percentile_f(list, 50), percentile_f(list, 75), percentile_f(list, 90));
+    println!("\tPercentile:\t10th :{:?}\t25th :{:?}\t50th :{:?}\t75th :{:?}\t90th :{:?}", percentile_f(list, 10), percentile_f(list, 25), percentile_f(list, 50), percentile_f(list, 75), percentile_f(list, 90));
 }

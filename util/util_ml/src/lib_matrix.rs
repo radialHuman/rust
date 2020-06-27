@@ -11,6 +11,11 @@ STRUCTS
 
 2. DataFrame : string: Vec<Vec<&'a str>>, numbers: Vec<Vec<f64>>, boolean: Vec<Vec<bool>>,
     > groupby : string_column_number , operation: &str // "sum" or "mean"
+    > describe
+
+2. DataMap : string: HashMap<&'a str,Vec<&'a str>>, numbers:HashMap<&'a str,Vec<f64>>, boolean: HashMap<&'a str,Vec<bool>>,
+    > groupby : string_column_number , operation: &str // "sum" or "mean"
+    > describe
 
 FUNCTIONS
 ---------
@@ -273,15 +278,45 @@ impl MatrixF {
 pub struct DataFrame<'a> {
     // stored column wise
     pub string: Vec<Vec<&'a str>>,
-    pub numbers: Vec<Vec<f64>>,
+    pub numerical: Vec<Vec<f64>>,
     pub boolean: Vec<Vec<bool>>,
 }
 impl<'a> DataFrame<'a> {
+    pub fn describe(&self) {
+        println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        println!("      Details of the DataFrame", );
+        println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        for (n, i) in self.string.iter().enumerate() {
+            println!(
+                "String column #{:?}  Values count : {:?}",
+                n,
+                value_counts(i)
+            )
+        }
+        for (n, i) in self.boolean.iter().enumerate() {
+            println!(
+                "String column #{:?}  Values count : {:?}",
+                n,
+                value_counts(i)
+            )
+        }
+        for (n, i) in self.numerical.iter().enumerate() {
+            println!("Numerical column #{:?}\n\tCount :{:?}", n, i.len());
+            println!(
+                "\tMinimum :{:?}  Maximum : {:?}",
+                min_max_f(i).0,
+                min_max_f(i).1
+            );
+            println!("\tMean :{:?}  Std Deviation : {:?}", mean(i), std_dev(i));
+            quartile_f(i);
+            println!("\tOutliers :{:?}", z_outlier_f(i));
+        }
+    }
     pub fn groupby(&self, string_column_number: usize, operation: &str) {
         // removing other string columns and boolean columns as they dont play any role
 
         let reduced_dataframe_string = self.string[string_column_number].clone();
-        let reduced_dataframe_float = self.numbers.clone();
+        let reduced_dataframe_float = self.numerical.clone();
 
         // finding unique string values and the index they occur in
         let unique_string = unique_values(&reduced_dataframe_string);
@@ -301,7 +336,7 @@ impl<'a> DataFrame<'a> {
         for i in unique_string_index.iter() {
             let mut result = vec![];
                 for j in reduced_dataframe_float.iter() {
-                        let seperated = j.iter().enumerate().filter(|(n,a)| i.contains(n) ).collect::<Vec<(usize,&f64)>>();
+                        let seperated = j.iter().enumerate().filter(|(n,_)| i.contains(n) ).collect::<Vec<(usize,&f64)>>();
                         match operation {
             "sum" => {
                 result.push(seperated.iter().map(|a| a.1).fold(0.,|a,b| a+b));
@@ -314,7 +349,195 @@ impl<'a> DataFrame<'a> {
                     }
                     output.push(result[0]);
                 }
-        println!("{:?}", unique_string.iter().zip(output.iter()).collect::<Vec<(&&str,&f64)>>());
+        println!("Grouped on {:?} => {:?}",string_column_number ,unique_string.iter().zip(output.iter()).collect::<Vec<(&&str,&f64)>>());
+    }
+}
+
+
+pub struct DataMap<'a> {
+    // use std::collections::HashMap;
+    // stored column wise
+    pub string: HashMap<&'a str,Vec<&'a str>>,
+    pub numerical: HashMap<&'a str,Vec<f64>>,
+    pub boolean: HashMap<&'a str,Vec<bool>>,
+}
+impl<'a> DataMap<'a> {
+    pub fn describe(&self) {
+        println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        println!("      Details of the DataMap", );
+        println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        for (k,v) in self.string.iter() {
+            println!(
+                "String column :{:?}  Values count : {:?}",
+                k,
+                value_counts(v)
+            )
+        }
+        for (k,v) in self.boolean.iter() {
+            println!(
+                "Boolean column :{:?}  Values count : {:?}",
+                k,
+                value_counts(v)
+            )
+        }
+        for (k,v) in self.numerical.iter() {
+            println!("Numerical column :{:?}\n\tCount :{:?}", k, v.len());
+            println!(
+                "\tMinimum :{:?}  Maximum : {:?}",
+                min_max_f(v).0,
+                min_max_f(v).1
+            );
+            println!("\tMean :{:?}  Std Deviation : {:?}", mean(v), std_dev(v));
+            quartile_f(v);
+            println!("\tOutliers :{:?}", z_outlier_f(v));
+        }
+    }
+
+    pub fn groupby(&self, string_column: &str, operation: &str) {
+        // removing other string columns and boolean columns as they dont play any role
+
+        let reduced_dataframe_string = self.string[string_column].clone();
+        let reduced_dataframe_float:Vec<&Vec<f64>> = self.numerical.values().clone().collect();
+
+        // finding unique string values and the index they occur in
+        let unique_string = unique_values(&reduced_dataframe_string);
+        let mut unique_string_index = vec![];
+        for i in unique_string.iter() {
+            let mut single_string = vec![];
+            for (n, j) in reduced_dataframe_string.iter().enumerate() {
+                if i == j {
+                    single_string.push(n);
+                }
+            }
+            unique_string_index.push(single_string);
+        }
+
+        // operating on numerical columns
+        let mut output = vec![];
+        for i in unique_string_index.iter() {
+            let mut result = vec![];
+            for j in reduced_dataframe_float.iter() {
+                let seperated = j
+                    .iter()
+                    .enumerate()
+                    .filter(|(n, _)| i.contains(n))
+                    .collect::<Vec<(usize, &f64)>>();
+                match operation {
+                    "sum" => {
+                        result.push(seperated.iter().map(|a| a.1).fold(0., |a, b| a + b));
+                    }
+                    "mean" => {
+                        result.push(
+                            seperated.iter().map(|a| a.1).fold(0., |a, b| a + b)
+                                / (seperated.len() as f64),
+                        );
+                    }
+                    _ => panic!("Enter either 'sum' or 'mean'"),
+                };
+            }
+            output.push(result[0]);
+        }
+        println!(
+            "Grouped by {:?} => {:?}",string_column,
+            unique_string
+                .iter()
+                .zip(output.iter())
+                .collect::<Vec<(&&str, &f64)>>()
+        );
+    }
+}
+
+
+use std::collections::HashMap;
+pub struct DataMap<'a> {
+    // stored column wise
+    string: HashMap<&'a str,Vec<&'a str>>,
+    numerical: HashMap<&'a str,Vec<f64>>,
+    boolean: HashMap<&'a str,Vec<bool>>,
+}
+impl<'a> DataMap<'a> {
+    pub fn describe(&self) {
+        println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        println!("      Details of the DataMap", );
+        println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        for (k,v) in self.string.iter() {
+            println!(
+                "String column :{:?}  Values count : {:?}",
+                k,
+                value_counts(v)
+            )
+        }
+        for (k,v) in self.boolean.iter() {
+            println!(
+                "Boolean column :{:?}  Values count : {:?}",
+                k,
+                value_counts(v)
+            )
+        }
+        for (k,v) in self.numerical.iter() {
+            println!("Numerical column :{:?}\n\tCount :{:?}", k, v.len());
+            println!(
+                "\tMinimum :{:?}  Maximum : {:?}",
+                min_max_f(v).0,
+                min_max_f(v).1
+            );
+            println!("\tMean :{:?}  Std Deviation : {:?}", mean(v), std_dev(v));
+            quartile_f(v);
+            println!("\tOutliers :{:?}", z_outlier_f(v));
+        }
+    }
+
+    pub fn groupby(&self, string_column: &str, operation: &str) {
+        // removing other string columns and boolean columns as they dont play any role
+
+        let reduced_dataframe_string = self.string[string_column].clone();
+        let reduced_dataframe_float:Vec<&Vec<f64>> = self.numerical.values().clone().collect();
+
+        // finding unique string values and the index they occur in
+        let unique_string = unique_values(&reduced_dataframe_string);
+        let mut unique_string_index = vec![];
+        for i in unique_string.iter() {
+            let mut single_string = vec![];
+            for (n, j) in reduced_dataframe_string.iter().enumerate() {
+                if i == j {
+                    single_string.push(n);
+                }
+            }
+            unique_string_index.push(single_string);
+        }
+
+        // operating on numerical columns
+        let mut output = vec![];
+        for i in unique_string_index.iter() {
+            let mut result = vec![];
+            for j in reduced_dataframe_float.iter() {
+                let seperated = j
+                    .iter()
+                    .enumerate()
+                    .filter(|(n, _)| i.contains(n))
+                    .collect::<Vec<(usize, &f64)>>();
+                match operation {
+                    "sum" => {
+                        result.push(seperated.iter().map(|a| a.1).fold(0., |a, b| a + b));
+                    }
+                    "mean" => {
+                        result.push(
+                            seperated.iter().map(|a| a.1).fold(0., |a, b| a + b)
+                                / (seperated.len() as f64),
+                        );
+                    }
+                    _ => panic!("Enter either 'sum' or 'mean'"),
+                };
+            }
+            output.push(result[0]);
+        }
+        println!(
+            "{:?}",
+            unique_string
+                .iter()
+                .zip(output.iter())
+                .collect::<Vec<(&&str, &f64)>>()
+        );
     }
 }
 
@@ -514,6 +737,9 @@ pub fn round_off_f(value: f64, decimals: i32) -> f64 {
 }
 
 pub fn min_max_f(list: &Vec<f64>) -> (f64, f64) {
+    /*
+    Returns a tuple with mininmum and maximum value in a vector
+    */
     // println!("========================================================================================================================================================");
     if type_of(list[0]) == "f64" {
         let mut positive: Vec<f64> = list
@@ -531,15 +757,31 @@ pub fn min_max_f(list: &Vec<f64>) -> (f64, f64) {
         positive.sort_by(|a, b| a.partial_cmp(b).unwrap());
         negative.sort_by(|a, b| a.partial_cmp(b).unwrap());
         // println!("{:?}", list);
-        if negative.len() > 0 {
+        if negative.len() > 0 && positive.len() >0
+        {
             (negative[0], positive[positive.len() - 1])
-        } else {
-            (positive[0], positive[positive.len() - 1])
         }
-    } else {
-        panic!("Input should be a float type");
+        else{
+           if positive.len()==0 && negative.len()!=0 
+                {
+                 (negative[negative.len() - 1], negative[0])
+                } 
+            else {
+            if negative.len()==0 && positive.len()!=0 
+            {
+             (positive[0],positive[positive.len() - 1])
+            }
+            else{
+                panic!("Empty vector found")
+            }
+        }}
+    }
+    else 
+    {  
+    panic!("Input should be a float type")
     }
 }
+
 
 pub fn is_numerical<T>(value: T) -> bool {
     if type_of(&value) == "&i32"

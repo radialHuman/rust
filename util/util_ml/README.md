@@ -4,7 +4,7 @@
 
 ## Changes in this version
 * lib_ml : outlier finder, Percentile finder, quartile calculator
-* lib_matrix : DataFrame, groupby (sum and mean)
+* lib_matrix : DataFrame, DataMap => describe, groupby (sum and mean), min_max_f modified
 * lib_string : tokenize
 
 ---
@@ -33,6 +33,7 @@
             x zero_matrix
 
     2. DataFrame:
+        > describe
         > groupby
 
     1. dot_product
