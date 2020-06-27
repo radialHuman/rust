@@ -36,6 +36,10 @@
         > describe
         > groupby
 
+    3. DataMap:
+        > describe
+        > groupby
+
     1. dot_product
     2. element_wise_operation
     3. matrix_multiplication
