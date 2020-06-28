@@ -2,10 +2,8 @@
 * To make a library of functions that are frequently used for data anlaysis and machine learning tasks
 * Inspired by Python libraires like numpy, sklearn, pandas etc.. 
 
-## Changes in this version
-* lib_ml : outlier finder, Percentile finder, quartile calculator
-* lib_matrix : DataFrame, DataMap => describe, groupby (sum and mean), min_max_f modified
-* lib_string : tokenize
+### Changes in this version
+* lib_ts : autocorrelation, simple_ma, exp_ma
 
 ---
 ### Comparision with [Scikit learn's output](https://github.com/radialHuman/rust_ml/tree/master/from_scratch/src)
@@ -161,7 +159,11 @@
     2. sentence_case
     3. remove_stop_words
     4. tokenize
-    
+---
+### lib_ts
+    1. acf
+    2. simple_ma
+    3. exp_ma
 ---
 ### About the author
 * Used Python, learning Rust
