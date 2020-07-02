@@ -3,12 +3,18 @@
 * Inspired by Python libraires like numpy, sklearn, pandas etc.. 
 
 ### Changes in this version
-* lib_ts : autocorrelation, simple_ma, exp_ma
+
+Section | Added | Fixed | Removed 
+---|---|---|---
+lib_ml | SSVM | float_randomized (randomizing was missing), read_csv (shows the correct number of rows now), confuse_me (now takes in class values instead of fixed class )
+lib_ts |best_fit_line, pacf ||
+lib_matrix ||head (made syntax easy), tail (made syntax easy)|
 
 ---
 ### Comparision with [Scikit learn's output](https://github.com/radialHuman/rust_ml/tree/master/from_scratch/src)
 * OLS
 * BLR
+* SSVM
 * KNN
 * Kmeans
 ----
@@ -86,6 +92,12 @@
         > distance_chebyshev
     5. Kmeans
         > fit
+    6. SSVM
+        > fit
+        x sgd
+        x compute_cost
+        x calculate_cost_gradient
+        x predict
 
     1. coefficient
     2. convert_and_impute
@@ -164,6 +176,8 @@
     1. acf
     2. simple_ma
     3. exp_ma
+    4. best_fit_line
+    5. pacf
 ---
 ### About the author
 * Used Python, learning Rust

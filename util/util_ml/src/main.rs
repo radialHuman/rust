@@ -181,16 +181,12 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
     println!(
         "{:?} =>\n{:?}",
         s,
-        tokenize(s.to_string(), &vec!["+","(",")"])
+        tokenize(s.to_string(), &vec!["+", "(", ")"])
     );
 
     println!("\nTOKENIZE default");
     let s = "The plus sign, +, is a binary operator that indicates addition, as in 2 + 3 = 5. It can also serve as a unary operator that leaves its operand unchanged (+x means the same as x). This notation may be used when it is desired to emphasize the positiveness of a number, especially when contrasting with the negative (+5 versus −5).";
-    println!(
-        "{:?} =>\n{:?}",
-        s,
-        tokenize(s.to_string(), &vec![])
-    );
+    println!("{:?} =>\n{:?}", s, tokenize(s.to_string(), &vec![]));
 
     println!();
     println!();
@@ -325,21 +321,35 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
 
     let a = vec![vec![1, 2], vec![3, 5]];
     let b = vec![vec![0, 1], vec![5, 7]];
-    println!("A: {:?}\nJOINED with\nB: {:?}",a,b);
+    println!("A: {:?}\nJOINED with\nB: {:?}", a, b);
     print_a_matrix("Wide", &join_matrix(&a, &b, "wide"));
     print_a_matrix("Long", &join_matrix(&a, &b, "long"));
-    print_a_matrix("First 2 rows of long is ",  &head(&join_matrix(&a, &b, "long"),2));
-    print_a_matrix("Last 2 rows of long is ",  &tail(&join_matrix(&a, &b, "long"),2));
+    &head(&join_matrix(&a, &b, "long"), 2);
+    &tail(&join_matrix(&a, &b, "long"), 2);
 
     println!("Row to column and vice versa conversion");
-    let c = vec![vec![1,6,11],vec![2,7,12],vec![3,8,13],vec![4,9,14],vec![5,10,15]];
-    print_a_matrix("This\n",&c);
+    let c = vec![
+        vec![1, 6, 11],
+        vec![2, 7, 12],
+        vec![3, 8, 13],
+        vec![4, 9, 14],
+        vec![5, 10, 15],
+    ];
+    print_a_matrix("This\n", &c);
     print_a_matrix("becomes\n", &row_to_columns_conversion(&c));
-    print_a_matrix("Which was originally\n", &columns_to_rows_conversion(&row_to_columns_conversion(&c)));
+    print_a_matrix(
+        "Which was originally\n",
+        &columns_to_rows_conversion(&row_to_columns_conversion(&c)),
+    );
 
-    let d = vec![vec!["A".to_string(),"B".to_string(),"C".to_string()],vec!["D".to_string(),"E".to_string(),"F".to_string()]];
-    print_a_matrix("String matrix to &str matrix\n", &make_matrix_string_literal(&d));
-
+    let d = vec![
+        vec!["A".to_string(), "B".to_string(), "C".to_string()],
+        vec!["D".to_string(), "E".to_string(), "F".to_string()],
+    ];
+    print_a_matrix(
+        "String matrix to &str matrix\n",
+        &make_matrix_string_literal(&d),
+    );
 
     println!("GROUPBY");
     let mut df = DataFrame {
@@ -359,18 +369,32 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
     df.groupby(0, "mean");
 
     df = DataFrame {
-        string: vec![vec![
-            "One", "Two", "One", "Two", "One", "One", "Two", "Two", "One", "One", "Two", "One",
-            "One","-One", "-Two", "-One", "-Two", "-One", "-One", "-Two", "-Two", "-One", "-One", "-Two", "-One",
-            "-One",
-        ],
-        vec!["Positive","Positive","Positive","Positive","Positive","Positive","Positive","Positive","Positive","Positive","Positive","Positive","Positive",
-        "Negative","Negative","Negative","Negative","Negative","Negative","Negative","Negative","Negative","Negative","Negative","Negative","Negative"]
+        string: vec![
+            vec![
+                "One", "Two", "One", "Two", "One", "One", "Two", "Two", "One", "One", "Two", "One",
+                "One", "-One", "-Two", "-One", "-Two", "-One", "-One", "-Two", "-Two", "-One",
+                "-One", "-Two", "-One", "-One",
+            ],
+            vec![
+                "Positive", "Positive", "Positive", "Positive", "Positive", "Positive", "Positive",
+                "Positive", "Positive", "Positive", "Positive", "Positive", "Positive", "Negative",
+                "Negative", "Negative", "Negative", "Negative", "Negative", "Negative", "Negative",
+                "Negative", "Negative", "Negative", "Negative", "Negative",
+            ],
         ],
         numerical: vec![
-            vec![1., 2., 1., 2., 1., 1., 2., 2., 1., 1., 2., 1., 1., -1., -2., -1., -2., -1., -1., -2., -2., -1., -1., -2., -1., -1.],
-            vec![1., 2., 1., 2., 1., 1., 2., 2., 1., 1., 2., 1., 1., -1., -2., -1., -2., -1., -1., -2., -2., -1., -1., -2., -1., -1.],
-            vec![1., 2., 1., 2., 1., 1., 2., 2., 1., 1., 2., 1., 1., -1., -2., -1., -2., -1., -1., -2., -2., -1., -1., -2., -1., -1.],
+            vec![
+                1., 2., 1., 2., 1., 1., 2., 2., 1., 1., 2., 1., 1., -1., -2., -1., -2., -1., -1.,
+                -2., -2., -1., -1., -2., -1., -1.,
+            ],
+            vec![
+                1., 2., 1., 2., 1., 1., 2., 2., 1., 1., 2., 1., 1., -1., -2., -1., -2., -1., -1.,
+                -2., -2., -1., -1., -2., -1., -1.,
+            ],
+            vec![
+                1., 2., 1., 2., 1., 1., 2., 2., 1., 1., 2., 1., 1., -1., -2., -1., -2., -1., -1.,
+                -2., -2., -1., -1., -2., -1., -1.,
+            ],
         ],
         boolean: vec![vec![]],
     };
@@ -400,19 +424,42 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
     println!();
 
     // creating hashmaps
-    let mut string_columns:HashMap<&str,Vec<&str>> = HashMap::new();
-    string_columns.insert("string_1",vec!["One", "Two", "Three", "One", "Two", "Three", "One", "Two", "Three", "One", "Two","Three"]);
-    string_columns.insert("string_2",vec!["1", "2", "3", "1", "2", "3", "1", "2", "3", "1", "2", "3"]);
-    let mut numerical_columns:HashMap<&str,Vec<f64>> = HashMap::new();
-    numerical_columns.insert("numerical_1",vec![1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 12., 11.]);
-    numerical_columns.insert("numerical_2",vec![-1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,]);
-    let mut boolean_columns:HashMap<&str,Vec<bool>> = HashMap::new();
-    boolean_columns.insert("boolean_1",vec![true, false, true, true, true, false, true, true, true, false, true, true]);
+    let mut string_columns: HashMap<&str, Vec<&str>> = HashMap::new();
+    string_columns.insert(
+        "string_1",
+        vec![
+            "One", "Two", "Three", "One", "Two", "Three", "One", "Two", "Three", "One", "Two",
+            "Three",
+        ],
+    );
+    string_columns.insert(
+        "string_2",
+        vec!["1", "2", "3", "1", "2", "3", "1", "2", "3", "1", "2", "3"],
+    );
+    let mut numerical_columns: HashMap<&str, Vec<f64>> = HashMap::new();
+    numerical_columns.insert(
+        "numerical_1",
+        vec![1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 12., 11.],
+    );
+    numerical_columns.insert(
+        "numerical_2",
+        vec![
+            -1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,
+        ],
+    );
+    let mut boolean_columns: HashMap<&str, Vec<bool>> = HashMap::new();
+    boolean_columns.insert(
+        "boolean_1",
+        vec![
+            true, false, true, true, true, false, true, true, true, false, true, true,
+        ],
+    );
 
     let dm = DataMap {
-        string:  string_columns,
+        string: string_columns,
         numerical: numerical_columns,
-        boolean: boolean_columns,};
+        boolean: boolean_columns,
+    };
     dm.describe();
     dm.groupby("string_2", "mean");
 
@@ -442,7 +489,7 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
         coefficient(&vector1, &vector2).1
     );
 
-    println!("\n>>>>>>>>>>>>>>>>> Simple Linear Regression" );
+    println!("\n>>>>>>>>>>>>>>>>> Simple Linear Regression");
     let to_train_on = vec![
         (1., 2.),
         (2., 3.),
@@ -488,11 +535,7 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
     );
 
     let arr = vec![1., 2., 3., -5., -7., 0.];
-    println!(
-        "{:?}\nNormalized to : {:?}\n",
-        arr,
-        min_max_scaler(&arr)
-    );
+    println!("{:?}\nNormalized to : {:?}\n", arr, min_max_scaler(&arr));
     let (min, max) = min_max_f(&arr);
     println!("In {:?}\nminimum is {} and maximum is {}\n", arr, min, max);
 
@@ -619,7 +662,7 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
         ],
     ];
     print_a_matrix("In", &list);
-    println!("0.2 can be found in {:?}\n",how_many_and_where(&list, 0.2));
+    println!("0.2 can be found in {:?}\n", how_many_and_where(&list, 0.2));
 
     let sample = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     println!(
@@ -629,10 +672,9 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
         z_score(&sample, 4)
     );
 
-    let values = vec!["A","B","C"];
+    let values = vec!["A", "B", "C"];
     println!("{:?}", values);
     print_a_matrix("One Hot Encoded", &one_hot_encoding(&values));
-
 
     let a = vec![
         vec![1, 2, 3],
@@ -672,51 +714,62 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
     ];
     println!("Outliers {:?}\n", z_outlier_f(&v));
     quartile_f(&v);
-    println!("27th percentile: {:?}", percentile_f(&v,27));
+    println!("27th percentile: {:?}", percentile_f(&v, 27));
 
-    // println!("\n>>>>>>>>>>>>>>>>> ORDINARY LEAST SQUARE" );
+    println!("\n>>>>>>>>>>>>>>>>> ORDINARY LEAST SQUARE");
     let mut file = "./data/ccpp.csv".to_string();
-    // let lr = OLS{
-    //     file_path: file.clone(),
-    //     target : 5,
-    //     test_size: 0.20,
-    // };
-    // lr.fit();
-    // println!();
+    let lr = OLS {
+        file_path: file.clone(),
+        target: 5,
+        test_size: 0.20,
+    };
+    lr.fit();
+    println!();
 
-
-    println!("\n>>>>>>>>>>>>>>>>> Simple Logistic Regression" );
+    println!("\n>>>>>>>>>>>>>>>>> Simple Logistic Regression");
     file = "./data/data_banknote_authentication.txt".to_string();
-    let logistic = BLR{
-        file_path: file.clone(), 
-        test_size: 0.20, 
-        target_column:5, 
-        learning_rate:0.1, 
-        iter_count:1000, 
-        binary_threshold:0.5
-        };
+    let logistic = BLR {
+        file_path: file.clone(),
+        test_size: 0.20,
+        target_column: 5,
+        learning_rate: 0.1,
+        iter_count: 1000,
+        binary_threshold: 0.5,
+    };
     logistic.fit();
 
-    println!("\n>>>>>>>>>>>>>>>>> K-Nearest Neighbour" );
+    println!("\n>>>>>>>>>>>>>>>>> K-Nearest Neighbour");
     file = "./data/data_banknote_authentication.txt".to_string();
-    let knn = KNN{
+    let knn = KNN {
         file_path: file.clone(),
         test_size: 0.20,
         target_column: 5,
         k: 10,
-        method: "e"
-        };
+        method: "e",
+    };
     knn.fit();
 
-
-    println!("\n>>>>>>>>>>>>>>>>> K-Means Clustering" );
+    println!("\n>>>>>>>>>>>>>>>>> K-Means Clustering");
     file = "./data/ccpp.csv".to_string();
-    let kmeans = Kmeans{
+    let kmeans = Kmeans {
         file_path: file.clone(),
         k: 5,
-        iterations: 1000
+        iterations: 1000,
     };
     kmeans.fit();
+
+    println!("\n>>>>>>>>>>>>>>>>> Simple SVM");
+    let svm = SSVM {
+        file_path: "./data/data_banknote_authentication.txt".to_string(),
+        drop_column_number: vec![], // just the ID needs to be removed, starts with 1
+        test_size: 0.20,
+        learning_rate: 0.000001,
+        iter_count: 5000,
+        reg_strength: 50000.,
+    };
+    // println!("Weights are\n{:?}", svm.fit());
+
+    let weights = svm.fit();
 
     println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     println!("                                                              LIB_TS");
@@ -748,10 +801,24 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
         );
     }
 
-    ts = vec![11.,12.,13.,14.,15.,16.,17.];
-    println!("\nSimple moving average of {:?} at 5 is:\n{:?}",ts,simple_ma(&ts, 5));
-    let alpha  = 0.2;
-    println!("\nExponential moving average of {:?} if alpha ={:?} is:\n{:?}",ts,alpha,exp_ma(&ts, alpha));
+    println!(
+        "Partial Autocorrelation at 20 lag is :{:?}\n",
+        pacf(&ts, 20)
+    );
+
+    ts = vec![11., 12., 13., 14., 15., 16., 17.];
+    println!(
+        "\nSimple moving average of {:?} at 5 is:\n{:?}",
+        ts,
+        simple_ma(&ts, 5)
+    );
+    let alpha = 0.2;
+    println!(
+        "\nExponential moving average of {:?} if alpha ={:?} is:\n{:?}",
+        ts,
+        alpha,
+        exp_ma(&ts, alpha)
+    );
 }
 
 /*
@@ -1491,6 +1558,69 @@ Final means
 [10.766866064710298, 41.26446576373229, 1016.5765613243078, 85.25373589164798, 474.9493190368703]
 [25.783037323037284, 70.1005727155726, 1008.7720012870026, 78.58686615186629, 436.3137323037332]
 
+>>>>>>>>>>>>>>>>> Simple SVM
+Reading the file ...
+Number of rows = 1372
+The columns are
+["cariance", "skwness", "cutosis", "entropy", "class\r"]
+
+"Before dropping columns the dimensions are" : Rows: 1372, Columns: 5
+"After dropping columns the dimensions are" : Rows: 1372, Columns: 5
+
+First 5 rows
+[5.1213, 8.5565, -3.3917, -1.5474, -1.0]
+[0.77124, 9.0862, -1.2281, -1.4996, -1.0]
+[2.888, 0.44696, 4.5907, -0.24398, -1.0]
+[-2.7769, -5.6967, 5.9179, 0.37671, 1.0]
+[4.1373, 0.49248, 1.093, 1.8276, -1.0]
+
+
+.....
+After normalizing:
+First 5 rows
+[0.8771535094361393, 0.8355416524787931, 0.08160768518319084, 0.6365694645244006, -1.0]
+[0.5634525380582538, 0.8553622678645598, 0.17481207056238823, 0.6409158278549152, -1.0]
+[0.7161009309939497, 0.5320942798235341, 0.42547655459107847, 0.7550869727306618, -1.0]
+[0.3075813628136065, 0.3022073213169839, 0.4826501820061603, 0.8115251370741154, 1.0]
+[0.8061931650188578, 0.5337975730316897, 0.27480130096710975, 0.9434518126517363, -1.0]
+
+
+
+Using the actual values without preprocessing unless 's' or 'm' is passed
+"Training features" : Rows: 1098, Columns: 5
+"Test features" : Rows: 274, Columns: 5
+Training target: 1098
+Test target: 274
+1 Epoch, has cost 19745.044884552295
+2 Epoch, has cost 13589.931006129606
+4 Epoch, has cost 8852.065939069003
+8 Epoch, has cost 4804.6838707929655
+16 Epoch, has cost 3989.0577345297893
+32 Epoch, has cost 3118.9469804687
+64 Epoch, has cost 2447.972528293415
+..128 Epoch, has cost 2194.0684640756035
+..256 Epoch, has cost 2153.1817272011294
+......512 Epoch, has cost 2259.5893692206396
+..........1024 Epoch, has cost 2578.0707127248143
+....................2048 Epoch, has cost 2997.762777580629
+........................................4096 Epoch, has cost 4049.2811750745022
+..................4999 Epoch, has cost 4459.63317018335
+Predications : [1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, -1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0]
+
+|------------------------|
+|  152.0    |   1.0
+|------------------------|
+|  0.0    |   121.0
+|------------------------|
+Accuracy : 0.996
+Precision : 0.993
+Recall (sensitivity) : 1.000
+Specificity: 0.992
+F1 : 2.000
+
+
+Weights of intercept followed by features : [50.82380082641569, -35.647755312041234, -37.69479059638258, -39.97778152171758, -2.028337155576391]
+
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                                                               LIB_TS
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -1504,6 +1634,40 @@ Lag: 6  Autocorrelation: 0.38
 At 7 lag the series seems to be correlated      Lag: 7  Autocorrelation: 0.652
 At 8 lag the series seems to be correlated      Lag: 8  Autocorrelation: -0.795
 Lag: 9  Autocorrelation: -0.137
+
+There is a strong positive correlation between the two :
+slope : 0.6262564983830184, intercept : 0.043374373090011686
+slope : 0.5722124529391518, intercept : 0.0489522303527585
+slope : 0.4959834283678541, intercept : 0.058191864120765546
+slope : 0.410020756798943, intercept : 0.0688817065120691
+slope : 0.35964355412048615, intercept : 0.0759509602365167
+slope : 0.29716600482711114, intercept : 0.08308720207711211
+slope : 0.22601468843812123, intercept : 0.09278489209961416
+There is a weak correlation between the two :
+slope : 0.16650758528062956, intercept : 0.1003225250037921
+There is a weak correlation between the two :
+slope : 0.11562864907434299, intercept : 0.10785338495108598
+There is a weak correlation between the two :
+slope : 0.06550304197745221, intercept : 0.1154222217515298
+There is a weak correlation between the two :
+slope : 0.004747726907751254, intercept : 0.12410210909231546
+There is a weak correlation between the two :
+slope : -0.004989902298937394, intercept : 0.12632820573383727
+There is a weak correlation between the two :
+slope : -0.026989831438867712, intercept : 0.13036444575635456
+There is a weak correlation between the two :
+slope : -0.06466032796962076, intercept : 0.13601808300079715
+There is a weak correlation between the two :
+slope : -0.04935983418715519, intercept : 0.13365340681179166
+There is a weak correlation between the two :
+slope : -0.05578378640957189, intercept : 0.13497433624103805
+There is a weak correlation between the two :
+slope : -0.05426523767521378, intercept : 0.1339633940284316
+There is a weak correlation between the two :
+slope : -0.06702900715377197, intercept : 0.13483573674372834
+There is a weak correlation between the two :
+slope : -0.07100811222098874, intercept : 0.13490570874185673
+Partial Autocorrelation at 20 lag is : [1.0, 0.6270436914718476, 0.5731704666611245, 0.4968135484242712, 0.4107427547729479, 0.3604416423218857, 0.2977207081400534, 0.22650035136145474, 0.16684592252741748, 0.11584337979290717, 0.06567974852627982, 0.004762451394421935, -0.005006393867825146, -0.027093693342496287, -0.06493303047799405, -0.04956656026728239, -0.05593120293771161, -0.054425168007557576, -0.06720657017009034, -0.0712005901352252]
 
 Simple moving average of [11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0] at 5 is:
 [0.0, 0.0, 0.0, 0.0, 0.0, 13.0, 14.0, 15.0]

@@ -225,6 +225,13 @@ STRUCTS
 5. Kmeans : file_path: String, k: usize, iterations: u32
     > fit
 
+6. SSVM : file_path: String,  drop_column_number: Vec<usize>,test_size: f64,  learning_rate: f64,  iter_count: i32,  reg_strength: f64
+    > fit
+    x sgd
+    x compute_cost
+    x calculate_cost_gradient
+    x predict
+
 
 FUNCTIONS
 ---------
@@ -351,7 +358,7 @@ FUNCTIONS
 25. one_hot_encoding :
     1. > column: &Vec<&str>
      = Vec<Vec<u8>>
-    
+
 26. shape : shows #rowsx#columns
     1. m: &Vec<Vec<f64>>
     = ()
@@ -431,7 +438,6 @@ FUNCTIONS
 
 // use crate::lib_matrix;
 // use lib_matrix::*;
-
 
 pub struct OLS {
     pub file_path: String,
@@ -580,7 +586,7 @@ impl BLR {
         */
 
         // read a csv file
-        let (columns, values) = read_csv(self.file_path.clone()); // output is row wise
+        let (_, values) = read_csv(self.file_path.clone()); // output is row wise
 
         // converting vector of string to vector of f64s
         let random_data = float_randomize(&values);
@@ -619,15 +625,14 @@ impl BLR {
         //         .collect::<Vec<(&String, f64)>>()
         // );
         let predicted = BLR::predict(&x_test, &coefficients, self.binary_threshold);
-        confuse_me(&predicted, &y_test);
+        confuse_me(&predicted, &y_test, -1., 1.);
     }
-    
 
     pub fn predict(test_features: &Vec<Vec<f64>>, weights: &Vec<f64>, threshold: f64) -> Vec<f64> {
         let length = test_features[0].len();
         let intercept = vec![vec![1.; length]];
         let new_x_test = [&intercept[..], &test_features[..]].concat();
-        let mut pred = BLR::sigmoid(&new_x_test, weights);
+        let pred = BLR::sigmoid(&new_x_test, weights);
         pred.iter()
             .map(|a| if *a > threshold { 1. } else { 0. })
             .collect()
@@ -672,270 +677,500 @@ impl BLR {
         let z = matrix_vector_product_f(&transpose(train), coeff);
         z.iter().map(|a| 1. / (1. + a.exp())).collect()
     }
-
 }
 
-pub struct KNN<'a>{
+pub struct KNN<'a> {
     pub file_path: String,
     pub test_size: f64,
     pub target_column: usize,
     pub k: usize,
-    pub method: &'a str
+    pub method: &'a str,
 }
-impl<'a> KNN<'a>{
-pub fn fit(&self) {
-    /*
-    method : Euclidean or Chebyshev or cosine or Manhattan or Minkowski or Weighted
-    */
-    // read a csv file
-    let (_, values) = read_csv(self.file_path.clone()); // output is row wise
+impl<'a> KNN<'a> {
+    pub fn fit(&self) {
+        /*
+        method : Euclidean or Chebyshev or cosine or Manhattan or Minkowski or Weighted
+        */
+        // read a csv file
+        let (_, values) = read_csv(self.file_path.clone()); // output is row wise
 
-    // converting vector of string to vector of f64s
-    let random_data = float_randomize(&values); // blr needs to be removed
+        // converting vector of string to vector of f64s
+        let random_data = float_randomize(&values); // blr needs to be removed
 
-    // splitting it into train and test as per test percentage passed as parameter to get scores
-    let (x_train, y_train, x_test, y_test) =
-        preprocess_train_test_split(&random_data, self.test_size, self.target_column, ""); // blr needs to be removed
+        // splitting it into train and test as per test percentage passed as parameter to get scores
+        let (x_train, y_train, x_test, y_test) =
+            preprocess_train_test_split(&random_data, self.test_size, self.target_column, ""); // blr needs to be removed
 
-    // now to the main part
-    // since it is row wise, conversion
-    let train_rows = columns_to_rows_conversion(&x_train);
-    let test_rows = columns_to_rows_conversion(&x_test);
-    shape("train Rows:", &train_rows);
-    shape("test Rows:", &test_rows);
-    // println!("{:?}", y_train.len());
+        // now to the main part
+        // since it is row wise, conversion
+        let train_rows = columns_to_rows_conversion(&x_train);
+        let test_rows = columns_to_rows_conversion(&x_test);
+        shape("train Rows:", &train_rows);
+        shape("test Rows:", &test_rows);
+        // println!("{:?}", y_train.len());
 
-    // predicting values
-    let predcited = KNN::predict(&train_rows, &y_train, &test_rows, self.method, self.k);
-    println!("Metrics");
-    confuse_me(
-        &predcited.iter().map(|a| *a as f64).collect::<Vec<f64>>(),
-        &y_test,
-    ); // blr needs to be removed
-}
-
-fn predict(
-    train_rows: &Vec<Vec<f64>>,
-    train_values: &Vec<f64>,
-    test_rows: &Vec<Vec<f64>>,
-    method: &str,
-    k: usize,
-) -> Vec<i32> {
-    match method {
-        "e" => println!("\n\nCalculating KNN using euclidean distance ..."),
-        "ma" => println!("\n\nCalculating KNN using manhattan distance ..."),
-        "co" => println!("\n\nCalculating KNN using cosine distance ..."),
-        "ch" => println!("\n\nCalculating KNN using chebyshev distance ..."),
-        _ => panic!("The method has to be either 'e' or 'ma' or 'co' or 'ch'"),
-    };
-    let mut predcited = vec![];
-    for j in test_rows.iter() {
-        let mut class_found = vec![];
-        for (n, i) in train_rows.iter().enumerate() {
-            // println!("{:?},{:?},{:?}", j, n, i);
-            let dis = Distance{row1:i.clone(),row2:j.clone()};
-            match method {
-                "e" => class_found.push((dis.distance_euclidean(), train_values[n])),
-                "ma" => class_found.push((dis.distance_manhattan(), train_values[n])),
-                "co" => class_found.push((dis.distance_cosine(), train_values[n])),
-                "ch" => class_found.push((dis.distance_chebyshev(), train_values[n])),
-                _ => (), // cant happen as it would panic in the previous match
-            };
-        }
-        // sorting acsending the vector by first value of tuple
-        class_found.sort_by(|(a, _), (c, _)| (*a).partial_cmp(c).unwrap());
-        let k_nearest = class_found[..k].to_vec();
-        let knn: Vec<f64> = k_nearest.iter().map(|a| a.1).collect();
-        // converting classes to int and classifying
-        let nearness = value_counts(&knn.iter().map(|a| *a as i32).collect());
-        // finding the closest
-        predcited.push(*nearness.iter().next_back().unwrap().0)
+        // predicting values
+        let predcited = KNN::predict(&train_rows, &y_train, &test_rows, self.method, self.k);
+        println!("Metrics");
+        confuse_me(
+            &predcited.iter().map(|a| *a as f64).collect::<Vec<f64>>(),
+            &y_test,
+            -1.,
+            1.,
+        ); // blr needs to be removed
     }
-    predcited
-}
+
+    fn predict(
+        train_rows: &Vec<Vec<f64>>,
+        train_values: &Vec<f64>,
+        test_rows: &Vec<Vec<f64>>,
+        method: &str,
+        k: usize,
+    ) -> Vec<i32> {
+        match method {
+            "e" => println!("\n\nCalculating KNN using euclidean distance ..."),
+            "ma" => println!("\n\nCalculating KNN using manhattan distance ..."),
+            "co" => println!("\n\nCalculating KNN using cosine distance ..."),
+            "ch" => println!("\n\nCalculating KNN using chebyshev distance ..."),
+            _ => panic!("The method has to be either 'e' or 'ma' or 'co' or 'ch'"),
+        };
+        let mut predcited = vec![];
+        for j in test_rows.iter() {
+            let mut class_found = vec![];
+            for (n, i) in train_rows.iter().enumerate() {
+                // println!("{:?},{:?},{:?}", j, n, i);
+                let dis = Distance {
+                    row1: i.clone(),
+                    row2: j.clone(),
+                };
+                match method {
+                    "e" => class_found.push((dis.distance_euclidean(), train_values[n])),
+                    "ma" => class_found.push((dis.distance_manhattan(), train_values[n])),
+                    "co" => class_found.push((dis.distance_cosine(), train_values[n])),
+                    "ch" => class_found.push((dis.distance_chebyshev(), train_values[n])),
+                    _ => (), // cant happen as it would panic in the previous match
+                };
+            }
+            // sorting acsending the vector by first value of tuple
+            class_found.sort_by(|(a, _), (c, _)| (*a).partial_cmp(c).unwrap());
+            let k_nearest = class_found[..k].to_vec();
+            let knn: Vec<f64> = k_nearest.iter().map(|a| a.1).collect();
+            // converting classes to int and classifying
+            let nearness = value_counts(&knn.iter().map(|a| *a as i32).collect());
+            // finding the closest
+            predcited.push(*nearness.iter().next_back().unwrap().0)
+        }
+        predcited
+    }
 }
 
-pub struct Distance{
+pub struct Distance {
     pub row1: Vec<f64>,
     pub row2: Vec<f64>,
 }
-impl Distance{
-pub fn distance_euclidean(&self) -> f64 {
-    // sqrt(sum((row1-row2)**2))
+impl Distance {
+    pub fn distance_euclidean(&self) -> f64 {
+        // sqrt(sum((row1-row2)**2))
 
-    let distance = self.row1
-        .iter()
-        .zip(self.row2.iter())
-        .map(|(a, b)| (*a - *b) * (*a - *b))
-        .collect::<Vec<f64>>();
-    distance.iter().fold(0., |a, b| a + b).sqrt()
-}
+        let distance = self
+            .row1
+            .iter()
+            .zip(self.row2.iter())
+            .map(|(a, b)| (*a - *b) * (*a - *b))
+            .collect::<Vec<f64>>();
+        distance.iter().fold(0., |a, b| a + b).sqrt()
+    }
 
-pub fn distance_manhattan(&self) -> f64 {
-    // sum(|row1-row2|)
+    pub fn distance_manhattan(&self) -> f64 {
+        // sum(|row1-row2|)
 
-    let distance = self.row1
-        .iter()
-        .zip(self.row2.iter())
-        .map(|(a, b)| (*a - *b).abs())
-        .collect::<Vec<f64>>();
-    distance.iter().fold(0., |a, b| a + b)
-}
+        let distance = self
+            .row1
+            .iter()
+            .zip(self.row2.iter())
+            .map(|(a, b)| (*a - *b).abs())
+            .collect::<Vec<f64>>();
+        distance.iter().fold(0., |a, b| a + b)
+    }
 
-pub fn distance_cosine(&self) -> f64 {
-    // 1- (a.b)/(|a||b|)
+    pub fn distance_cosine(&self) -> f64 {
+        // 1- (a.b)/(|a||b|)
 
-    let numerator = self.row1
-        .iter()
-        .zip(self.row2.iter())
-        .map(|(a, b)| (*a * *b))
-        .collect::<Vec<f64>>()
-        .iter()
-        .fold(0., |a, b| a + b);
-    let denominator = (self.row1
-        .iter()
-        .map(|a| a * a)
-        .collect::<Vec<f64>>()
-        .iter()
-        .fold(0., |a, b| a + b)
-        .sqrt())
-        * (self.row2
+        let numerator = self
+            .row1
+            .iter()
+            .zip(self.row2.iter())
+            .map(|(a, b)| (*a * *b))
+            .collect::<Vec<f64>>()
+            .iter()
+            .fold(0., |a, b| a + b);
+        let denominator = (self
+            .row1
             .iter()
             .map(|a| a * a)
             .collect::<Vec<f64>>()
             .iter()
             .fold(0., |a, b| a + b)
-            .sqrt());
-    1. - numerator / denominator
+            .sqrt())
+            * (self
+                .row2
+                .iter()
+                .map(|a| a * a)
+                .collect::<Vec<f64>>()
+                .iter()
+                .fold(0., |a, b| a + b)
+                .sqrt());
+        1. - numerator / denominator
+    }
+
+    pub fn distance_chebyshev(&self) -> f64 {
+        // max(|row1-row2|)
+        let distance = self
+            .row1
+            .iter()
+            .zip(self.row2.iter())
+            .map(|(a, b)| (*a - *b).abs())
+            .collect::<Vec<f64>>();
+        distance.iter().cloned().fold(0. / 0., f64::max)
+    }
 }
 
-pub fn distance_chebyshev(&self) -> f64 {
-    // max(|row1-row2|)
-    let distance = self.row1
-        .iter()
-        .zip(self.row2.iter())
-        .map(|(a, b)| (*a - *b).abs())
-        .collect::<Vec<f64>>();
-    distance.iter().cloned().fold(0. / 0., f64::max)
-}
-}
-
-pub struct Kmeans{
+pub struct Kmeans {
     pub file_path: String,
     pub k: usize,
-    pub iterations: u32
+    pub iterations: u32,
 }
-impl Kmeans{
+impl Kmeans {
     pub fn fit(&self) {
-    /*
-        Source:
-        Video:
-        Book: Trevor Hastie,  Robert Tibshirani, Jerome Friedman - The Elements of  Statistical Learning_  Data Mining, Inference, and Pred
-        Article: https://www.analyticsvidhya.com/blog/2019/08/comprehensive-guide-k-means-clustering/
-        Library:
+        /*
+            Source:
+            Video:
+            Book: Trevor Hastie,  Robert Tibshirani, Jerome Friedman - The Elements of  Statistical Learning_  Data Mining, Inference, and Pred
+            Article: https://www.analyticsvidhya.com/blog/2019/08/comprehensive-guide-k-means-clustering/
+            Library:
 
-        ABOUT:
-        * Assuming no duplicate rows exist
-        * Only features and no targets in the input data
+            ABOUT:
+            * Assuming no duplicate rows exist
+            * Only features and no targets in the input data
 
-        Procedure:
-        1. Prepare data : remove target if any
-        2. Select K centroids
-        3. Find closest points (Eucledian distance)
-        4. Calcualte new mean
-        5. Repeat 3,4 till the same points ened up in the cluster
+            Procedure:
+            1. Prepare data : remove target if any
+            2. Select K centroids
+            3. Find closest points (Eucledian distance)
+            4. Calcualte new mean
+            5. Repeat 3,4 till the same points ened up in the cluster
 
-        TODO:
-        * Add cost function to minimize
-    */
+            TODO:
+            * Add cost function to minimize
+        */
 
-    // read a csv file
-    let (_, values) = read_csv(self.file_path.clone()); // output is row wise
+        // read a csv file
+        let (_, values) = read_csv(self.file_path.clone()); // output is row wise
 
-    // converting vector of string to vector of f64s
-    let random_data: Vec<_> = float_randomize(&values);
+        // converting vector of string to vector of f64s
+        let random_data: Vec<_> = float_randomize(&values);
 
-    // selecting first k points as centroid (already in random order)
-    let mut centroids = randomize(&random_data)[..self.k].to_vec();
-    print_a_matrix("Original means", &centroids);
+        // selecting first k points as centroid (already in random order)
+        let mut centroids = randomize(&random_data)[..self.k].to_vec();
+        print_a_matrix("Original means", &centroids);
 
-    let mut new_mean: Vec<Vec<f64>> = vec![];
-    for x in 0..self.iterations - 1 {
-        let mut updated_cluster = vec![];
-        let mut nearest_centroid_number = vec![];
-        for i in random_data.iter() {
-            let mut distance = vec![];
-            for (centroid_number, j) in centroids.iter().enumerate() {
-                let dis = Distance {
-                    row1: i.clone(),
-                    row2: j.clone(),
-                };
-                distance.push((centroid_number, dis.distance_euclidean()))
-            }
-            distance.sort_by(|m, n| m.1.partial_cmp(&n.1).unwrap());
-            nearest_centroid_number.push(distance[0].0);
-        }
-
-        // combining cluster number and data
-        let clusters: Vec<(&usize, &Vec<f64>)> = nearest_centroid_number
-            .iter()
-            .zip(random_data.iter())
-            .collect();
-        // println!("{:?}", clusters);
-
-        // finding new centorid
-        new_mean = vec![];
-        for (m, _) in centroids.iter().enumerate() {
-            let mut group = vec![];
-            for i in clusters.iter() {
-                if *i.0 == m {
-                    group.push(i.1.clone());
+        let mut new_mean: Vec<Vec<f64>> = vec![];
+        for x in 0..self.iterations - 1 {
+            let mut updated_cluster = vec![];
+            let mut nearest_centroid_number = vec![];
+            for i in random_data.iter() {
+                let mut distance = vec![];
+                for (centroid_number, j) in centroids.iter().enumerate() {
+                    let dis = Distance {
+                        row1: i.clone(),
+                        row2: j.clone(),
+                    };
+                    distance.push((centroid_number, dis.distance_euclidean()))
                 }
+                distance.sort_by(|m, n| m.1.partial_cmp(&n.1).unwrap());
+                nearest_centroid_number.push(distance[0].0);
             }
-            new_mean.push(
-                group
-                    .iter()
-                    .fold(vec![0.; self.k], |a, b| element_wise_operation(&a, b, "add"))
-                    .iter()
-                    .map(|a| a / (group.len() as f64)) // the mean part in K-means
-                    .collect(),
-            );
-            updated_cluster = clusters.clone()
-        }
-        println!("Iteration {:?}", x);
-        if centroids == new_mean {
-            // show in a list of cluster number as per the order of row in original data
-            let mut rearranged_output = vec![];
-            for i in values
+
+            // combining cluster number and data
+            let clusters: Vec<(&usize, &Vec<f64>)> = nearest_centroid_number
                 .iter()
-                .map(|a| a.iter().map(|b| b.parse().unwrap()).collect())
-                .collect::<Vec<Vec<f64>>>()
-                .iter()
-            {
-                for (c, v) in updated_cluster.iter() {
-                    if i == *v {
-                        rearranged_output.push((c, v));
-                        break;
+                .zip(random_data.iter())
+                .collect();
+            // println!("{:?}", clusters);
+
+            // finding new centorid
+            new_mean = vec![];
+            for (m, _) in centroids.iter().enumerate() {
+                let mut group = vec![];
+                for i in clusters.iter() {
+                    if *i.0 == m {
+                        group.push(i.1.clone());
                     }
                 }
+                new_mean.push(
+                    group
+                        .iter()
+                        .fold(vec![0.; self.k], |a, b| {
+                            element_wise_operation(&a, b, "add")
+                        })
+                        .iter()
+                        .map(|a| a / (group.len() as f64)) // the mean part in K-means
+                        .collect(),
+                );
+                updated_cluster = clusters.clone()
             }
-            // displaying only the clusters assigned to  each row
-            println!(
-                "CLUSTERS\n{:?}",
-                rearranged_output
+            println!("Iteration {:?}", x);
+            if centroids == new_mean {
+                // show in a list of cluster number as per the order of row in original data
+                let mut rearranged_output = vec![];
+                for i in values
                     .iter()
-                    .map(|a| **(a.0))
-                    .collect::<Vec<usize>>()
-            );
-            break;
-        } else {
-            centroids = new_mean.clone();
+                    .map(|a| a.iter().map(|b| b.parse().unwrap()).collect())
+                    .collect::<Vec<Vec<f64>>>()
+                    .iter()
+                {
+                    for (c, v) in updated_cluster.iter() {
+                        if i == *v {
+                            rearranged_output.push((c, v));
+                            break;
+                        }
+                    }
+                }
+                // displaying only the clusters assigned to  each row
+                println!(
+                    "CLUSTERS\n{:?}",
+                    rearranged_output
+                        .iter()
+                        .map(|a| **(a.0))
+                        .collect::<Vec<usize>>()
+                );
+                break;
+            } else {
+                centroids = new_mean.clone();
+            }
         }
+        print_a_matrix("Final means", &centroids);
     }
-    print_a_matrix("Final means", &centroids);
-}
 }
 
+pub struct SSVM {
+    pub file_path: String,              // pointing to a csv or txt file
+    pub drop_column_number: Vec<usize>, // if first and second column has id and are not required then vec![1,2] else if nothing then vec![]
+    pub test_size: f64,                 // ex: .30 => random 30% of data become test
+    pub learning_rate: f64,             // gradient descent step size ex: 0.1, 0.05 etc
+    pub iter_count: i32,                // how many epochs ex: 10000
+    pub reg_strength: f64, // at what probability will the class be determined ex: 0.6 => anything above 0.6 is 1
+}
+impl SSVM {
+    // https://towardsdatascience.com/svm-implementation-from-scratch-python-2db2fc52e5c2
+    // data: https://www.kaggle.com/uciml/breast-cancer-wisconsin-data (changed M:1 and B:2)
+    /*
+        Assumes all the pre-processing like converting string columns to a number has been done
+        Assuming the target column is placed in the end
+        Assuming only two classes 1 and -1
+    */
+
+    pub fn fit(&self) -> Vec<f64> {
+        // read a csv file
+        let (columns, values) = read_csv(self.file_path.clone()); // output is row wise
+
+        // converting vector of string to vector of f64s
+        // println!("___");
+        let mut random_data = SSVM::float_randomize(&values);
+
+        println!(
+            "The columns are\n{:?}\n",
+            columns
+                .iter()
+                .filter(|a| **a != "\r".to_string())
+                .map(|a| a.replace("\"", ""))
+                .collect::<Vec<String>>()
+        );
+        shape("Before dropping columns the dimensions are", &random_data);
+
+        // drop column after converting it to column wise data
+        random_data = row_to_columns_conversion(&random_data);
+        if self.drop_column_number.len() > 0 {
+            for (n, i) in self.drop_column_number.iter().enumerate() {
+                if n == 0 {
+                    println!("Dropping column #{}", i);
+                    random_data = drop_column(&random_data, *i);
+                } else {
+                    println!("Dropping column #{}", i);
+                    random_data = drop_column(&random_data, *i - n);
+                }
+            }
+        }
+        // converting it back to row wise
+        random_data = columns_to_rows_conversion(&random_data);
+
+        shape("After dropping columns the dimensions are", &random_data);
+        println!();
+
+        head(&random_data, 5);
+
+        // normalizing features in thier columns wise format
+        let mut normalized = row_to_columns_conversion(&random_data);
+
+        random_data = row_to_columns_conversion(&random_data);
+        for (n, i) in random_data.iter().enumerate() {
+            print!(".");
+            if n != normalized.len() - 1 - self.drop_column_number.len() {
+                normalized[n] = min_max_scaler(i);
+            } else {
+                normalized[n] = i.clone();
+            }
+        }
+        println!("\nAfter normalizing:");
+
+        // converting it back to row wise
+        normalized = columns_to_rows_conversion(&normalized);
+        head(&normalized, 5);
+        println!();
+
+        // splitting it into train and test as per test percentage passed as parameter to get scores
+        let (mut x_train, y_train, mut x_test, y_test) =
+            preprocess_train_test_split(&normalized, self.test_size, normalized[0].len(), "");
+
+        // adding intercept column to feature
+        let mut length = x_train[0].len();
+        let intercept = vec![vec![1.; length]];
+        x_train = [&intercept[..], &x_train[..]].concat();
+        length = x_test[0].len();
+        let intercept = vec![vec![1.; length]];
+        x_test = [&intercept[..], &x_test[..]].concat();
+
+        // converting into proper shape
+        x_train = columns_to_rows_conversion(&x_train);
+        x_test = columns_to_rows_conversion(&x_test);
+
+        // checking the shapes
+        shape("Training features", &x_train);
+        shape("Test features", &x_test);
+        println!("Training target: {:?}", &y_train.len());
+        println!("Test target: {:?}", &y_test.len());
+
+        let weights = SSVM::sgd(&self, &x_train, &y_train);
+        let predictions = SSVM::predict(&self, &x_test, &weights);
+        confuse_me(&predictions, &y_test, -1., 1.);
+        println!("Weights of intercept followed by features : {:?}", weights);
+        weights
+    }
+    fn sgd(&self, features: &Vec<Vec<f64>>, output: &Vec<f64>) -> Vec<f64> {
+        let max_epoch: i32 = self.iter_count;
+        let mut weights = vec![0.; features[0].len()];
+        let mut nth = 0.;
+        let mut prev_cost = std::f64::INFINITY;
+        let per_cost_threshold = 0.01;
+        for epoch in 1..max_epoch {
+            // shuffling inputs
+            if epoch % 100 == 0 {
+                print!("..");
+            }
+            let order = randomize_vector(&(0..output.len()).map(|a| a).collect());
+            let mut x = vec![];
+            let mut y = vec![];
+            for i in order.iter() {
+                x.push(features[*i].clone());
+                y.push(output[*i]);
+            }
+
+            // calculating cost
+            for (n, i) in x.iter().enumerate() {
+                let ascent = SSVM::calculate_cost_gradient(&self, &weights, i, y[n]);
+                weights = element_wise_operation(
+                    &weights,
+                    &ascent.iter().map(|a| a * self.learning_rate).collect(),
+                    "sub",
+                );
+            }
+            // println!("Ascent {:?}", weights);
+
+            if epoch == 2f64.powf(nth) as i32 || epoch == max_epoch - 1 {
+                let cost = SSVM::compute_cost(&self, &weights, features, output);
+                println!("{} Epoch, has cost {}", epoch, cost);
+                if (prev_cost - cost).abs() < (per_cost_threshold * prev_cost) {
+                    println!("{:?}", weights);
+                    return weights;
+                }
+                prev_cost = cost;
+                nth += 1.;
+            }
+        }
+        // println!();
+        weights
+    }
+
+    fn compute_cost(&self, weight: &Vec<f64>, x: &Vec<Vec<f64>>, y: &Vec<f64>) -> f64 {
+        // hinge loss
+        let mut distance = element_wise_operation(&matrix_vector_product_f(x, weight), &y, "mul");
+        // println!("{:?}", &matrix_vector_product_f(x, weight).len());
+        // println!("Loss {:?}", distance);
+        distance = distance.iter().map(|a| 1. - *a).collect();
+        distance = distance
+            .iter()
+            .map(|a| if *a > 0. { *a } else { 0. })
+            .collect();
+        let hinge_loss =
+            self.reg_strength * (distance.iter().fold(0., |a, b| a + b) / (x.len() as f64));
+        (dot_product(&weight, &weight) / 2.) + hinge_loss
+    }
+
+    fn calculate_cost_gradient(
+        &self,
+        weight: &Vec<f64>,
+        x_batch: &Vec<f64>,
+        y_batch: f64,
+    ) -> Vec<f64> {
+        let distance = 1. - (dot_product(&x_batch, &weight) * y_batch);
+        // println!("Distance {:?}", distance);
+        let mut dw = vec![0.; weight.len()];
+        let di;
+        if distance < 0. {
+            di = dw.clone();
+        } else {
+            let second_half = x_batch
+                .iter()
+                .map(|a| a * self.reg_strength * y_batch)
+                .collect();
+            di = element_wise_operation(weight, &second_half, "sub");
+        }
+        dw = element_wise_operation(&di, &dw, "add");
+        // println!("di : {:?}", dw);
+        dw
+    }
+
+    fn predict(&self, test_features: &Vec<Vec<f64>>, weights: &Vec<f64>) -> Vec<f64> {
+        let mut output = vec![];
+        for i in test_features.iter() {
+            if dot_product(i, weights) > 0. {
+                output.push(1.);
+            } else {
+                output.push(-1.);
+            }
+        }
+        println!("Predications : {:?}", output);
+        output
+    }
+
+    fn float_randomize(matrix: &Vec<Vec<String>>) -> Vec<Vec<f64>> {
+        randomize(
+            &matrix
+                .iter()
+                .map(|a| {
+                    a.iter()
+                        .map(|b| {
+                            (b).replace("\r", "")
+                                .replace("\n", "")
+                                .parse::<f64>()
+                                .unwrap()
+                        })
+                        .collect::<Vec<f64>>()
+                })
+                .collect::<Vec<Vec<f64>>>(),
+        )
+    }
+}
 
 pub fn mean<T>(list: &Vec<T>) -> f64
 where
@@ -1104,7 +1339,7 @@ pub fn read_csv<'a>(path: String) -> (Vec<String>, Vec<Vec<String>>) {
     let file = fs::read_to_string(&path).unwrap();
     let splitted: Vec<&str> = file.split("\n").collect();
     let rows: i32 = (splitted.len() - 1) as i32;
-    println!("Number of rows = {}", rows - 1);
+    println!("Number of rows = {}", rows);
     let table: Vec<Vec<_>> = splitted.iter().map(|a| a.split(",").collect()).collect();
     let values = table[1..]
         .iter()
@@ -1279,7 +1514,7 @@ pub fn logistic_predict(matrix1: &Vec<Vec<f64>>, beta: &Vec<Vec<f64>>) -> Vec<Ve
     output
 }
 
-pub fn randomize_vector<T:std::clone::Clone>(rows: &Vec<T>) -> Vec<T> {
+pub fn randomize_vector<T: std::clone::Clone>(rows: &Vec<T>) -> Vec<T> {
     /*
     Shuffle values inside vector
     */
@@ -1298,7 +1533,7 @@ pub fn randomize_vector<T:std::clone::Clone>(rows: &Vec<T>) -> Vec<T> {
     output
 }
 
-pub fn randomize<T:std::clone::Clone>(rows: &Vec<Vec<T>>) -> Vec<Vec<T>> {
+pub fn randomize<T: std::clone::Clone>(rows: &Vec<Vec<T>>) -> Vec<Vec<T>> {
     /*
     Shuffle rows inside matrix
     */
@@ -1502,7 +1737,7 @@ where
     tuple
 }
 
-pub fn how_many_and_where<T>(matrix: &Vec<Vec<T>>, number: T) -> Vec<(usize,usize)>
+pub fn how_many_and_where<T>(matrix: &Vec<Vec<T>>, number: T) -> Vec<(usize, usize)>
 where
     T: std::cmp::PartialEq + std::fmt::Debug + Copy,
 {
@@ -1510,11 +1745,10 @@ where
     Returns the positions of the number to be found in a matrix
     */
     let mut output = vec![];
-    for (n,i) in matrix.iter().enumerate(){
-        for j in how_many_and_where_vector(&i, number)
-            {
-            output.push((n,j));
-            }
+    for (n, i) in matrix.iter().enumerate() {
+        for j in how_many_and_where_vector(&i, number) {
+            output.push((n, j));
+        }
     }
     output
 }
@@ -1562,10 +1796,14 @@ pub fn one_hot_encoding(column: &Vec<&str>) -> Vec<Vec<u8>> {
     output
 }
 
-
 pub fn shape(words: &str, m: &Vec<Vec<f64>>) {
     // # of rows and columns of a matrix
-    println!("{:?} : Rows: {:?}, Columns: {:?}", words, m.len(), m[0].len());
+    println!(
+        "{:?} : Rows: {:?}, Columns: {:?}",
+        words,
+        m.len(),
+        m[0].len()
+    );
 }
 
 pub fn rmse(test_data: &Vec<Vec<f64>>, predicted: &Vec<f64>) -> f64 {
@@ -1661,129 +1899,129 @@ pub fn drop_column(matrix: &Vec<Vec<f64>>, column_number: usize) -> Vec<Vec<f64>
 }
 
 pub fn float_randomize(matrix: &Vec<Vec<String>>) -> Vec<Vec<f64>> {
-        matrix
+    randomize(
+        &matrix
             .iter()
             .map(|a| {
                 a.iter()
                     .map(|b| (*b).replace("\r", "").parse::<f64>().unwrap())
                     .collect::<Vec<f64>>()
             })
-            .collect::<Vec<Vec<f64>>>()
-    }
+            .collect::<Vec<Vec<f64>>>(),
+    )
+}
 
 pub fn preprocess_train_test_split(
-        matrix: &Vec<Vec<f64>>,
-        test_percentage: f64,
-        target_column: usize,
-        preprocess: &str,
-    ) -> (Vec<Vec<f64>>, Vec<f64>, Vec<Vec<f64>>, Vec<f64>) {
-        /*
-        preprocess : "s" : standardize, "m" : minmaxscaler, "_" : no change
-        */
+    matrix: &Vec<Vec<f64>>,
+    test_percentage: f64,
+    target_column: usize,
+    preprocess: &str,
+) -> (Vec<Vec<f64>>, Vec<f64>, Vec<Vec<f64>>, Vec<f64>) {
+    /*
+    preprocess : "s" : standardize, "m" : minmaxscaler, "_" : no change
+    */
 
-        let (train_data, test_data) = train_test_split_f(matrix, test_percentage);
-        // println!("Training size: {:?}", train_data.len());
-        // println!("Test size: {:?}", test_data.len());
+    let (train_data, test_data) = train_test_split_f(matrix, test_percentage);
+    // println!("Training size: {:?}", train_data.len());
+    // println!("Test size: {:?}", test_data.len());
 
-        // converting rows to vector of columns of f64s
-        let mut actual_train = row_to_columns_conversion(&train_data);
-        let mut actual_test = row_to_columns_conversion(&test_data);
+    // converting rows to vector of columns of f64s
+    let mut actual_train = row_to_columns_conversion(&train_data);
+    let mut actual_test = row_to_columns_conversion(&test_data);
 
-        match preprocess {
-            "s" => {
-                actual_train = actual_train
-                    .iter()
-                    .map(|a| standardize_vector_f(a))
-                    .collect::<Vec<Vec<f64>>>();
-                actual_test = actual_test
-                    .iter()
-                    .map(|a| standardize_vector_f(a))
-                    .collect::<Vec<Vec<f64>>>();
-            }
-            "m" => {
-                actual_train = actual_train
-                    .iter()
-                    .map(|a| min_max_scaler(a))
-                    .collect::<Vec<Vec<f64>>>();
-                actual_test = actual_test
-                    .iter()
-                    .map(|a| min_max_scaler(a))
-                    .collect::<Vec<Vec<f64>>>();
-            }
+    match preprocess {
+        "s" => {
+            actual_train = actual_train
+                .iter()
+                .map(|a| standardize_vector_f(a))
+                .collect::<Vec<Vec<f64>>>();
+            actual_test = actual_test
+                .iter()
+                .map(|a| standardize_vector_f(a))
+                .collect::<Vec<Vec<f64>>>();
+        }
+        "m" => {
+            actual_train = actual_train
+                .iter()
+                .map(|a| min_max_scaler(a))
+                .collect::<Vec<Vec<f64>>>();
+            actual_test = actual_test
+                .iter()
+                .map(|a| min_max_scaler(a))
+                .collect::<Vec<Vec<f64>>>();
+        }
 
-            _ => println!(
-                "Using the actual values without preprocessing unless 's' or 'm' is passed"
-            ),
-        };
+        _ => println!("Using the actual values without preprocessing unless 's' or 'm' is passed"),
+    };
 
-        (
-            drop_column(&actual_train, target_column),
-            actual_train[target_column - 1].clone(),
-            drop_column(&actual_test, target_column),
-            actual_test[target_column - 1].clone(),
-        )
-    }
+    (
+        drop_column(&actual_train, target_column),
+        actual_train[target_column - 1].clone(),
+        drop_column(&actual_test, target_column),
+        actual_test[target_column - 1].clone(),
+    )
+}
 
 pub fn standardize_vector_f(list: &Vec<f64>) -> Vec<f64> {
-        /*
-        Preserves the shape of the original distribution. Doesn't
-        reduce the importance of outliers. Least disruptive to the
-        information in the original data. Default range for
-        MinMaxScaler is O to 1.
-            */
-        list.iter()
-            .map(|a| (*a - mean(list)) / std_dev(list))
-            .collect()
-    }
+    /*
+    Preserves the shape of the original distribution. Doesn't
+    reduce the importance of outliers. Least disruptive to the
+    information in the original data. Default range for
+    MinMaxScaler is O to 1.
+        */
+    list.iter()
+        .map(|a| (*a - mean(list)) / std_dev(list))
+        .collect()
+}
 
-    // pub fn min_max_scaler(list: &Vec<f64>) -> Vec<f64> {
-    //     let (minimum, maximum) = min_max_f(&list);
-    //     let range: f64 = maximum - minimum;
-    //     list.iter().map(|a| 1. - ((maximum - a) / range)).collect()
-    // }
+// pub fn min_max_scaler(list: &Vec<f64>) -> Vec<f64> {
+//     let (minimum, maximum) = min_max_f(&list);
+//     let range: f64 = maximum - minimum;
+//     list.iter().map(|a| 1. - ((maximum - a) / range)).collect()
+// }
 
-pub fn confuse_me(predicted: &Vec<f64>, actual: &Vec<f64>) {
-        // https://medium.com/@MohammedS/performance-metrics-for-classification-problems-in-machine-learning-part-i-b085d432082b
-        let mut tp = 0.; // class_one_is_class_one
-        let mut fp = 0.; // class_one_is_class_two(Type 1)
-        let mut fng = 0.; // class_two_is_class_one (Type 1)
-        let mut tng = 0.; // class_two_is_class_two
+pub fn confuse_me(predicted: &Vec<f64>, actual: &Vec<f64>, class0: f64, class1: f64) {
+    // https://medium.com/@MohammedS/performance-metrics-for-classification-problems-in-machine-learning-part-i-b085d432082b
+    let mut tp = 0.; // class_one_is_class_one
+    let mut fp = 0.; // class_one_is_class_two(Type 1)
+    let mut fng = 0.; // class_two_is_class_one (Type 1)
+    let mut tng = 0.; // class_two_is_class_two
 
-        for (i, j) in actual
-            .iter()
-            .zip(predicted.iter())
-            .collect::<Vec<(&f64, &f64)>>()
-            .iter()
-        {
-            if **i == 0.0 && **j == 0.0 {
-                tp += 1.;
-            }
-            if **i == 1.0 && **j == 1.0 {
-                tng += 1.;
-            }
-            if **i == 0.0 && **j == 1.0 {
-                fp += 1.;
-            }
-            if **i == 1.0 && **j == 0.0 {
-                fng += 1.;
-            }
+    for (i, j) in actual
+        .iter()
+        .zip(predicted.iter())
+        .collect::<Vec<(&f64, &f64)>>()
+        .iter()
+    {
+        if **i == class0 && **j == class0 {
+            tp += 1.;
         }
-        println!("\n|------------------------|");
-        println!("|  {:?}    |   {:?}", tp, fp);
-        println!("|------------------------|");
-        println!("|  {:?}    |   {:?}", fng, tng);
-        println!("|------------------------|");
-        println!("Accuracy : {:.3}", (tp + tng) / (tp + fp + fng + tng));
-        println!("Precision : {:.3}", (tp) / (tp + fp));
-        let precision: f64 = (tp) / (tp + fp);
-        println!("Recall (sensitivity) : {:.3}", (tp) / (tp + fng));
-        let recall: f64 = (tp) / (tp + fng);
-        println!("Specificity: {:.3}", (tng) / (fp + tng));
-        println!(
-            "F1 : {:.3}\n\n",
-            (2. * precision * recall) / (precision * recall)
-        );
+        if **i == class1 && **j == class1 {
+            tng += 1.;
+        }
+        if **i == class0 && **j == class1 {
+            fp += 1.;
+        }
+        if **i == class1 && **j == class0 {
+            fng += 1.;
+        }
     }
+    println!("\n|------------------------|");
+    println!("|  {:?}    |   {:?}", tp, fp);
+    println!("|------------------------|");
+    println!("|  {:?}    |   {:?}", fng, tng);
+    println!("|------------------------|");
+    println!("Accuracy : {:.3}", (tp + tng) / (tp + fp + fng + tng));
+    println!("Precision : {:.3}", (tp) / (tp + fp));
+    let precision: f64 = (tp) / (tp + fp);
+    println!("Recall (sensitivity) : {:.3}", (tp) / (tp + fng));
+    let recall: f64 = (tp) / (tp + fng);
+    println!("Specificity: {:.3}", (tng) / (fp + tng));
+    println!(
+        "F1 : {:.3}\n\n",
+        (2. * precision * recall) / (precision * recall)
+    );
+}
 
 pub fn cv<T: Copy>(data: &Vec<Vec<T>>, k: usize) -> (Vec<Vec<T>>, Vec<Vec<T>>) {
     /*
@@ -1813,21 +2051,28 @@ pub fn z_outlier_f(list: &Vec<f64>) -> Vec<f64> {
         .collect::<Vec<f64>>()
 }
 
-pub fn percentile_f(list:&Vec<f64>, percentile:u32)-> f64{
+pub fn percentile_f(list: &Vec<f64>, percentile: u32) -> f64 {
     /*
     Returns passed percentile in the list
     */
     // https://en.wikipedia.org/wiki/Percentile
     list.clone().sort_by(|a, b| a.partial_cmp(b).unwrap());
-    let oridinal_rank = round_off_f((percentile as f64/100.)*(list.len() as f64),0);
-    list[oridinal_rank as usize-1]
+    let oridinal_rank = round_off_f((percentile as f64 / 100.) * (list.len() as f64), 0);
+    list[oridinal_rank as usize - 1]
 }
 
-pub fn quartile_f(list:&Vec<f64>){
+pub fn quartile_f(list: &Vec<f64>) {
     /*
     Returns quartiles like in a boxplot
     */
-    println!("\tPercentile:\t10th :{:?}\t25th :{:?}\t50th :{:?}\t75th :{:?}\t90th :{:?}", percentile_f(list, 10), percentile_f(list, 25), percentile_f(list, 50), percentile_f(list, 75), percentile_f(list, 90));
+    println!(
+        "\tPercentile:\t10th :{:?}\t25th :{:?}\t50th :{:?}\t75th :{:?}\t90th :{:?}",
+        percentile_f(list, 10),
+        percentile_f(list, 25),
+        percentile_f(list, 50),
+        percentile_f(list, 75),
+        percentile_f(list, 90)
+    );
 }
 
 /*
@@ -1950,31 +2195,30 @@ FUNCTIONS
     > 1. matrix1: &Vec<Vec<T>>
     > 2. matrix2: &Vec<Vec<T>>
     > 3. how: &str : "long" or "wide"
-    = Vec<Vec<T>> 
+    = Vec<Vec<T>>
 
 22. make_matrix_string_literal
     > 1. data: &'a Vec<Vec<String>>
-    = Vec<Vec<&'a str>> 
+    = Vec<Vec<&'a str>>
 
 23. head
     > 1. data: &Vec<Vec<T>>
     > 2. rows: usize
-    = Vec<Vec<T>> 
+    = Vec<Vec<T>>
 
 24. tail
     > 1. data: &Vec<Vec<T>>
     > 2. rows: usize
-    = Vec<Vec<T>> 
+    = Vec<Vec<T>>
 
 25. row_to_columns_conversion
     > 1. data: &Vec<Vec<T>>
-    = Vec<Vec<T>> 
+    = Vec<Vec<T>>
 
 26. columns_to_rows_conversion
     > 1. data: &Vec<Vec<T>>
-    = Vec<Vec<T>> 
+    = Vec<Vec<T>>
 */
-
 
 #[derive(Debug)] // to make it usable by print!
 pub struct MatrixF {
@@ -2107,7 +2351,6 @@ impl MatrixF {
     }
 }
 
-
 pub struct DataFrame<'a> {
     // stored column wise
     pub string: Vec<Vec<&'a str>>,
@@ -2117,7 +2360,7 @@ pub struct DataFrame<'a> {
 impl<'a> DataFrame<'a> {
     pub fn describe(&self) {
         println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        println!("      Details of the DataFrame", );
+        println!("      Details of the DataFrame",);
         println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         for (n, i) in self.string.iter().enumerate() {
             println!(
@@ -2168,52 +2411,65 @@ impl<'a> DataFrame<'a> {
         let mut output = vec![];
         for i in unique_string_index.iter() {
             let mut result = vec![];
-                for j in reduced_dataframe_float.iter() {
-                        let seperated = j.iter().enumerate().filter(|(n,_)| i.contains(n) ).collect::<Vec<(usize,&f64)>>();
-                        match operation {
-            "sum" => {
-                result.push(seperated.iter().map(|a| a.1).fold(0.,|a,b| a+b));
-            }
-            "mean" => {
-                result.push(seperated.iter().map(|a| a.1).fold(0.,|a,b| a+b)/(seperated.len() as f64));
-            }
-            _ => panic!("Enter either 'sum' or 'mean'"),
-        };
+            for j in reduced_dataframe_float.iter() {
+                let seperated = j
+                    .iter()
+                    .enumerate()
+                    .filter(|(n, _)| i.contains(n))
+                    .collect::<Vec<(usize, &f64)>>();
+                match operation {
+                    "sum" => {
+                        result.push(seperated.iter().map(|a| a.1).fold(0., |a, b| a + b));
                     }
-                    output.push(result[0]);
-                }
-        println!("Grouped on {:?} => {:?}",string_column_number ,unique_string.iter().zip(output.iter()).collect::<Vec<(&&str,&f64)>>());
+                    "mean" => {
+                        result.push(
+                            seperated.iter().map(|a| a.1).fold(0., |a, b| a + b)
+                                / (seperated.len() as f64),
+                        );
+                    }
+                    _ => panic!("Enter either 'sum' or 'mean'"),
+                };
+            }
+            output.push(result[0]);
+        }
+        println!(
+            "Grouped on {:?} => {:?}",
+            string_column_number,
+            unique_string
+                .iter()
+                .zip(output.iter())
+                .collect::<Vec<(&&str, &f64)>>()
+        );
     }
 }
-
 
 pub struct DataMap<'a> {
     // use std::collections::HashMap;
     // stored column wise
-    pub string: HashMap<&'a str,Vec<&'a str>>,
-    pub numerical: HashMap<&'a str,Vec<f64>>,
-    pub boolean: HashMap<&'a str,Vec<bool>>,
+    pub string: HashMap<&'a str, Vec<&'a str>>,
+    pub numerical: HashMap<&'a str, Vec<f64>>,
+    pub boolean: HashMap<&'a str, Vec<bool>>,
 }
 impl<'a> DataMap<'a> {
     pub fn describe(&self) {
         println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        println!("      Details of the DataMap", );
+        println!("      Details of the DataMap",);
         println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        for (k,v) in self.string.iter() {
+        for (k, v) in self.string.iter() {
             println!(
                 "String column :{:?}  Values count : {:?}",
                 k,
                 value_counts(v)
             )
         }
-        for (k,v) in self.boolean.iter() {
+        for (k, v) in self.boolean.iter() {
             println!(
                 "Boolean column :{:?}  Values count : {:?}",
                 k,
                 value_counts(v)
             )
         }
-        for (k,v) in self.numerical.iter() {
+        for (k, v) in self.numerical.iter() {
             println!("Numerical column :{:?}\n\tCount :{:?}", k, v.len());
             println!(
                 "\tMinimum :{:?}  Maximum : {:?}",
@@ -2230,7 +2486,7 @@ impl<'a> DataMap<'a> {
         // removing other string columns and boolean columns as they dont play any role
 
         let reduced_dataframe_string = self.string[string_column].clone();
-        let reduced_dataframe_float:Vec<&Vec<f64>> = self.numerical.values().clone().collect();
+        let reduced_dataframe_float: Vec<&Vec<f64>> = self.numerical.values().clone().collect();
 
         // finding unique string values and the index they occur in
         let unique_string = unique_values(&reduced_dataframe_string);
@@ -2271,7 +2527,8 @@ impl<'a> DataMap<'a> {
             output.push(result[0]);
         }
         println!(
-            "Grouped by {:?} => {:?}",string_column,
+            "Grouped by {:?} => {:?}",
+            string_column,
             unique_string
                 .iter()
                 .zip(output.iter())
@@ -2279,7 +2536,6 @@ impl<'a> DataMap<'a> {
         );
     }
 }
-
 
 pub fn print_a_matrix<T: std::fmt::Debug>(string: &str, matrix: &Vec<Vec<T>>) {
     // To print a matrix in a manner that resembles a matrix
@@ -2521,32 +2777,23 @@ pub fn min_max_f(list: &Vec<f64>) -> (f64, f64) {
         positive.sort_by(|a, b| a.partial_cmp(b).unwrap());
         negative.sort_by(|a, b| a.partial_cmp(b).unwrap());
         // println!("{:?}", list);
-        if negative.len() > 0 && positive.len() >0
-        {
+        if negative.len() > 0 && positive.len() > 0 {
             (negative[0], positive[positive.len() - 1])
+        } else {
+            if positive.len() == 0 && negative.len() != 0 {
+                (negative[negative.len() - 1], negative[0])
+            } else {
+                if negative.len() == 0 && positive.len() != 0 {
+                    (positive[0], positive[positive.len() - 1])
+                } else {
+                    panic!("Empty vector found")
+                }
+            }
         }
-        else{
-           if positive.len()==0 && negative.len()!=0 
-                {
-                 (negative[negative.len() - 1], negative[0])
-                } 
-            else {
-            if negative.len()==0 && positive.len()!=0 
-            {
-             (positive[0],positive[positive.len() - 1])
-            }
-            else{
-                panic!("Empty vector found")
-            }
-        }}
-    }
-    else 
-    {  
-    panic!("Input should be a float type")
+    } else {
+        panic!("Input should be a float type")
     }
 }
-
-
 
 pub fn is_numerical<T>(value: T) -> bool {
     if type_of(&value) == "&i32"
@@ -2711,7 +2958,6 @@ where
     }
 }
 
-
 pub fn join_matrix<T: Copy>(
     matrix1: &Vec<Vec<T>>,
     matrix2: &Vec<Vec<T>>,
@@ -2778,27 +3024,27 @@ pub fn make_matrix_string_literal<'a>(data: &'a Vec<Vec<String>>) -> Vec<Vec<&'a
     output
 }
 
-pub fn head<T: std::clone::Clone>(data: &Vec<Vec<T>>, rows: usize) -> Vec<Vec<T>> {
+pub fn head<T: std::clone::Clone + std::fmt::Debug>(data: &Vec<Vec<T>>, rows: usize) {
     /*
     Works on row wise data
     Shows first few rows of a matrix
     */
     if rows <= data.len() {
         let output = data[..rows].to_vec();
-        output
+        print_a_matrix(&format!("First {} rows", rows), &output);
     } else {
         panic!("Data is nt that big, please check the numbers");
     }
 }
 
-pub fn tail<T: std::clone::Clone>(data: &Vec<Vec<T>>, rows: usize) -> Vec<Vec<T>> {
+pub fn tail<T: std::clone::Clone + std::fmt::Debug>(data: &Vec<Vec<T>>, rows: usize) {
     /*
     Works on row wise data
     Shows first few rows of a matrix
     */
     if rows <= data.len() {
-        let output = data[data.len()-rows..].to_vec();
-        output
+        let output = data[data.len() - rows..].to_vec();
+        print_a_matrix(&format!("Last {} rows", rows), &output);
     } else {
         panic!("Data is nt that big, please check the numbers");
     }
@@ -2810,7 +3056,7 @@ pub fn row_to_columns_conversion<T: std::fmt::Debug + Copy>(data: &Vec<Vec<T>>) 
     converts [[1,6,11],[2,7,12],[3,8,13],[4,9,14],[5,10,15]] => [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]]
     */
     // println!("{:?}x{:?} becomes", data.len(), data[0].len());
-    let mut output:Vec<Vec<_>> = vec![];
+    let mut output: Vec<Vec<_>> = vec![];
     for j in 0..(data[0].len()) {
         let columns = data.iter().map(|a| a[j]).collect();
         output.push(columns)
@@ -2818,7 +3064,6 @@ pub fn row_to_columns_conversion<T: std::fmt::Debug + Copy>(data: &Vec<Vec<T>>) 
     // println!("{:?}x{:?}", output.len(), output[0].len());
     output
 }
-
 
 pub fn columns_to_rows_conversion<T: std::fmt::Debug + Copy>(data: &Vec<Vec<T>>) -> Vec<Vec<T>> {
     /*
@@ -2861,7 +3106,7 @@ FUNCTIONS
 ---------
 1. extract_vowels_consonants : Returns a tuple of vectors containing chars (after converting to lowercase)
     > 1. string : String
-    = Vec<chars> 
+    = Vec<chars>
     = Vec<chars>
 
 2. sentence_case
@@ -2874,7 +3119,7 @@ FUNCTIONS
 
 4. tokenize :
     > string: String
-    > symbol: &Vec<&'a str> 
+    > symbol: &Vec<&'a str>
      = Vec<String>
 
 */
@@ -3167,7 +3412,6 @@ impl StringToMatch {
         }
     }
 }
-
 
 pub fn extract_vowels_consonants(string: String) -> (Vec<char>, Vec<char>) {
     /*
@@ -3643,7 +3887,6 @@ pub fn tokenize<'a>(string: String, symbol: &Vec<&'a str>) -> Vec<String> {
     output2
 }
 
-
 /*
 DESCRIPTION
 -----------------------------------------
@@ -3659,12 +3902,22 @@ FUNCTIONS
 
 2. simple_ma
     > 1. ts : &Vec<f64>
-    > 2. lag : usize 
+    > 2. lag : usize
     = Vec<f64>
 
 3. exp_ma
     > 1. ts : &Vec<f64>
-    > 2. alpha : f64 
+    > 2. alpha : f64
+    = Vec<f64>
+
+4. best_fit_line : returns intercept and slope of the best fit line
+    > x: &Vec<f64>
+    > y: &Vec<f64>)
+     = (f64, f64)
+
+5. pacf : returns a vector of values as in a graph
+    > ts: &Vec<f64>
+    > lag: usize)
     = Vec<f64>
 */
 
@@ -3684,10 +3937,12 @@ pub fn acf(ts: &Vec<f64>, lag: usize) -> Result<f64, std::io::Error> {
         }
     }
     match denominator {
-        x if x != 0. => { if ((numerator / denominator).abs() > 0.5) && (lag!=0){
-            print!("At {:?} lag the series seems to be correlated\t",lag)
+        x if x != 0. => {
+            if ((numerator / denominator).abs() > 0.5) && (lag != 0) {
+                print!("At {:?} lag the series seems to be correlated\t", lag)
+            }
+            Ok(numerator / denominator)
         }
-            Ok(numerator / denominator)},
         _ => Err(std::io::Error::new(
             std::io::ErrorKind::Other,
             "Denominator is 0!",
@@ -3695,28 +3950,97 @@ pub fn acf(ts: &Vec<f64>, lag: usize) -> Result<f64, std::io::Error> {
     }
 }
 
-pub fn simple_ma(ts: &Vec<f64>, lag: usize) -> Vec<f64>{
+pub fn simple_ma(ts: &Vec<f64>, lag: usize) -> Vec<f64> {
     let mut output = vec![];
-    for i in 0..lag{
-        if lag+i<= ts.len()
-        {let sub_ts = ts[i..lag+i].to_vec();
-        output.push(sub_ts.iter().fold(0.,|a,b| a+b)/sub_ts.len() as f64);}
+    for i in 0..lag {
+        if lag + i <= ts.len() {
+            let sub_ts = ts[i..lag + i].to_vec();
+            output.push(sub_ts.iter().fold(0., |a, b| a + b) / sub_ts.len() as f64);
+        }
     }
     pad_with_zero(&mut output, lag, "pre")
 }
 
-
-pub fn exp_ma(ts: &Vec<f64>,  alpha:f64) -> Vec<f64>{
+pub fn exp_ma(ts: &Vec<f64>, alpha: f64) -> Vec<f64> {
     // https://www.youtube.com/watch?v=k_HN0wOKDd0
     // assuming first forecast is == first actual value
     // new forecast  = aplha*actual old value+(1-alpha)*forecasted old value
     let mut output = vec![ts[0]];
-    for (n,i) in ts[1..].to_vec().iter().enumerate(){
-        output.push(alpha*i+(1.-alpha)*output[n]);
+    for (n, i) in ts[1..].to_vec().iter().enumerate() {
+        output.push(alpha * i + (1. - alpha) * output[n]);
     }
     // removing the last value and adding 0 in front
-    let exp_ma = pad_with_zero(&mut output[..ts.len()-1].to_vec(), 1, "pre");
-    let mse = mean(&ts[1..].to_vec().iter().zip(output[..ts.len()-1].to_vec().iter()).map(|(a,b)| (a-b)*(a-b)).collect());
+    let exp_ma = pad_with_zero(&mut output[..ts.len() - 1].to_vec(), 1, "pre");
+    let mse = mean(
+        &ts[1..]
+            .to_vec()
+            .iter()
+            .zip(output[..ts.len() - 1].to_vec().iter())
+            .map(|(a, b)| (a - b) * (a - b))
+            .collect(),
+    );
     println!("Mean square error of this forecasting : {:?}", mse);
     exp_ma
+}
+
+pub fn best_fit_line(x: &Vec<f64>, y: &Vec<f64>) -> (f64, f64) {
+    // https://pythonprogramming.net/how-to-program-best-fit-line-machine-learning-tutorial/
+    // intercept , slope
+    let xy = x
+        .iter()
+        .zip(y.iter())
+        .map(|a| a.0 * a.1)
+        .collect::<Vec<f64>>();
+    let xx = x
+        .iter()
+        .zip(x.iter())
+        .map(|a| a.0 * a.1)
+        .collect::<Vec<f64>>();
+    let m = ((mean(x) * mean(y)) - mean(&xy)) / ((mean(x) * mean(x)) - mean(&xx));
+
+    let b = mean(y) - m * mean(x);
+    (b, m)
+}
+
+pub fn pacf(ts: &Vec<f64>, lag: usize) -> Vec<f64> {
+    /*
+    Unlike ACF, which uses combined effect on a value, here the impact is very specific
+    The coeeficient is specific to the lagged value
+    This is more useful than ACF as it remoevs the influence of values in between
+    */
+    // data: https://www.ncdc.noaa.gov/teleconnections/enso/indicators/soi/data.csv
+    // https://www.youtube.com/watch?v=ZjaBn93YPWo, http://rinterested.github.io/statistics/acf_pacf.html, https://towardsdatascience.com/understanding-partial-auto-correlation-fa39271146ac
+    /*
+    STEPS:
+    1. While shifting the ts from front, and residual from last (residual is same as ts initially)
+    2. From the best fit line between ts and residual find the new residual
+    3. From now on best fit line will be found on the residual
+    4. The correlation between shifted ts and point residual at each shift will be captured as pacf at that point
+    */
+    let mut pacf = vec![1.]; // as correlation with it self is 1
+    let residual = ts.clone();
+    for i in 1..lag {
+        let mut res_shift = &residual[i..].to_vec();
+        // finding correlation
+        let corr = correlation(&ts[..(ts.len() - i)].to_vec(), &res_shift, "p");
+        pacf.push(corr);
+        // calculting best fit line
+        let (intercept, slope) =
+            best_fit_line(&ts[..(ts.len() - i)].to_vec(), &residual[i..].to_vec());
+        // calculating estimate
+        let estimate = &ts[..(ts.len() - i)]
+            .to_vec()
+            .iter()
+            .map(|a| (a * slope) + intercept)
+            .collect::<Vec<f64>>();
+        // modifying residual to act as source data in the next lag
+        res_shift = &res_shift
+            .iter()
+            .zip(estimate.iter())
+            .map(|a| a.0 - a.1)
+            .collect::<Vec<f64>>();
+        println!("slope : {:?}, intercept : {:?}", slope, intercept);
+    }
+
+    pacf
 }

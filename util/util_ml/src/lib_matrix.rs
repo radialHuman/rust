@@ -989,27 +989,28 @@ pub fn make_matrix_string_literal<'a>(data: &'a Vec<Vec<String>>) -> Vec<Vec<&'a
     output
 }
 
-pub fn head<T: std::clone::Clone>(data: &Vec<Vec<T>>, rows: usize) -> Vec<Vec<T>> {
+
+pub fn head<T: std::clone::Clone+std::fmt::Debug>(data: &Vec<Vec<T>>, rows: usize) {
     /*
     Works on row wise data
     Shows first few rows of a matrix
     */
     if rows <= data.len() {
         let output = data[..rows].to_vec();
-        output
+        print_a_matrix(&format!("First {} rows",rows), &output);
     } else {
         panic!("Data is nt that big, please check the numbers");
     }
 }
 
-pub fn tail<T: std::clone::Clone>(data: &Vec<Vec<T>>, rows: usize) -> Vec<Vec<T>> {
+pub fn tail<T: std::clone::Clone+std::fmt::Debug>(data: &Vec<Vec<T>>, rows: usize) {
     /*
     Works on row wise data
     Shows first few rows of a matrix
     */
     if rows <= data.len() {
         let output = data[data.len()-rows..].to_vec();
-        output
+        print_a_matrix(&format!("Last {} rows",rows), &output);
     } else {
         panic!("Data is nt that big, please check the numbers");
     }
