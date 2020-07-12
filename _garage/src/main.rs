@@ -848,6 +848,365 @@ fn main() {
 
     // let weights = svm.fit();
     // println!("Weights : {:?}", weights);
+    // let df1 = DataFrame {
+    //     string: vec![
+    //         vec![
+    //             "One", "Two", "Three", "One", "Two", "Three", "One", "Two", "Three", "One", "Two",
+    //             "Three",
+    //         ],
+    //         vec!["1", "2", "3", "1", "2", "3", "1", "2", "3", "1", "2", "3"],
+    //     ],
+    //     numerical: vec![
+    //         vec![1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 12., 11.],
+    //         vec![
+    //             -1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,
+    //         ],
+    //     ],
+    //     boolean: vec![vec![
+    //         true, false, true, true, true, false, true, true, true, false, true, true,
+    //     ]],
+    // };
+
+    // let df2 = DataFrame {
+    //     string: vec![
+    //         vec![
+    //             "One", "Two", "3", "One", "Two", "3", "One", "Two", "3", "One", "Two", "3",
+    //         ],
+    //         vec![
+    //             "1", "2", "Three", "1", "2", "Three", "1", "2", "Three", "1", "2", "Three",
+    //         ],
+    //     ],
+    //     numerical: vec![
+    //         vec![
+    //             1.1, 2.1, 3.1, 4.1, 5.1, 6.1, 7.1, 8.1, 9.1, 10.1, 12.1, 11.1,
+    //         ],
+    //         vec![
+    //             -1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,
+    //         ],
+    //     ],
+    //     boolean: vec![
+    //         vec![
+    //             true, false, true, true, true, false, true, true, true, false, true, true,
+    //         ],
+    //         vec![
+    //             true, false, true, true, true, false, true, true, true, false, true, true,
+    //         ],
+    //     ],
+    // };
+    // dataframe_comparision(&df1, &df2);
+    // use std::collections::HashMap;
+    // // creating hashmaps
+    // let mut string_columns: HashMap<&str, Vec<&str>> = HashMap::new();
+    // string_columns.insert(
+    //     "string_1",
+    //     vec![
+    //         "One", "Two", "Three", "One", "Two", "Three", "One", "Two", "Three", "One", "Two",
+    //         "Three",
+    //     ],
+    // );
+    // string_columns.insert(
+    //     "string_2",
+    //     vec!["1", "2", "3", "1", "2", "3", "1", "2", "3", "1", "2", "3"],
+    // );
+    // let mut numerical_columns: HashMap<&str, Vec<f64>> = HashMap::new();
+    // numerical_columns.insert(
+    //     "numerical_1",
+    //     vec![1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 12., 11.],
+    // );
+    // numerical_columns.insert(
+    //     "numerical_2",
+    //     vec![
+    //         -1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,
+    //     ],
+    // );
+    // let mut boolean_columns: HashMap<&str, Vec<bool>> = HashMap::new();
+    // boolean_columns.insert(
+    //     "boolean_1",
+    //     vec![
+    //         true, false, true, true, true, false, true, true, true, false, true, true,
+    //     ],
+    // );
+
+    // let dm1 = DataMap {
+    //     string: string_columns,
+    //     numerical: numerical_columns,
+    //     boolean: boolean_columns,
+    // };
+
+    // // second datamap
+    // let mut string_columns: HashMap<&str, Vec<&str>> = HashMap::new();
+    // string_columns.insert(
+    //     "string_1",
+    //     vec![
+    //         "One", "Two", "3", "One", "Two", "3", "One", "Two", "3", "One", "Two", "3",
+    //     ],
+    // );
+    // string_columns.insert(
+    //     "string_2",
+    //     vec![
+    //         "One", "2", "3", "One", "2", "3", "One", "2", "3", "One", "2", "3",
+    //     ],
+    // );
+    // let mut numerical_columns: HashMap<&str, Vec<f64>> = HashMap::new();
+    // numerical_columns.insert(
+    //     "numerical_1",
+    //     vec![
+    //         1.1, 2.1, 3.1, 4.1, 5.1, 6.1, 7.1, 8.1, 9.1, 10.1, 12.1, 11.1,
+    //     ],
+    // );
+    // numerical_columns.insert(
+    //     "numerical_2",
+    //     vec![
+    //         -1.1, -2., -3.1, -4., -5.1, -6., -7.1, -8., -9.1, -10., -11.1, -12.,
+    //     ],
+    // );
+    // numerical_columns.insert(
+    //     "numerical_5",
+    //     vec![
+    //         -1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,
+    //     ],
+    // );
+    // let mut boolean_columns: HashMap<&str, Vec<bool>> = HashMap::new();
+    // boolean_columns.insert(
+    //     "boolean_1",
+    //     vec![
+    //         true, false, true, true, true, false, true, true, true, false, true, true,
+    //     ],
+    // );
+
+    // let dm2 = DataMap {
+    //     string: string_columns,
+    //     numerical: numerical_columns,
+    //     boolean: boolean_columns,
+    // };
+    // datamap_comparision(&dm1, &dm2);
+    // let data = vec![
+    //     vec![10., 11., 8., 3., 2., 1.],
+    //     vec![6., 4., 5., 3., 2.8, 1.],
+    //     vec![12., 9., 10., 2.5, 1.3, 2.],
+    //     vec![5., 7., 6., 2., 4., 7.],
+    // ];
+    // let mut data = vec![
+    //     vec![13., -20., 3.],
+    //     vec![1., -7.5, 13.3],
+    //     vec![3.5, -10., 1.],
+    // ];
+    // let (_, values) = read_csv("dataset_iris.txt".to_string());
+    // let mut data = values
+    //     .iter()
+    //     .map(|a| a[..a.len() - 1].to_vec())
+    //     .collect::<Vec<Vec<String>>>(); // removing the lables
+    // let iris = float_randomize(&data);
+    // // print_a_matrix("Iris", &iris);
+    // pca(&iris, 1);
+    // data = vec![
+    //     vec![10., 11., 8., 3., 2., 1.],
+    //     vec![6., 4., 5., 3., 2.8, 1.],
+    // ];
+    // println!("{:?}", best_fit_line_in_higher_dimension(&data));
+    // let mut df2 = DataFrame {
+    //     string: vec![
+    //         vec![
+    //             "One", "Two", "3", "One", "Two", "3", "One", "Two", "3", "One", "Two", "3",
+    //         ],
+    //         vec![
+    //             "1", "2", "Three", "1", "2", "Three", "1", "2", "Three", "1", "2", "Three",
+    //         ],
+    //     ],
+    //     numerical: vec![
+    //         vec![
+    //             1.1, 2.1, 3.1, 4.1, 5.1, 6.1, 7.1, 8.1, 9.1, 10.1, 12.1, 11.1,
+    //         ],
+    //         vec![
+    //             -1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,
+    //         ],
+    //     ],
+    //     boolean: vec![
+    //         vec![
+    //             true, false, true, true, true, false, true, true, true, false, true, true,
+    //         ],
+    //         vec![
+    //             true, false, true, true, true, false, true, true, true, false, true, true,
+    //         ],
+    //     ],
+    // };
+    // let df2 = df2.sort("n", 1, true);
+    // println!("{:?}", df2.string);
+    // println!("{:?}", df2.numerical);
+    // println!("{:?}", df2.boolean);
+
+    let mut string_columns: HashMap<&str, Vec<&str>> = HashMap::new();
+    string_columns.insert(
+        "string_1",
+        vec![
+            "One", "Two", "Three", "One", "Two", "Three", "One", "Two", "Three", "One", "Two",
+            "Three",
+        ],
+    );
+    string_columns.insert(
+        "string_2",
+        vec!["1", "2", "3", "1", "2", "3", "1", "2", "3", "1", "2", "3"],
+    );
+    let mut numerical_columns: HashMap<&str, Vec<f64>> = HashMap::new();
+    numerical_columns.insert(
+        "numerical_1",
+        vec![1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 12., 11.],
+    );
+    numerical_columns.insert(
+        "numerical_2",
+        vec![
+            -1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,
+        ],
+    );
+    let mut boolean_columns: HashMap<&str, Vec<bool>> = HashMap::new();
+    boolean_columns.insert(
+        "boolean_1",
+        vec![
+            true, false, true, true, true, false, true, true, true, false, true, true,
+        ],
+    );
+
+    let dm = DataMap {
+        string: string_columns,
+        numerical: numerical_columns,
+        boolean: boolean_columns,
+    };
+    println!("SORTING (Ascending):");
+    let dm1 = dm.sort("s", "string_1", true);
+    println!("{:?}", dm1.string);
+    println!("{:?}", dm1.numerical);
+    println!("{:?}", dm1.boolean);
+    println!("SORTING (Descending):");
+    let dm1 = dm.sort("s", "string_1", false);
+    println!("{:?}", dm1.string);
+    println!("{:?}", dm1.numerical);
+    println!("{:?}", dm1.boolean);
+}
+use std::collections::HashMap;
+pub struct DataMap<'a> {
+    // use std::collections::HashMap;
+    // stored column wise
+    pub string: HashMap<&'a str, Vec<&'a str>>,
+    pub numerical: HashMap<&'a str, Vec<f64>>,
+    pub boolean: HashMap<&'a str, Vec<bool>>,
+}
+impl<'a> DataMap<'a> {
+    pub fn sort(&self, col_type: &str, col_name: &str, ascending: bool) -> DataMap {
+        /* returns a different DataFrame with rows sorted as per order passed
+        col_type : "s": string,"n":numerical
+        */
+        let mut output = DataMap {
+            string: HashMap::new(),
+            numerical: HashMap::new(),
+            boolean: HashMap::new(),
+        };
+        let mut to_sort_by_string;
+        let mut to_sort_by_numerical;
+        let order: Vec<usize>;
+        match col_type {
+            "s" => {
+                to_sort_by_string = self.string[col_name].clone();
+                // finding the order of sorting
+                order = DataFrame::find_order_of_sorting_string(&mut to_sort_by_string, ascending);
+            }
+            "n" => {
+                to_sort_by_numerical = self.numerical[col_name].clone();
+                // finding the order of sorting
+                order = DataFrame::find_order_of_sorting_numerical(
+                    &mut to_sort_by_numerical,
+                    ascending,
+                );
+            }
+            _ => panic!("Pass either `s` or `n`"),
+        }
+
+        println!("New order is : {:?}", order);
+        // reordering the original DataFrame (String)
+        for (key, value) in self.string.iter() {
+            let mut new_vector = vec![];
+            for o in order.iter() {
+                new_vector.push(value[*o]);
+            }
+            output.string.insert(*key, new_vector);
+        }
+        // reordering the original DataFrame (Numerical)
+        for (key, value) in self.numerical.iter() {
+            let mut new_vector = vec![];
+            for o in order.iter() {
+                new_vector.push(value[*o]);
+            }
+            output.numerical.insert(*key, new_vector);
+        }
+        // reordering the original DataFrame (Numerical)
+        for (key, value) in self.boolean.iter() {
+            let mut new_vector = vec![];
+            for o in order.iter() {
+                new_vector.push(value[*o]);
+            }
+            output.boolean.insert(*key, new_vector);
+        }
+
+        output
+    }
+
+    fn find_order_of_sorting_string(data: &mut Vec<&str>, ascending: bool) -> Vec<usize> {
+        use std::collections::BTreeMap;
+        let mut input = data.clone();
+        let mut order: BTreeMap<usize, &str> = BTreeMap::new();
+        let mut output = vec![];
+
+        // original order
+        for (n, i) in data.iter().enumerate() {
+            order.insert(n, i);
+        }
+        // println!("{:?}", order);
+        match ascending {
+            true => input.sort_unstable(),
+            false => {
+                input.sort_unstable();
+                input.reverse();
+            }
+        };
+
+        // new order
+        for i in input.iter() {
+            for (k, v) in order.iter() {
+                if (*i == *v) & (output.contains(k) == false) {
+                    output.push(*k);
+                    break;
+                }
+            }
+        }
+        output
+    }
+
+    fn find_order_of_sorting_numerical(data: &mut Vec<f64>, ascending: bool) -> Vec<usize> {
+        use std::collections::BTreeMap;
+        let mut input = data.clone();
+        let mut order: BTreeMap<usize, &f64> = BTreeMap::new();
+        let mut output = vec![];
+
+        // original order
+        for (n, i) in data.iter().enumerate() {
+            order.insert(n, i);
+        }
+        // println!("{:?}", order);
+        match ascending {
+            true => input.sort_by(|a, b| a.partial_cmp(b).unwrap()),
+            false => input.sort_by(|a, b| b.partial_cmp(a).unwrap()),
+        };
+
+        // new order
+        for i in input.iter() {
+            for (k, v) in order.iter() {
+                if (i == *v) & (output.contains(k) == false) {
+                    output.push(*k);
+                    break;
+                }
+            }
+        }
+        output
+    }
 }
 
 // ================================================================================= // =================================================================================
@@ -855,6 +1214,190 @@ fn main() {
 // ================================================================================= // =================================================================================
 // ================================================================================= // =================================================================================// ================================================================================= // =================================================================================
 // ================================================================================= // =================================================================================
+// https://towardsdatascience.com/detecting-stationarity-in-time-series-data-d29e0a21e638 https://github.com/2wavetech/How-to-Check-if-Time-Series-Data-is-Stationary-with-Python
+// https://towardsdatascience.com/principal-component-analysis-pca-from-scratch-in-python-7f3e2a540c51
+// pub fn pca(data: &Vec<Vec<f64>>, reduce_to: usize) -> Vec<Vec<f64>> {
+//     /*
+//      Steps
+//      1. Scale the data
+//      2. Find covariance matrix
+//      3. Eigendecomposition
+//     */
+//     /*
+//     Video: https://www.youtube.com/watch?v=FgakZw6K1QQ, https://www.youtube.com/watch?v=PFDu9oVAE-g
+//     Article: https://towardsdatascience.com/principal-component-analysis-pca-from-scratch-in-python-7f3e2a540c51, https://medium.com/@louisdevitry/intuitive-tutorial-on-eigenvalue-decomposition-in-numpy-af0062a4929b
+//     */
+//     println!("Original data");
+//     head(&data, 5);
+//     let mut output = vec![];
+//     let mut input = data.clone();
+//     let mut cov_mat = vec![];
+
+//     // 1. standardize data and transpose it
+//     input = transpose(&columns_to_rows_conversion(
+//         &row_to_columns_conversion(&input)
+//             .iter()
+//             .map(|a| standardize_vector_f(a))
+//             .collect(),
+//     ));
+
+//     println!("Data Standardized .. ");
+
+//     // 2. Covariance matrix (ASSUMING DATA IS ROW WISE)
+//     for (n, i) in input.iter().enumerate() {
+//         let mut row = vec![];
+//         for (m, j) in input.iter().enumerate() {
+//             if n == m {
+//                 row.push(round_off_f(variance(i) / input[0].len() as f64, 3));
+//             } else {
+//                 row.push(round_off_f(covariance(i, j) / input[0].len() as f64, 3));
+//             }
+//         }
+//         cov_mat.push(row);
+//     }
+//     print_a_matrix("Covariance Matrix", &cov_mat);
+
+//     // 3. Eigen decomposition
+//     eigen_decomposition(&cov_mat);
+//     output
+// }
+// pub fn eigen_decomposition(matrix: &Vec<Vec<f64>>) -> (Vec<f64>, Vec<Vec<f64>>) {
+//     //
+//     // returns eigen values and eigen vectors
+//     let mut eigen_values = vec![];
+//     let mut eigen_vectors = vec![];
+
+//     (eigen_values, eigen_vectors)
+// }
+
+// pub fn make_string_float(matrix: &Vec<Vec<String>>) -> Vec<Vec<f64>> {
+//     // similar to float_ramdomize without randomizing
+//     matrix
+//         .iter()
+//         .map(|a| {
+//             a.iter()
+//                 .map(|b| (*b).replace("\r", "").parse::<f64>().unwrap())
+//                 .collect::<Vec<f64>>()
+//         })
+//         .collect::<Vec<Vec<f64>>>()
+// }
+
+// pub fn pca(data: &Vec<Vec<f64>>, reduce_to: usize) -> Vec<Vec<f64>> {
+//     /*
+//     Steps:
+//     1. Average of each row (assuming data is row wise)
+//     2. Find the point which is the center and move it to origin
+//     3. Find the best fit line's equation
+//     4. Find the most imp column on PC1
+//     */
+//     /*
+//     Video: https://www.youtube.com/watch?v=FgakZw6K1QQ, https://www.youtube.com/watch?v=PFDu9oVAE-g
+//     Article: https://towardsdatascience.com/principal-component-analysis-pca-from-scratch-in-python-7f3e2a540c51
+//     */
+//     print_a_matrix("Original data", &data);
+//     let mut output = vec![];
+//     let mut center_of_data = vec![];
+//     let mut input = data.clone();
+//     let mut shifted_values = input.clone();
+//     // 1. Average of each row (assuming data is row wise)
+//     for each_row in input.iter() {
+//         center_of_data.push(mean(each_row));
+//     }
+//     println!("The center of the data :{:?}", center_of_data);
+
+//     // 2. Find the point which is the center and move it to origin
+//     for (row_count, each_row) in input.iter().enumerate() {
+//         for (center_count, center_value) in center_of_data.iter().enumerate() {
+//             shifted_values[row_count] = each_row.iter().map(|a| a + (-1. * center_value)).collect()
+//         }
+//     }
+//     print_a_matrix("Shifted input is:", &shifted_values);
+//     let number_of_rows = shifted_values.len();
+
+//     // 3. Find the best fit line's equation
+//     let xt = MatrixF {
+//         matrix: shifted_values,
+//     };
+//     let xtx = MatrixF {
+//         matrix: matrix_multiplication(&xt.matrix, &transpose(&xt.matrix)),
+//     };
+//     // println!("{:?}", MatrixF::inverse_f(&xtx));
+//     let slopes = &matrix_multiplication(
+//         &MatrixF::inverse_f(&xtx), // np.linalg.inv(X.T@X)
+//         // &transpose(&vec![matrix_vector_product_f(&xt.matrix,&vec![1.; number_of_rows])]), //(X.T)
+//         &transpose(&xt.matrix),
+//     )[0];
+//     println!("The importance of each column : {:?}", slopes);
+
+//     output
+// }
+
+// pub fn line_between_2_points(point1: &Vec<f64>, point2: &Vec<f64>) {
+//     let direction_vector = element_wise_operation(point1, point2, "sub");
+//     println!("Directional vector : {:?}", direction_vector);
+// }
+
+// pub fn best_fit_line_in_higher_dimension(data: &Vec<Vec<f64>>) -> Vec<f64> {
+//     // returns coefficients in the form of ax+by+cz+...+n
+//     // assuming data is passed row wise
+//     // https://www.youtube.com/watch?v=U4eRSL16KzA
+//     print_a_matrix("The original matrix is:", &data);
+//     let mut input = row_to_columns_conversion(&data);
+//     let column_count = input.len() - 1;
+//     input[column_count] = vec![1.; input[0].len()];
+//     let a = MatrixF {
+//         matrix: input.clone(),
+//     };
+//     print_a_matrix("The modified input matrix is:", &a.matrix);
+//     print_a_matrix("Inverse", &a.inverse_f());
+//     matrix_vector_product_f(&a.inverse_f(), &input[column_count].to_vec())
+//         .iter()
+//         .map(|a| round_off_f(*a, 2))
+//         .collect()
+// }
+
+pub fn pacf(ts: &Vec<f64>, lag: usize) -> Vec<f64> {
+    /*
+    Unlike ACF, which uses combined effect on a value, here the impact is very specific
+    The coeeficient is specific to the lagged value
+    This is more useful than ACF as it remoevs the influence of values in between
+    */
+    // data: https://www.ncdc.noaa.gov/teleconnections/enso/indicators/soi/data.csv
+    // https://www.youtube.com/watch?v=ZjaBn93YPWo, http://rinterested.github.io/statistics/acf_pacf.html, https://towardsdatascience.com/understanding-partial-auto-correlation-fa39271146ac
+    /*
+    STEPS:
+    1. While shifting the ts from front, and residual from last (residual is same as ts initially)
+    2. From the best fit line between ts and residual find the new residual
+    3. From now on best fit line will be found on the residual
+    4. The correlation between shifted ts and point residual at each shift will be captured as pacf at that point
+    */
+    let mut pacf = vec![1.]; // as correlation with it self is 1
+    let residual = ts.clone();
+    for i in 1..lag {
+        let mut res_shift = &residual[i..].to_vec();
+        // finding correlation
+        let corr = correlation(&ts[..(ts.len() - i)].to_vec(), &res_shift, "p");
+        pacf.push(corr);
+        // calculting best fit line
+        let (intercept, slope) =
+            best_fit_line(&ts[..(ts.len() - i)].to_vec(), &residual[i..].to_vec());
+        // calculating estimate
+        let estimate = &ts[..(ts.len() - i)]
+            .to_vec()
+            .iter()
+            .map(|a| (a * slope) + intercept)
+            .collect::<Vec<f64>>();
+        // modifying residual to act as source data in the next lag
+        res_shift = &res_shift
+            .iter()
+            .zip(estimate.iter())
+            .map(|a| a.0 - a.1)
+            .collect::<Vec<f64>>();
+        println!("slope : {:?}, intercept : {:?}", slope, intercept);
+    }
+
+    pacf
+}
 
 // pub struct OLS {
 //     pub file_path: String,

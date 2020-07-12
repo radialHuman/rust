@@ -423,6 +423,45 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
     df.describe();
     println!();
 
+    let df2 = DataFrame {
+        string: vec![
+            vec![
+                "One", "Two", "3", "One", "Two", "3", "One", "Two", "3", "One", "Two", "3",
+            ],
+            vec![
+                "1", "2", "Three", "1", "2", "Three", "1", "2", "Three", "1", "2", "Three",
+            ],
+        ],
+        numerical: vec![
+            vec![
+                1.1, 2.1, 3.1, 4.1, 5.1, 6.1, 7.1, 8.1, 9.1, 10.1, 12.1, 11.1,
+            ],
+            vec![
+                -1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,
+            ],
+        ],
+        boolean: vec![
+            vec![
+                true, false, true, true, true, false, true, true, true, false, true, true,
+            ],
+            vec![
+                true, false, true, true, true, false, true, true, true, false, true, true,
+            ],
+        ],
+    };
+
+    println!("\n\nSORTING (Descending):");
+    let df2 = df2.sort("s", 1, false);
+    println!("{:?}", df2.string);
+    println!("{:?}", df2.numerical);
+    println!("{:?}\n\n", df2.boolean);
+
+    println!("SORTING (Ascending):");
+    let df2 = df2.sort("s", 1, true);
+    println!("{:?}", df2.string);
+    println!("{:?}", df2.numerical);
+    println!("{:?}\n\n", df2.boolean);
+
     // creating hashmaps
     let mut string_columns: HashMap<&str, Vec<&str>> = HashMap::new();
     string_columns.insert(
@@ -456,12 +495,161 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
     );
 
     let dm = DataMap {
+        string: string_columns.clone(),
+        numerical: numerical_columns.clone(),
+        boolean: boolean_columns.clone(),
+    };
+    dm.describe();
+    dm.groupby("string_2", "mean");
+
+    let dm = DataMap {
+        string: string_columns.clone(),
+        numerical: numerical_columns.clone(),
+        boolean: boolean_columns.clone(),
+    };
+    println!("SORTING (Ascending):");
+    let dm1 = dm.sort("s", "string_1", true);
+    println!("{:?}", dm1.string);
+    println!("{:?}", dm1.numerical);
+    println!("{:?}", dm1.boolean);
+    println!("SORTING (Descending):");
+    let dm1 = dm.sort("s", "string_1", false);
+    println!("{:?}", dm1.string);
+    println!("{:?}", dm1.numerical);
+    println!("{:?}", dm1.boolean);
+
+    let df1 = DataFrame {
+        string: vec![
+            vec![
+                "One", "Two", "Three", "One", "Two", "Three", "One", "Two", "Three", "One", "Two",
+                "Three",
+            ],
+            vec!["1", "2", "3", "1", "2", "3", "1", "2", "3", "1", "2", "3"],
+        ],
+        numerical: vec![
+            vec![1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 12., 11.],
+            vec![
+                -1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,
+            ],
+        ],
+        boolean: vec![vec![
+            true, false, true, true, true, false, true, true, true, false, true, true,
+        ]],
+    };
+
+    let df2 = DataFrame {
+        string: vec![
+            vec![
+                "One", "Two", "3", "One", "Two", "3", "One", "Two", "3", "One", "Two", "3",
+            ],
+            vec![
+                "1", "2", "Three", "1", "2", "Three", "1", "2", "Three", "1", "2", "Three",
+            ],
+        ],
+        numerical: vec![
+            vec![
+                1.1, 2.1, 3.1, 4.1, 5.1, 6.1, 7.1, 8.1, 9.1, 10.1, 12.1, 11.1,
+            ],
+            vec![
+                -1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,
+            ],
+        ],
+        boolean: vec![
+            vec![
+                true, false, true, true, true, false, true, true, true, false, true, true,
+            ],
+            vec![
+                true, false, true, true, true, false, true, true, true, false, true, true,
+            ],
+        ],
+    };
+    dataframe_comparision(&df1, &df2);
+    use std::collections::HashMap;
+    // creating hashmaps
+    let mut string_columns: HashMap<&str, Vec<&str>> = HashMap::new();
+    string_columns.insert(
+        "string_1",
+        vec![
+            "One", "Two", "Three", "One", "Two", "Three", "One", "Two", "Three", "One", "Two",
+            "Three",
+        ],
+    );
+    string_columns.insert(
+        "string_2",
+        vec!["1", "2", "3", "1", "2", "3", "1", "2", "3", "1", "2", "3"],
+    );
+    let mut numerical_columns: HashMap<&str, Vec<f64>> = HashMap::new();
+    numerical_columns.insert(
+        "numerical_1",
+        vec![1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 12., 11.],
+    );
+    numerical_columns.insert(
+        "numerical_2",
+        vec![
+            -1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,
+        ],
+    );
+    let mut boolean_columns: HashMap<&str, Vec<bool>> = HashMap::new();
+    boolean_columns.insert(
+        "boolean_1",
+        vec![
+            true, false, true, true, true, false, true, true, true, false, true, true,
+        ],
+    );
+
+    let dm1 = DataMap {
         string: string_columns,
         numerical: numerical_columns,
         boolean: boolean_columns,
     };
-    dm.describe();
-    dm.groupby("string_2", "mean");
+
+    // second datamap
+    let mut string_columns: HashMap<&str, Vec<&str>> = HashMap::new();
+    string_columns.insert(
+        "string_1",
+        vec![
+            "One", "Two", "3", "One", "Two", "3", "One", "Two", "3", "One", "Two", "3",
+        ],
+    );
+    string_columns.insert(
+        "string_2",
+        vec![
+            "One", "2", "3", "One", "2", "3", "One", "2", "3", "One", "2", "3",
+        ],
+    );
+    let mut numerical_columns: HashMap<&str, Vec<f64>> = HashMap::new();
+    numerical_columns.insert(
+        "numerical_1",
+        vec![
+            1.1, 2.1, 3.1, 4.1, 5.1, 6.1, 7.1, 8.1, 9.1, 10.1, 12.1, 11.1,
+        ],
+    );
+    numerical_columns.insert(
+        "numerical_2",
+        vec![
+            -1.1, -2., -3.1, -4., -5.1, -6., -7.1, -8., -9.1, -10., -11.1, -12.,
+        ],
+    );
+    numerical_columns.insert(
+        "numerical_5",
+        vec![
+            -1., -2., -3., -4., -5., -6., -7., -8., -9., -10., -11., -12.,
+        ],
+    );
+    let mut boolean_columns: HashMap<&str, Vec<bool>> = HashMap::new();
+    boolean_columns.insert(
+        "boolean_1",
+        vec![
+            true, false, true, true, true, false, true, true, true, false, true, true,
+        ],
+    );
+
+    let dm2 = DataMap {
+        string: string_columns,
+        numerical: numerical_columns,
+        boolean: boolean_columns,
+    };
+    datamap_comparision(&dm1, &dm2);
 
     println!();
     println!();
@@ -801,10 +989,10 @@ Rust was originally designed by Graydon Hoare at Mozilla Research, with contribu
         );
     }
 
-    println!(
-        "Partial Autocorrelation at 20 lag is :{:?}\n",
-        pacf(&ts, 20)
-    );
+    // println!(
+    //     "Partial Autocorrelation at 20 lag is :{:?}\n",
+    //     pacf(&ts, 20)
+    // );
 
     ts = vec![11., 12., 13., 14., 15., 16., 17.];
     println!(
@@ -1278,6 +1466,20 @@ Numerical column #1
         Percentile:     10th :-1.0      25th :-3.0      50th :-6.0      75th :-9.0      90th :-11.0
         Outliers :[]
 
+SORTING (Descending):
+New order is : [2, 5, 8, 11, 1, 4, 7, 10, 0, 3, 6, 9]
+[["3", "3", "3", "3", "Two", "Two", "Two", "Two", "One", "One", "One", "One"], ["Three", "Three", "Three", "Three", "2", "2", "2", "2", "1", "1", "1", "1"]]
+[[3.1, 6.1, 9.1, 11.1, 2.1, 5.1, 8.1, 12.1, 1.1, 4.1, 7.1, 10.1], [-3.0, -6.0, -9.0, -12.0, -2.0, -5.0, -8.0, -11.0, -1.0, -4.0, -7.0, -10.0]]
+[[true, false, true, true, false, true, true, true, true, true, true, false], [true, false, true, true, false, true, true, true, true, true, true, false]]
+
+
+SORTING (Ascending):
+New order is : [8, 9, 10, 11, 4, 5, 6, 7, 0, 1, 2, 3]
+[["One", "One", "One", "One", "Two", "Two", "Two", "Two", "3", "3", "3", "3"], ["1", "1", "1", "1", "2", "2", "2", "2", "Three", "Three", "Three", "Three"]]
+[[1.1, 4.1, 7.1, 10.1, 2.1, 5.1, 8.1, 12.1, 3.1, 6.1, 9.1, 11.1], [-1.0, -4.0, -7.0, -10.0, -2.0, -5.0, -8.0, -11.0, -3.0, -6.0, -9.0, -12.0]]
+[[true, true, true, false, false, true, true, true, true, false, true, true], [true, true, true, false, false, true, true, true, true, false, true, true]]
+
+
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
       Details of the DataMap
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -1298,6 +1500,96 @@ Numerical column :"numerical_2"
         Outliers :[]
 Grouped by "string_2" => [("1", 5.5), ("2", 6.75), ("3", 7.25)]
 
+SORTING (Ascending):
+New order is : [0, 3, 6, 9, 2, 5, 8, 11, 1, 4, 7, 10]
+{"string_1": ["One", "One", "One", "One", "Three", "Three", "Three", "Three", "Two", "Two", "Two", "Two"], "string_2": ["1", "1", "1", "1", "3", "3", "3", "3", "2", "2", "2", "2"]}
+{"numerical_1": [1.0, 4.0, 7.0, 10.0, 3.0, 6.0, 9.0, 11.0, 2.0, 5.0, 8.0, 12.0], "numerical_2": [-1.0, -4.0, -7.0, -10.0, -3.0, -6.0, -9.0, -12.0, -2.0, -5.0, -8.0, -11.0]}
+{"boolean_1": [true, true, true, false, true, false, true, true, false, true, true, true]}
+SORTING (Descending):
+New order is : [1, 4, 7, 10, 2, 5, 8, 11, 0, 3, 6, 9]
+{"string_1": ["Two", "Two", "Two", "Two", "Three", "Three", "Three", "Three", "One", "One", "One", "One"], "string_2": ["2", "2", "2", "2", "3", "3", "3", "3", "1", "1", "1", "1"]}
+{"numerical_1": [2.0, 5.0, 8.0, 12.0, 3.0, 6.0, 9.0, 11.0, 1.0, 4.0, 7.0, 10.0], "numerical_2": [-2.0, -5.0, -8.0, -11.0, -3.0, -6.0, -9.0, -12.0, -1.0, -4.0, -7.0, -10.0]}
+{"boolean_1": [false, true, true, true, true, false, true, true, true, true, true, false]}
+
+********** Count comparision **********
+String columns count : 2
+Numerical columns count : 2
+Boolean columns count are not the same 1 and 2
+
+********** Value comparision (for the common columns) **********
+Dissimilar in String at :
+0 : ((0, 2), (0, 2))
+1 : ((0, 5), (0, 5))
+2 : ((0, 8), (0, 8))
+3 : ((0, 11), (0, 11))
+4 : ((1, 2), (1, 2))
+5 : ((1, 5), (1, 5))
+6 : ((1, 8), (1, 8))
+7 : ((1, 11), (1, 11))
+Dissimilar in Numerical at :
+0 : ((0, 0), (0, 0))
+1 : ((0, 1), (0, 1))
+2 : ((0, 2), (0, 2))
+3 : ((0, 3), (0, 3))
+4 : ((0, 4), (0, 4))
+5 : ((0, 5), (0, 5))
+6 : ((0, 6), (0, 6))
+7 : ((0, 7), (0, 7))
+8 : ((0, 8), (0, 8))
+9 : ((0, 9), (0, 9))
+10 : ((0, 10), (0, 10))
+11 : ((0, 11), (0, 11))
+The boolean values matchs, if present
+
+********** Count comparision **********
+String columns count : 2
+Numerical columns count : 2
+Boolean columns count are not the same 1 and 2
+
+********** Value comparision (for the common columns) **********
+Dissimilar in String at :
+0 : ((0, 2), (0, 2))
+1 : ((0, 5), (0, 5))
+2 : ((0, 8), (0, 8))
+3 : ((0, 11), (0, 11))
+4 : ((1, 2), (1, 2))
+5 : ((1, 5), (1, 5))
+6 : ((1, 8), (1, 8))
+7 : ((1, 11), (1, 11))
+Dissimilar in Numerical at :
+0 : ((0, 0), (0, 0))
+1 : ((0, 1), (0, 1))
+2 : ((0, 2), (0, 2))
+3 : ((0, 3), (0, 3))
+4 : ((0, 4), (0, 4))
+5 : ((0, 5), (0, 5))
+6 : ((0, 6), (0, 6))
+7 : ((0, 7), (0, 7))
+8 : ((0, 8), (0, 8))
+9 : ((0, 9), (0, 9))
+10 : ((0, 10), (0, 10))
+11 : ((0, 11), (0, 11))
+The boolean values matchs, if present
+
+********** Count comparision **********
+Number of String columns match
+Mismatch in count of Numerical columns : Table 1 has 2 while Table 2 has 3
+Number of Boolean columns match
+
+********** Column name comparision **********
+String columns match (irrespective of order)
+Table 1 has ["numerical_5"] missing in Numerical
+Boolean columns match (irrespective of order)
+
+********** Value comparision (for the common columns) **********
+Dissimilar in String at (Table 1, Table 2):
+"string_1" : [(2, 2), (5, 5), (8, 8), (11, 11)]
+"string_2" : [(0, 0), (3, 3), (6, 6), (9, 9)]
+Dissimilar in Numerical at (Table 1, Table 2):
+"numerical_2" : [(0, 0), (2, 2), (4, 4), (6, 6), (8, 8), (10, 10)]
+"numerical_1" : [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (10, 10), (11, 11)]
+Dissimilar in boolean at (Table 1, Table 2):
+"boolean_1" : []
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                                                               LIB_ML

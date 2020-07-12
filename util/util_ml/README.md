@@ -6,9 +6,8 @@
 
 Section | Added | Fixed | Removed 
 ---|---|---|---
-lib_ml | SSVM | float_randomized (randomizing was missing), read_csv (shows the correct number of rows now), confuse_me (now takes in class values instead of fixed class )
-lib_ts |best_fit_line, pacf ||
-lib_matrix ||head (made syntax easy), tail (made syntax easy)|
+lib_matrix | dataframe_comparision, datamap_comparision, vector_comparision, DataFrame > sort, DataMap > sort|||
+lib_ts | | | pacf |
 
 ---
 ### Comparision with [Scikit learn's output](https://github.com/radialHuman/rust_ml/tree/master/from_scratch/src)
@@ -26,7 +25,7 @@ lib_matrix ||head (made syntax easy), tail (made syntax easy)|
 ## List of Functions and Structs
 
 ### lib_matrix
-    1. MatrixDeterminantF : 
+    1. MatrixF : 
         > determinant_f
             x determinant_2
             x determinant_3plus
@@ -39,10 +38,12 @@ lib_matrix ||head (made syntax easy), tail (made syntax easy)|
     2. DataFrame:
         > describe
         > groupby
+        > sort
 
     3. DataMap:
         > describe
         > groupby
+        > sort
 
     1. dot_product
     2. element_wise_operation
@@ -70,6 +71,9 @@ lib_matrix ||head (made syntax easy), tail (made syntax easy)|
     24. tail
     25. row_to_columns_conversion
     26. columns_to_rows_conversion
+    27. dataframe_comparision
+    28. datamap_comparision
+    29. vector_comparision
 
 ---
 ### lib_ml
@@ -109,7 +113,7 @@ lib_matrix ||head (made syntax easy), tail (made syntax easy)|
     8. simple_linear_regression_prediction
     9. variance
     10. convert_string_categorical 
-    11. normalize_vector_f
+    11. min_max_scaler
     12. logistic_function_f
     13. log_gradient_f 
     14. logistic_predict 
@@ -177,10 +181,8 @@ lib_matrix ||head (made syntax easy), tail (made syntax easy)|
     2. simple_ma
     3. exp_ma
     4. best_fit_line
-    5. pacf
 ---
 ### About the author
 * Used Python, learning Rust
 * Feedback appreciated
 * rd2575691@gmail.com
-

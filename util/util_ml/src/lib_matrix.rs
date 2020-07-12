@@ -12,10 +12,12 @@ STRUCTS
 2. DataFrame : string: Vec<Vec<&'a str>>, numbers: Vec<Vec<f64>>, boolean: Vec<Vec<bool>>,
     > groupby : string_column_number , operation: &str // "sum" or "mean"
     > describe
+    > sort : col_type : "s" or "n" , col_number, ascending : true or false
 
 2. DataMap : string: HashMap<&'a str,Vec<&'a str>>, numbers:HashMap<&'a str,Vec<f64>>, boolean: HashMap<&'a str,Vec<bool>>,
     > groupby : string_column_number , operation: &str // "sum" or "mean"
     > describe
+    > sort : col_type : "s" or "n" , col_name, ascending : true or false
 
 FUNCTIONS
 ---------
@@ -118,29 +120,42 @@ FUNCTIONS
     > 1. matrix1: &Vec<Vec<T>>
     > 2. matrix2: &Vec<Vec<T>>
     > 3. how: &str : "long" or "wide"
-    = Vec<Vec<T>> 
+    = Vec<Vec<T>>
 
 22. make_matrix_string_literal
     > 1. data: &'a Vec<Vec<String>>
-    = Vec<Vec<&'a str>> 
+    = Vec<Vec<&'a str>>
 
 23. head
     > 1. data: &Vec<Vec<T>>
     > 2. rows: usize
-    = Vec<Vec<T>> 
+    = Vec<Vec<T>>
 
 24. tail
     > 1. data: &Vec<Vec<T>>
     > 2. rows: usize
-    = Vec<Vec<T>> 
+    = Vec<Vec<T>>
 
 25. row_to_columns_conversion
     > 1. data: &Vec<Vec<T>>
-    = Vec<Vec<T>> 
+    = Vec<Vec<T>>
 
 26. columns_to_rows_conversion
     > 1. data: &Vec<Vec<T>>
-    = Vec<Vec<T>> 
+    = Vec<Vec<T>>
+
+27. datamap_comparision
+    > table1: &DataMap
+    > table2: &DataMap
+
+28. dataframe_comparision
+    > table1: &DataFrame
+    > table2: &DataFrame
+
+29. compare_vectors
+    > v1: &Vec<T>,
+    > v2: &Vec<T>,
+    = (usize, Vec<(usize, usize)>)
 */
 
 #[derive(Debug)] // to make it usable by print!
@@ -274,7 +289,6 @@ impl MatrixF {
     }
 }
 
-
 pub struct DataFrame<'a> {
     // stored column wise
     pub string: Vec<Vec<&'a str>>,
@@ -284,7 +298,7 @@ pub struct DataFrame<'a> {
 impl<'a> DataFrame<'a> {
     pub fn describe(&self) {
         println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        println!("      Details of the DataFrame", );
+        println!("      Details of the DataFrame",);
         println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         for (n, i) in self.string.iter().enumerate() {
             println!(
@@ -335,52 +349,183 @@ impl<'a> DataFrame<'a> {
         let mut output = vec![];
         for i in unique_string_index.iter() {
             let mut result = vec![];
-                for j in reduced_dataframe_float.iter() {
-                        let seperated = j.iter().enumerate().filter(|(n,_)| i.contains(n) ).collect::<Vec<(usize,&f64)>>();
-                        match operation {
-            "sum" => {
-                result.push(seperated.iter().map(|a| a.1).fold(0.,|a,b| a+b));
-            }
-            "mean" => {
-                result.push(seperated.iter().map(|a| a.1).fold(0.,|a,b| a+b)/(seperated.len() as f64));
-            }
-            _ => panic!("Enter either 'sum' or 'mean'"),
-        };
+            for j in reduced_dataframe_float.iter() {
+                let seperated = j
+                    .iter()
+                    .enumerate()
+                    .filter(|(n, _)| i.contains(n))
+                    .collect::<Vec<(usize, &f64)>>();
+                match operation {
+                    "sum" => {
+                        result.push(seperated.iter().map(|a| a.1).fold(0., |a, b| a + b));
                     }
-                    output.push(result[0]);
+                    "mean" => {
+                        result.push(
+                            seperated.iter().map(|a| a.1).fold(0., |a, b| a + b)
+                                / (seperated.len() as f64),
+                        );
+                    }
+                    _ => panic!("Enter either 'sum' or 'mean'"),
+                };
+            }
+            output.push(result[0]);
+        }
+        println!(
+            "Grouped on {:?} => {:?}",
+            string_column_number,
+            unique_string
+                .iter()
+                .zip(output.iter())
+                .collect::<Vec<(&&str, &f64)>>()
+        );
+    }
+    pub fn sort(&self, col_type: &str, col_number: usize, ascending: bool) -> DataFrame {
+        /* returns a different DataFrame with rows sorted as per order passed
+        col_type : "s": string,"n":numerical
+        */
+        let mut output = DataFrame {
+            string: vec![],
+            numerical: vec![],
+            boolean: vec![],
+        };
+        let mut to_sort_by_string;
+        let mut to_sort_by_numerical;
+        let order: Vec<usize>;
+        match col_type {
+            "s" => {
+                to_sort_by_string = self.string[col_number].clone();
+                // finding the order of sorting
+                order = DataFrame::find_order_of_sorting_string(&mut to_sort_by_string, ascending);
+            }
+            "n" => {
+                to_sort_by_numerical = self.numerical[col_number].clone();
+                // finding the order of sorting
+                order = DataFrame::find_order_of_sorting_numerical(
+                    &mut to_sort_by_numerical,
+                    ascending,
+                );
+            }
+            _ => panic!("Pass either `s` or `n`"),
+        }
+
+        println!("{:?}", order);
+        // reordering the original DataFrame (String)
+        for each_vector in self.string.iter() {
+            let mut new_vector = vec![];
+            for o in order.iter() {
+                new_vector.push(each_vector[*o]);
+            }
+            output.string.push(new_vector);
+        }
+
+        // reordering the original DataFrame (Numerical)
+        for each_vector in self.numerical.iter() {
+            let mut new_vector = vec![];
+            for o in order.iter() {
+                new_vector.push(each_vector[*o]);
+            }
+
+            output.numerical.push(new_vector);
+        }
+
+        // reordering the original DataFrame (Boolean)
+        for each_vector in self.boolean.iter() {
+            let mut new_vector = vec![];
+            for o in order.iter() {
+                new_vector.push(each_vector[*o]);
+            }
+            output.boolean.push(new_vector);
+        }
+
+        output
+    }
+    fn find_order_of_sorting_string(data: &mut Vec<&str>, ascending: bool) -> Vec<usize> {
+        use std::collections::BTreeMap;
+        let mut input = data.clone();
+        let mut order: BTreeMap<usize, &str> = BTreeMap::new();
+        let mut output = vec![];
+
+        // original order
+        for (n, i) in data.iter().enumerate() {
+            order.insert(n, i);
+        }
+        // println!("{:?}", order);
+        match ascending {
+            true => input.sort_unstable(),
+            false => {
+                input.sort_unstable();
+                input.reverse();
+            }
+        };
+
+        // new order
+        for i in input.iter() {
+            for (k, v) in order.iter() {
+                if (*i == *v) & (output.contains(k) == false) {
+                    output.push(*k);
+                    break;
                 }
-        println!("Grouped on {:?} => {:?}",string_column_number ,unique_string.iter().zip(output.iter()).collect::<Vec<(&&str,&f64)>>());
+            }
+        }
+        output
+    }
+
+    fn find_order_of_sorting_numerical(data: &mut Vec<f64>, ascending: bool) -> Vec<usize> {
+        use std::collections::BTreeMap;
+        let mut input = data.clone();
+        let mut order: BTreeMap<usize, &f64> = BTreeMap::new();
+        let mut output = vec![];
+
+        // original order
+        for (n, i) in data.iter().enumerate() {
+            order.insert(n, i);
+        }
+        // println!("{:?}", order);
+        match ascending {
+            true => input.sort_by(|a, b| a.partial_cmp(b).unwrap()),
+            false => input.sort_by(|a, b| b.partial_cmp(a).unwrap()),
+        };
+
+        // new order
+        for i in input.iter() {
+            for (k, v) in order.iter() {
+                if (i == *v) & (output.contains(k) == false) {
+                    output.push(*k);
+                    break;
+                }
+            }
+        }
+        output
     }
 }
-
 
 pub struct DataMap<'a> {
     // use std::collections::HashMap;
     // stored column wise
-    pub string: HashMap<&'a str,Vec<&'a str>>,
-    pub numerical: HashMap<&'a str,Vec<f64>>,
-    pub boolean: HashMap<&'a str,Vec<bool>>,
+    pub string: HashMap<&'a str, Vec<&'a str>>,
+    pub numerical: HashMap<&'a str, Vec<f64>>,
+    pub boolean: HashMap<&'a str, Vec<bool>>,
 }
 impl<'a> DataMap<'a> {
     pub fn describe(&self) {
         println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        println!("      Details of the DataMap", );
+        println!("      Details of the DataMap",);
         println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        for (k,v) in self.string.iter() {
+        for (k, v) in self.string.iter() {
             println!(
                 "String column :{:?}  Values count : {:?}",
                 k,
                 value_counts(v)
             )
         }
-        for (k,v) in self.boolean.iter() {
+        for (k, v) in self.boolean.iter() {
             println!(
                 "Boolean column :{:?}  Values count : {:?}",
                 k,
                 value_counts(v)
             )
         }
-        for (k,v) in self.numerical.iter() {
+        for (k, v) in self.numerical.iter() {
             println!("Numerical column :{:?}\n\tCount :{:?}", k, v.len());
             println!(
                 "\tMinimum :{:?}  Maximum : {:?}",
@@ -397,7 +542,7 @@ impl<'a> DataMap<'a> {
         // removing other string columns and boolean columns as they dont play any role
 
         let reduced_dataframe_string = self.string[string_column].clone();
-        let reduced_dataframe_float:Vec<&Vec<f64>> = self.numerical.values().clone().collect();
+        let reduced_dataframe_float: Vec<&Vec<f64>> = self.numerical.values().clone().collect();
 
         // finding unique string values and the index they occur in
         let unique_string = unique_values(&reduced_dataframe_string);
@@ -438,43 +583,100 @@ impl<'a> DataMap<'a> {
             output.push(result[0]);
         }
         println!(
-            "Grouped by {:?} => {:?}",string_column,
+            "Grouped by {:?} => {:?}",
+            string_column,
             unique_string
                 .iter()
                 .zip(output.iter())
                 .collect::<Vec<(&&str, &f64)>>()
         );
     }
-}
+    pub fn sort(&self, col_type: &str, col_name: &str, ascending: bool) -> DataMap {
+        /* returns a different DataFrame with rows sorted as per order passed
+        col_type : "s": string,"n":numerical
+        */
+        let mut output = DataMap {
+            string: HashMap::new(),
+            numerical: HashMap::new(),
+            boolean: HashMap::new(),
+        };
+        let mut to_sort_by_string;
+        let mut to_sort_by_numerical;
+        let order: Vec<usize>;
+        match col_type {
+            "s" => {
+                to_sort_by_string = self.string[col_name].clone();
+                // finding the order of sorting
+                order = DataFrame::find_order_of_sorting_string(&mut to_sort_by_string, ascending);
+            }
+            "n" => {
+                to_sort_by_numerical = self.numerical[col_name].clone();
+                // finding the order of sorting
+                order = DataFrame::find_order_of_sorting_numerical(
+                    &mut to_sort_by_numerical,
+                    ascending,
+                );
+            }
+            _ => panic!("Pass either `s` or `n`"),
+        }
 
+        println!("New order is : {:?}", order);
+        // reordering the original DataFrame (String)
+        for (key, value) in self.string.iter() {
+            let mut new_vector = vec![];
+            for o in order.iter() {
+                new_vector.push(value[*o]);
+            }
+            output.string.insert(*key, new_vector);
+        }
+        // reordering the original DataFrame (Numerical)
+        for (key, value) in self.numerical.iter() {
+            let mut new_vector = vec![];
+            for o in order.iter() {
+                new_vector.push(value[*o]);
+            }
+            output.numerical.insert(*key, new_vector);
+        }
+        // reordering the original DataFrame (Numerical)
+        for (key, value) in self.boolean.iter() {
+            let mut new_vector = vec![];
+            for o in order.iter() {
+                new_vector.push(value[*o]);
+            }
+            output.boolean.insert(*key, new_vector);
+        }
+
+        output
+    }
+}
 
 use std::collections::HashMap;
 pub struct DataMap<'a> {
     // stored column wise
-    string: HashMap<&'a str,Vec<&'a str>>,
-    numerical: HashMap<&'a str,Vec<f64>>,
-    boolean: HashMap<&'a str,Vec<bool>>,
+    string: HashMap<&'a str, Vec<&'a str>>,
+    numerical: HashMap<&'a str, Vec<f64>>,
+    boolean: HashMap<&'a str, Vec<bool>>,
 }
 impl<'a> DataMap<'a> {
     pub fn describe(&self) {
         println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        println!("      Details of the DataMap", );
+        println!("      Details of the DataMap",);
         println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        for (k,v) in self.string.iter() {
+        for (k, v) in self.string.iter() {
             println!(
                 "String column :{:?}  Values count : {:?}",
                 k,
                 value_counts(v)
             )
         }
-        for (k,v) in self.boolean.iter() {
+        for (k, v) in self.boolean.iter() {
             println!(
                 "Boolean column :{:?}  Values count : {:?}",
                 k,
                 value_counts(v)
             )
         }
-        for (k,v) in self.numerical.iter() {
+        for (k, v) in self.numerical.iter() {
             println!("Numerical column :{:?}\n\tCount :{:?}", k, v.len());
             println!(
                 "\tMinimum :{:?}  Maximum : {:?}",
@@ -491,7 +693,7 @@ impl<'a> DataMap<'a> {
         // removing other string columns and boolean columns as they dont play any role
 
         let reduced_dataframe_string = self.string[string_column].clone();
-        let reduced_dataframe_float:Vec<&Vec<f64>> = self.numerical.values().clone().collect();
+        let reduced_dataframe_float: Vec<&Vec<f64>> = self.numerical.values().clone().collect();
 
         // finding unique string values and the index they occur in
         let unique_string = unique_values(&reduced_dataframe_string);
@@ -540,7 +742,6 @@ impl<'a> DataMap<'a> {
         );
     }
 }
-
 
 pub fn print_a_matrix<T: std::fmt::Debug>(string: &str, matrix: &Vec<Vec<T>>) {
     // To print a matrix in a manner that resembles a matrix
@@ -758,31 +959,23 @@ pub fn min_max_f(list: &Vec<f64>) -> (f64, f64) {
         positive.sort_by(|a, b| a.partial_cmp(b).unwrap());
         negative.sort_by(|a, b| a.partial_cmp(b).unwrap());
         // println!("{:?}", list);
-        if negative.len() > 0 && positive.len() >0
-        {
+        if negative.len() > 0 && positive.len() > 0 {
             (negative[0], positive[positive.len() - 1])
+        } else {
+            if positive.len() == 0 && negative.len() != 0 {
+                (negative[negative.len() - 1], negative[0])
+            } else {
+                if negative.len() == 0 && positive.len() != 0 {
+                    (positive[0], positive[positive.len() - 1])
+                } else {
+                    panic!("Empty vector found")
+                }
+            }
         }
-        else{
-           if positive.len()==0 && negative.len()!=0 
-                {
-                 (negative[negative.len() - 1], negative[0])
-                } 
-            else {
-            if negative.len()==0 && positive.len()!=0 
-            {
-             (positive[0],positive[positive.len() - 1])
-            }
-            else{
-                panic!("Empty vector found")
-            }
-        }}
-    }
-    else 
-    {  
-    panic!("Input should be a float type")
+    } else {
+        panic!("Input should be a float type")
     }
 }
-
 
 pub fn is_numerical<T>(value: T) -> bool {
     if type_of(&value) == "&i32"
@@ -922,7 +1115,6 @@ where
     }
 }
 
-
 pub fn join_matrix<T: Copy>(
     matrix1: &Vec<Vec<T>>,
     matrix2: &Vec<Vec<T>>,
@@ -989,28 +1181,27 @@ pub fn make_matrix_string_literal<'a>(data: &'a Vec<Vec<String>>) -> Vec<Vec<&'a
     output
 }
 
-
-pub fn head<T: std::clone::Clone+std::fmt::Debug>(data: &Vec<Vec<T>>, rows: usize) {
+pub fn head<T: std::clone::Clone + std::fmt::Debug>(data: &Vec<Vec<T>>, rows: usize) {
     /*
     Works on row wise data
     Shows first few rows of a matrix
     */
     if rows <= data.len() {
         let output = data[..rows].to_vec();
-        print_a_matrix(&format!("First {} rows",rows), &output);
+        print_a_matrix(&format!("First {} rows", rows), &output);
     } else {
         panic!("Data is nt that big, please check the numbers");
     }
 }
 
-pub fn tail<T: std::clone::Clone+std::fmt::Debug>(data: &Vec<Vec<T>>, rows: usize) {
+pub fn tail<T: std::clone::Clone + std::fmt::Debug>(data: &Vec<Vec<T>>, rows: usize) {
     /*
     Works on row wise data
     Shows first few rows of a matrix
     */
     if rows <= data.len() {
-        let output = data[data.len()-rows..].to_vec();
-        print_a_matrix(&format!("Last {} rows",rows), &output);
+        let output = data[data.len() - rows..].to_vec();
+        print_a_matrix(&format!("Last {} rows", rows), &output);
     } else {
         panic!("Data is nt that big, please check the numbers");
     }
@@ -1050,4 +1241,398 @@ pub fn columns_to_rows_conversion<T: std::fmt::Debug + Copy>(data: &Vec<Vec<T>>)
     }
     // println!("{:?}x{:?}", output.len(), output[0].len());
     output
+}
+
+pub fn datamap_comparision(table1: &DataMap, table2: &DataMap) {
+    /*
+    Generates report on count, similarities and dissimilarities of 2 DataMaps
+    */
+
+    // comparing column count
+    println!("\n********** Count comparision **********");
+    let string_columns1 = table1.string.keys().collect::<Vec<&&str>>();
+    let string_columns2 = table2.string.keys().collect::<Vec<&&str>>();
+
+    if string_columns1.len() == string_columns2.len() {
+        println!("Number of String columns match");
+    } else {
+        println!(
+            "Mismatch in count of String columns : Table 1 has {} ; while Table 2 has {:?}",
+            string_columns1.len(),
+            string_columns2.len()
+        );
+    }
+
+    let numerical_columns1 = table1.numerical.keys().collect::<Vec<&&str>>();
+    let numerical_columns2 = table2.numerical.keys().collect::<Vec<&&str>>();
+
+    if numerical_columns1.len() == numerical_columns2.len() {
+        println!("Number of Numerical columns match");
+    } else {
+        println!(
+            "Mismatch in count of Numerical columns : Table 1 has {} while Table 2 has {:?}",
+            numerical_columns1.len(),
+            numerical_columns2.len()
+        );
+    }
+
+    let boolean_columns1 = table1.boolean.keys().collect::<Vec<&&str>>();
+    let boolean_columns2 = table2.boolean.keys().collect::<Vec<&&str>>();
+
+    if boolean_columns1.len() == boolean_columns2.len() {
+        println!("Number of Boolean columns match");
+    } else {
+        println!(
+            "Mismatch in count of Boolean columns : Table 1 has {} while Table 2 has {:?}",
+            boolean_columns1.len(),
+            boolean_columns2.len()
+        );
+    }
+
+    println!("\n********** Column name comparision **********");
+    // chekcing for duplicate headers d=is not required as hashmap takes care of that automatically
+
+    let mut c = 0;
+    let mut mis_string1 = vec![];
+    let mut mis_string2 = vec![];
+    for i in string_columns1.iter() {
+        if string_columns2.contains(i) {
+            c += 1;
+        } else {
+            mis_string2.push(i);
+        }
+    }
+
+    for i in string_columns2.iter() {
+        if string_columns1.contains(i) {
+            c += 1;
+        } else {
+            mis_string1.push(i);
+        }
+    }
+    // println!("{:?}", c);
+    if c == string_columns1.len() + string_columns2.len() {
+        println!("String columns match (irrespective of order)");
+    } else {
+        if mis_string1.len() > 0 && mis_string2.len() > 0 {
+            println!(
+                "Table 1 has {:?} missing in String ; Table 2 has {:?} missing in String",
+                mis_string1, mis_string2
+            );
+        }
+        if mis_string1.len() > 0 && mis_string2.len() == 0 {
+            println!("Table 1 has {:?} missing in String", mis_string1);
+        }
+        if mis_string1.len() == 0 && mis_string2.len() > 0 {
+            println!("Table 2 has {:?} missing in String", mis_string2);
+        }
+    }
+
+    c = 0;
+    let mut mis_numerical1 = vec![];
+    let mut mis_numerical2 = vec![];
+    for i in numerical_columns1.iter() {
+        if numerical_columns2.contains(i) {
+            c += 1;
+        } else {
+            mis_numerical2.push(i);
+        }
+    }
+
+    for i in numerical_columns2.iter() {
+        if numerical_columns1.contains(i) {
+            c += 1;
+        } else {
+            mis_numerical1.push(i);
+        }
+    }
+    // println!("{:?}", c);
+    if c == numerical_columns1.len() + numerical_columns2.len() {
+        println!("Numerical columns match (irrespective of order)");
+    } else {
+        if mis_numerical1.len() > 0 && mis_numerical2.len() > 0 {
+            println!(
+                "Table 1 has {:?} missing in Numerical ; Table 2 has {:?} missing in Numerical",
+                mis_numerical1, mis_numerical2
+            );
+        }
+        if mis_numerical1.len() > 0 && mis_numerical2.len() == 0 {
+            println!("Table 1 has {:?} missing in Numerical", mis_numerical1);
+        }
+        if mis_numerical1.len() == 0 && mis_numerical2.len() > 0 {
+            println!("Table 2 has {:?} missing in Numerical", mis_numerical2);
+        }
+    }
+
+    c = 0;
+    let mut mis_boolean1 = vec![];
+    let mut mis_boolean2 = vec![];
+    for i in boolean_columns1.iter() {
+        if boolean_columns2.contains(i) {
+            c += 1;
+        } else {
+            mis_boolean2.push(i);
+        }
+    }
+
+    for i in boolean_columns2.iter() {
+        if boolean_columns1.contains(i) {
+            c += 1;
+        } else {
+            mis_boolean1.push(i);
+        }
+    }
+    // println!("{:?}", c);
+    if c == boolean_columns1.len() + boolean_columns2.len() {
+        println!("Boolean columns match (irrespective of order)");
+    } else {
+        if mis_boolean1.len() > 0 && mis_boolean2.len() > 0 {
+            println!(
+                "Table 1 has {:?} missing in Boolean ; Table 2 has {:?} missing in Boolean",
+                mis_boolean1, mis_boolean2
+            );
+        }
+        if mis_boolean1.len() > 0 && mis_boolean2.len() == 0 {
+            println!("Table 1 has {:?} missing in Boolean", mis_boolean1);
+        }
+        if mis_boolean1.len() == 0 && mis_boolean2.len() > 0 {
+            println!("Table 2 has {:?} missing in Boolean", mis_boolean2);
+        }
+    }
+
+    println!("\n********** Value comparision (for the common columns) **********");
+    let mut string_similarity = 0;
+    let mut dissimilarity = vec![];
+    for (k1, v1) in table1.string.iter() {
+        for (k2, v2) in table2.string.iter() {
+            if k1 == k2 {
+                string_similarity += compare_vectors(&v1, &v2).0;
+                dissimilarity.push(compare_vectors(&v1, &v2).1);
+            }
+        }
+    }
+    if string_similarity == table1.string.len() {
+        println!("The string values matchs, if present");
+    } else {
+        println!("Dissimilar in String at (Table 1, Table 2): ");
+        let _ = dissimilarity
+            .iter()
+            .enumerate()
+            .map(|(n, a)| {
+                println!(
+                    "{:?} : {:?}",
+                    table1.string.keys().collect::<Vec<&&str>>()[n],
+                    a
+                );
+                a.clone()
+            })
+            .collect::<Vec<Vec<(usize, usize)>>>();
+    }
+
+    let mut numerical_similarity = 0;
+    dissimilarity = vec![];
+    for (k1, v1) in table1.numerical.iter() {
+        for (k2, v2) in table2.numerical.iter() {
+            if k1 == k2 {
+                numerical_similarity += compare_vectors(&v1, &v2).0;
+                dissimilarity.push(compare_vectors(&v1, &v2).1);
+            }
+        }
+    }
+    if numerical_similarity == table1.numerical.len() {
+        println!("The numerical values matchs, if present");
+    } else {
+        println!("Dissimilar in Numerical at (Table 1, Table 2): ");
+        let _ = dissimilarity
+            .iter()
+            .enumerate()
+            .map(|(n, a)| {
+                println!(
+                    "{:?} : {:?}",
+                    table1.numerical.keys().collect::<Vec<&&str>>()[n],
+                    a
+                );
+                a.clone()
+            })
+            .collect::<Vec<Vec<(usize, usize)>>>();
+    }
+
+    let mut boolean_similarity = 0;
+    dissimilarity = vec![];
+    for (k1, v1) in table1.boolean.iter() {
+        for (k2, v2) in table2.boolean.iter() {
+            if k1 == k2 {
+                boolean_similarity += compare_vectors(&v1, &v2).0;
+                dissimilarity.push(compare_vectors(&v1, &v2).1);
+            }
+        }
+    }
+    if boolean_similarity == table1.boolean.len() {
+        println!("The Boolean values matchs, if present");
+    } else {
+        println!("Dissimilar in boolean at (Table 1, Table 2): ");
+        let _ = dissimilarity
+            .iter()
+            .enumerate()
+            .map(|(n, a)| {
+                println!(
+                    "{:?} : {:?}",
+                    table1.boolean.keys().collect::<Vec<&&str>>()[n],
+                    a
+                );
+                a.clone()
+            })
+            .collect::<Vec<Vec<(usize, usize)>>>();
+    }
+}
+
+pub fn dataframe_comparision(table1: &DataFrame, table2: &DataFrame) {
+    /*
+    Generates report on count, similarities and dissimilarities of 2 DataMaps
+    */
+    // comparing column count
+    println!("\n********** Count comparision **********");
+    if table1.string.len() == table2.string.len() {
+        println!("String columns count : {:?}", table1.string.len(),);
+    } else {
+        println!(
+            "String columns count are not the same {:?} and {:?}",
+            table1.string.len(),
+            table2.string.len()
+        );
+    }
+
+    if table1.numerical.len() == table2.numerical.len() {
+        println!("Numerical columns count : {:?}", table1.numerical.len(),);
+    } else {
+        println!(
+            "Numerical columns count are not the same {:?} and {:?}",
+            table1.numerical.len(),
+            table2.numerical.len(),
+        );
+    }
+
+    if table1.boolean.len() == table2.boolean.len() {
+        println!("Boolean columns count : {:?}", table1.boolean.len(),);
+    } else {
+        println!(
+            "Boolean columns count are not the same {:?} and {:?}",
+            table1.boolean.len(),
+            table2.boolean.len()
+        );
+    }
+
+    println!("\n********** Value comparision (for the common columns) **********");
+    let mut string_similarity = 0;
+    let mut dissimilarity = vec![];
+    for (ni, i) in table1.string.iter().enumerate() {
+        for (nj, j) in i.iter().enumerate() {
+            for (nk, k) in table2.string.iter().enumerate() {
+                for (nl, l) in k.iter().enumerate() {
+                    if nj == nl && nk == ni {
+                        if j == l {
+                            string_similarity += 1;
+                        } else {
+                            dissimilarity.push(((ni, nj), (nk, nl)));
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if string_similarity == table1.string[0].len() * table1.string.len() {
+        println!("The string values matchs, if present");
+    } else {
+        println!("Dissimilar in String at :");
+        let _ = dissimilarity
+            .iter()
+            .enumerate()
+            .map(|(n, a)| {
+                println!("{:?} : {:?}", n, a);
+                *a
+            })
+            .collect::<Vec<((usize, usize), (usize, usize))>>();
+    }
+
+    let mut numerical_similarity = 0;
+    let mut dissimilarity = vec![];
+    for (ni, i) in table1.numerical.iter().enumerate() {
+        for (nj, j) in i.iter().enumerate() {
+            for (nk, k) in table2.numerical.iter().enumerate() {
+                for (nl, l) in k.iter().enumerate() {
+                    if nj == nl && nk == ni {
+                        if j == l {
+                            numerical_similarity += 1;
+                        } else {
+                            dissimilarity.push(((ni, nj), (nk, nl)));
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if numerical_similarity == table1.numerical[0].len() * table1.numerical.len() {
+        println!("The numerical values matchs, if present");
+    } else {
+        println!("Dissimilar in Numerical at :");
+        let _ = dissimilarity
+            .iter()
+            .enumerate()
+            .map(|(n, a)| {
+                println!("{:?} : {:?}", n, a);
+                *a
+            })
+            .collect::<Vec<((usize, usize), (usize, usize))>>();
+    }
+
+    let mut boolean_similarity = 0;
+    let mut dissimilarity = vec![];
+    for (ni, i) in table1.boolean.iter().enumerate() {
+        for (nj, j) in i.iter().enumerate() {
+            for (nk, k) in table2.boolean.iter().enumerate() {
+                for (nl, l) in k.iter().enumerate() {
+                    if nj == nl && nk == ni {
+                        if j == l {
+                            boolean_similarity += 1;
+                        } else {
+                            dissimilarity.push(((ni, nj), (nk, nl)));
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if boolean_similarity == table1.boolean[0].len() * table1.boolean.len() {
+        println!("The boolean values matchs, if present");
+    } else {
+        println!("Dissimilar in Boolean at :");
+        let _ = dissimilarity
+            .iter()
+            .enumerate()
+            .map(|(n, a)| {
+                println!("{:?} : {:?}", n, a);
+                *a
+            })
+            .collect::<Vec<((usize, usize), (usize, usize))>>();
+    }
+}
+
+pub fn compare_vectors<T: std::cmp::PartialEq>(
+    v1: &Vec<T>,
+    v2: &Vec<T>,
+) -> (usize, Vec<(usize, usize)>) {
+    let mut similarity = 0;
+    let mut dissimilarity = vec![];
+    for (n, i) in v1.iter().enumerate() {
+        for (m, j) in v2.iter().enumerate() {
+            if n == m {
+                if *i == *j {
+                    similarity += 1;
+                } else {
+                    dissimilarity.push((n, m))
+                }
+            }
+        }
+    }
+    (similarity, dissimilarity)
 }
